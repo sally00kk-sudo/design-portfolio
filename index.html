@@ -181,12 +181,13 @@
       margin-bottom: 4rem;
       padding-bottom: 1rem;
       border-bottom: 1px solid #eee;
+      overflow-x: auto; /* 手机上支持横滑 */
     }
     
     .tab-btn {
       background: none;
       border: none;
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 700;
       color: #ccc;
       cursor: pointer;
@@ -197,6 +198,7 @@
       flex-direction: column;
       align-items: flex-start;
       text-align: left;
+      flex-shrink: 0;
     }
     .tab-btn .en-sub { font-size: 0.45em; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px;}
     .tab-btn.active { color: #000; }
@@ -211,7 +213,14 @@
     .resume-year i { color: #ccc; font-size: 0.8em; margin-top: 4px; margin-right: 10px;}
     .resume-detail h4 { font-size: 1.25rem; margin-bottom: 0.3rem; font-weight: 700;}
     .resume-detail p { color: var(--text-sub); margin-bottom: 0.5rem; }
-    .resume-detail ul { list-style: disc; padding-left: 20px; color: var(--text-sub); font-size: 0.95rem; margin-top: 0.5rem; }
+    
+    /* 普通列表 */
+    .resume-detail ul.normal-list { list-style: disc; padding-left: 20px; color: var(--text-sub); font-size: 0.95rem; margin-top: 0.5rem; }
+    
+    /* 课程/证书 标签式列表 */
+    .detail-group { margin-top: 1rem; }
+    .detail-label { font-size: 0.9rem; font-weight: 700; color: #333; margin-bottom: 0.5rem; display: block;}
+    .detail-text { font-size: 0.95rem; color: #666; line-height: 1.6; }
 
     /* --- 7. 作品集 Grid --- */
     .section-title { font-size: 2rem; margin-bottom: 4rem; font-weight: 700; display: flex; align-items: center; }
@@ -265,8 +274,8 @@
       .nav-links { display: none; }
       .cases-grid { grid-template-columns: 1fr; gap: 4rem; }
       .resume-item { grid-template-columns: 1fr; gap: 0.5rem; }
-      .tab-header { gap: 1.5rem; }
-      .tab-btn { font-size: 1.5rem; }
+      .tab-header { gap: 2rem; padding-bottom: 1.5rem; }
+      .tab-btn { font-size: 1.2rem; }
     }
   </style>
 </head>
@@ -285,7 +294,6 @@
   <!-- 1. Split Hero (Banner) -->
   <section class="hero-split">
     <div class="hero-visual">
-      <!-- Banner 图片 -->
       <img src="images/banner-1.jpg" class="hero-slide active" alt="Banner 1">
       <img src="images/banner-2.jpg" class="hero-slide" alt="Banner 2">
       <img src="images/banner-3.jpg" class="hero-slide" alt="Banner 3">
@@ -309,17 +317,27 @@
     </div>
   </section>
 
-  <!-- 2. Resume 简历 (含 Tab 切换) -->
+  <!-- 2. Resume 简历 (含3个Tab) -->
   <section id="about" class="section-container">
     
-    <!-- Tab 按钮区 (注意 onclick 中的参数改成了 'jobs' 以免冲突) -->
+    <!-- Tab 按钮区 -->
     <div class="tab-header scroll-reveal">
-      <button class="tab-btn active" onclick="switchTab('jobs', this)">
+      
+      <!-- 1. 教育背景 (新加) -->
+      <button class="tab-btn active" onclick="switchTab('education', this)">
+        <i class="fa-solid fa-user-graduate" style="font-size: 0.5em; margin-bottom:5px;"></i>
+        教育背景
+        <span class="en-sub">Education</span>
+      </button>
+
+      <!-- 2. 工作经历 -->
+      <button class="tab-btn" onclick="switchTab('jobs', this)">
         <i class="fa-solid fa-briefcase" style="font-size: 0.5em; margin-bottom:5px;"></i>
         工作经历
         <span class="en-sub">Work Experience</span>
       </button>
 
+      <!-- 3. 校园实践 -->
       <button class="tab-btn" onclick="switchTab('campus', this)">
         <i class="fa-solid fa-graduation-cap" style="font-size: 0.5em; margin-bottom:5px;"></i>
         校园实践
@@ -327,14 +345,45 @@
       </button>
     </div>
     
-    <!-- 内容1: 工作经历 (ID 改为 jobs) -->
-    <div id="jobs" class="resume-list tab-content active">
+    <!-- 内容1: 教育背景 (默认显示) -->
+    <div id="education" class="resume-list tab-content active">
       <div class="resume-item scroll-reveal">
-        <div class="resume-year"><i class="fa-solid fa-circle-dot" style="font-size:0.6em; margin-top:6px;"></i> 2022.10 - Present <span class="en-sub">至今</span></div>
+        <div class="resume-year">
+          <i class="fa-solid fa-circle-dot" style="font-size:0.6em; margin-top:6px;"></i> 
+          2017.09 - 2021.06
+        </div>
+        <div class="resume-detail">
+          <h4>湖南农业大学 <span class="en-sub">/ Hunan Agricultural University</span></h4>
+          <p><strong>视觉传达设计专业 (本科)</strong></p>
+          <p class="en-sub">Bachelor of Arts in Visual Communication Design</p>
+
+          <div class="detail-group">
+            <span class="detail-label">主修课程 (Core Courses):</span>
+            <p class="detail-text">
+              交互设计、插画设计、版式设计、动画设计、字体设计、展示设计、设计思维、包装设计、招贴设计、书籍设计
+            </p>
+          </div>
+
+          <div class="detail-group">
+            <span class="detail-label">选修 / 证书 / 荣誉:</span>
+            <ul class="normal-list">
+              <li><strong>选修：</strong>药膳学、艺术哲学、欧洲文明的现代历程</li>
+              <li><strong>证书：</strong>普通话二级甲等、大学生英语四级 (CET-4)、教师资格证 (高级中学美术)</li>
+              <li><strong>荣誉：</strong>2019届“优秀助班”奖</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 内容2: 工作经历 (ID=jobs) -->
+    <div id="jobs" class="resume-list tab-content">
+      <div class="resume-item">
+        <div class="resume-year"><i class="fa-solid fa-briefcase" style="font-size:0.6em; margin-top:6px;"></i> 2022.10 - Present <span class="en-sub">至今</span></div>
         <div class="resume-detail">
           <h4>电商网页设计师 <span class="en-sub">/ E-commerce Web Designer</span></h4>
           <p><strong>@安徽美瑞邦达跨境电商有限公司</strong></p>
-          <ul>
+          <ul class="normal-list">
             <li>海外独立站设计、改版及产品图精修</li>
             <li>跨境电商 A+ 页面设计与店铺装修</li>
             <li>品牌 VI、Logo 升级优化及包装物料设计</li>
@@ -342,23 +391,23 @@
           </ul>
         </div>
       </div>
-      <div class="resume-item scroll-reveal">
+      <div class="resume-item">
         <div class="resume-year"><i class="fa-regular fa-circle" style="font-size:0.6em; margin-top:6px;"></i> 2022.07 - 2022.08</div>
         <div class="resume-detail">
           <h4>设计师助理 <span class="en-sub">/ Designer Assistant</span></h4>
           <p><strong>@赛飞广告传播有限公司</strong></p>
-          <ul>
+          <ul class="normal-list">
             <li>参与设计部的创意设计工作（画册、折页、海报等）</li>
             <li>品牌工法墙标识导视系统设计</li>
           </ul>
         </div>
       </div>
-      <div class="resume-item scroll-reveal">
+      <div class="resume-item">
         <div class="resume-year"><i class="fa-regular fa-circle" style="font-size:0.6em; margin-top:6px;"></i> 2022.02 - 2022.05</div>
         <div class="resume-detail">
           <h4>美术教师 <span class="en-sub">/ Art Teacher</span></h4>
           <p><strong>@安徽朗声教育咨询有限公司</strong></p>
-          <ul>
+          <ul class="normal-list">
             <li>创意美术：定制教学计划，因材施教，增进家长沟通</li>
             <li>素描教学：几何石膏、静物、人物头像教学</li>
           </ul>
@@ -366,14 +415,14 @@
       </div>
     </div>
 
-    <!-- 内容2: 校园实践 -->
+    <!-- 内容3: 校园实践 -->
     <div id="campus" class="resume-list tab-content">
       <div class="resume-item">
         <div class="resume-year"><i class="fa-solid fa-school" style="font-size:0.6em; margin-top:6px;"></i> 2019.09 - 2019.10</div>
         <div class="resume-detail">
           <h4>新生助理班主任 <span class="en-sub">/ Assistant Class Teacher</span></h4>
           <p><strong>@ 2019级视觉传达设计一班</strong></p>
-          <ul>
+          <ul class="normal-list">
             <li>管理并组织班级同学参加军训以及各种活动</li>
             <li>协助辅导员处理新生入学适宜及班级建设</li>
           </ul>
@@ -384,7 +433,7 @@
         <div class="resume-detail">
           <h4>科幻俱乐部团长 <span class="en-sub">/ President of Sci-Fi Club</span></h4>
           <p><strong>@ 湖南农业大学科幻俱乐部</strong></p>
-          <ul>
+          <ul class="normal-list">
             <li>负责社团日常运营、活动策划与执行</li>
             <li>组织30余名成员参与校园社团文化艺术节及音响演出</li>
           </ul>
@@ -395,7 +444,7 @@
         <div class="resume-detail">
           <h4>广播播音员 & 宣传组负责人 <span class="en-sub">/ Broadcaster & Publicity Lead</span></h4>
           <p><strong>@ 湖南农业大学广播电视台</strong></p>
-          <ul>
+          <ul class="normal-list">
             <li>负责宣传海报、喷绘、易拉宝等平面物料设计</li>
             <li>负责校园广播播音，脚本编辑、录制及后期剪辑</li>
           </ul>
@@ -406,7 +455,7 @@
         <div class="resume-detail">
           <h4>班级宣传员 <span class="en-sub">/ Class Publicity Committee</span></h4>
           <p><strong>@ 2017级视传一班</strong></p>
-          <ul>
+          <ul class="normal-list">
             <li>负责班级形象建设与活动宣传</li>
             <li>运营与管理班级官方微信公众号</li>
           </ul>
@@ -416,7 +465,7 @@
 
   </section>
 
-  <!-- 3. Work 作品集 (ID 保持为 work) -->
+  <!-- 3. Work 作品集 (ID=work) -->
   <section id="work" class="section-container">
     <h2 class="section-title scroll-reveal">
       <i class="fa-solid fa-pen-nib"></i> Selected Work 
