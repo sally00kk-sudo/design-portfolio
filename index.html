@@ -9,9 +9,9 @@
     :root {
       --primary-color: #000000;
       --secondary-color: #666666;
+      --light-text: #999999; /* 用于英文的浅色 */
       --bg-color: #ffffff;
-      --accent-color: #000000; /* 极简黑 */
-      --card-bg: #f9f9f9;
+      --accent-color: #000000;
       --max-width: 1280px;
       --gutter: 24px;
       --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -20,7 +20,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body { 
-      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif; 
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif; 
       line-height: 1.6; 
       color: var(--primary-color);
       background-color: var(--bg-color);
@@ -32,6 +32,24 @@
     ul { list-style: none; }
     img { display: block; width: 100%; height: auto; object-fit: cover; }
 
+    /* --- 关键：中英互译样式 --- */
+    /* 英文次要文本通用样式 */
+    .en-sub {
+      display: block; /* 换行显示 */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-weight: 400; 
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+    
+    /* 标题里的英文 (更小一点) */
+    h1 .en-sub { font-size: 0.4em; line-height: 1.4; margin-top: 10px; font-weight: 300; letter-spacing: 0.5px; }
+    h2 .en-sub { font-size: 0.6em; text-transform: uppercase; letter-spacing: 1px; color: var(--light-text); margin-top: 5px; }
+    h3 .en-sub { font-size: 0.75em; font-weight: 400; color: var(--secondary-color); }
+    
+    /* 正文里的英文 */
+    p .en-sub { font-size: 0.9em; color: var(--light-text); margin-top: 2px; }
+
     /* --- 2. 布局容器 --- */
     .container { 
       max-width: var(--max-width); 
@@ -39,12 +57,12 @@
       padding: 0 var(--gutter); 
     }
 
-    /* --- 3. 顶部导航 (Sticky Header) --- */
+    /* --- 3. 顶部导航 --- */
     header { 
       position: fixed; 
       top: 0; left: 0; width: 100%; 
       background: rgba(255,255,255,0.9); 
-      backdrop-filter: blur(10px); /* 磨砂玻璃效果 */
+      backdrop-filter: blur(10px); 
       z-index: 100; 
       border-bottom: 1px solid rgba(0,0,0,0.05);
     }
@@ -67,13 +85,14 @@
     .nav-links a { 
       font-size: 0.9rem; 
       font-weight: 500; 
-      text-transform: uppercase; 
       letter-spacing: 0.5px;
     }
+    /* 导航栏英文换行太挤，所以这里用行内样式 */
+    .nav-en { font-size: 0.8em; opacity: 0.5; margin-left: 4px; text-transform: uppercase;}
     
     .menu-toggle { display: none; cursor: pointer; font-size: 0.9rem; border: none; background: none; text-transform: uppercase; font-weight: bold;}
 
-    /* --- 4. Hero Section (Motto 风格大标语) --- */
+    /* --- 4. Hero Section --- */
     .hero { 
       display: flex; 
       flex-direction: column; 
@@ -83,20 +102,20 @@
     }
     
     .hero h1 { 
-      font-size: clamp(2.5rem, 5vw, 4.5rem); /* 响应式字体 */
-      line-height: 1.1; 
+      font-size: clamp(2rem, 4vw, 3.5rem); 
+      line-height: 1.2; 
       font-weight: 800; 
-      margin-bottom: 1.5rem; 
-      max-width: 900px;
+      margin-bottom: 2rem; 
+      max-width: 950px;
       letter-spacing: -1px;
     }
 
     .hero p { 
-      font-size: 1.25rem; 
+      font-size: 1.1rem; 
       color: var(--secondary-color); 
-      max-width: 600px; 
+      max-width: 700px; 
       margin-bottom: 2.5rem; 
-      font-weight: 300;
+      font-weight: 400;
     }
 
     .cta-group { display: flex; gap: 1rem; }
@@ -106,56 +125,54 @@
       font-weight: 600;
       font-size: 0.9rem;
       transition: var(--transition);
+      display: inline-block;
+      text-align: center;
     }
+    .btn span { display: block; font-size: 0.8em; font-weight: 400; opacity: 0.8; }
+    
     .btn-primary { background: var(--primary-color); color: #fff; }
     .btn-primary:hover { background: transparent; color: var(--primary-color); }
+    .btn-primary:hover span { opacity: 1; }
+    
     .btn-outline:hover { background: var(--primary-color); color: #fff; }
 
-    /* --- 5. 通用 Section 样式 --- */
-    section { padding: 5rem 0; border-top: 1px solid #eee; }
+    /* --- 5. 通用 Section --- */
+    section { padding: 6rem 0; border-top: 1px solid #eee; }
     
-    .section-header { margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap;}
-    .section-title { font-size: 2rem; font-weight: 700; }
-    .section-subtitle { font-size: 0.9rem; color: var(--secondary-color); margin-top: 0.5rem; }
+    .section-header { margin-bottom: 3rem; }
+    .section-title { font-size: 2rem; font-weight: 700; color: #000; }
 
     /* --- 6. 简历/关于 (Grid) --- */
-    .resume-list {
-      display: grid;
-      gap: 1.5rem;
-    }
+    .resume-list { display: grid; gap: 2rem; }
     .resume-item {
       display: grid;
-      grid-template-columns: 150px 1fr;
-      padding-bottom: 1.5rem;
+      grid-template-columns: 180px 1fr;
+      padding-bottom: 2rem;
       border-bottom: 1px solid #eee;
     }
-    .resume-year { font-weight: bold; font-size: 0.9rem; }
-    .resume-detail h4 { font-size: 1.1rem; margin-bottom: 0.25rem; }
-    .resume-detail p { color: var(--secondary-color); font-size: 0.95rem; }
+    .resume-year { font-weight: bold; font-size: 1rem; }
+    .resume-year .en-sub { font-size: 0.8em; color: var(--secondary-color); font-weight: 400;}
+    
+    .resume-detail h4 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+    .resume-detail p { color: var(--secondary-color); font-size: 0.95rem; line-height: 1.7; }
 
-    /* --- 7. 作品集网格 (核心区域) --- */
-    /* 既然你是横屏长图居多，我们使用 2列 或 1列 的布局，让图片更大 */
+    /* --- 7. 作品集网格 --- */
     .work-grid { 
       display: grid; 
       grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); 
       gap: 3rem; 
-      row-gap: 4rem;
+      row-gap: 5rem;
     }
 
-    .project-card {
-      group-hover: none;
-      cursor: pointer;
-    }
+    .project-card { cursor: pointer; }
 
-    /* 图片容器：增加 hover 动效 */
     .media-wrapper {
       width: 100%;
       background: #e0e0e0;
       overflow: hidden;
       border-radius: 4px;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
       position: relative;
-      /* 这里强制一个比例，比如 16:9 或者更宽，防止高度参差不齐 */
       aspect-ratio: 16 / 10; 
     }
 
@@ -166,39 +183,39 @@
       transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
     }
 
-    .project-card:hover .media-wrapper img {
-      transform: scale(1.03);
-    }
+    .project-card:hover .media-wrapper img { transform: scale(1.03); }
 
-    .project-info h3 { font-size: 1.25rem; margin-bottom: 0.3rem; }
-    .project-info p { font-size: 0.9rem; color: var(--secondary-color); }
+    .project-info h3 { font-size: 1.35rem; margin-bottom: 0.5rem; line-height: 1.3;}
+    .project-info p { font-size: 0.95rem; color: var(--secondary-color); margin-bottom: 1rem;}
     
-    /* 标签 Tag */
-    .tags { margin-top: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .tag { 
       font-size: 0.75rem; 
-      padding: 2px 8px; 
-      border: 1px solid #ddd; 
+      padding: 3px 10px; 
+      border: 1px solid #eee; 
+      background: #fafafa;
       border-radius: 100px; 
       color: #666;
     }
 
-    /* --- 8. 联系方式 (Footer) --- */
-    .footer-cta { text-align: center; padding: 6rem 0; background: #f9f9f9; }
+    /* --- 8. Footer --- */
+    .footer-cta { text-align: center; padding: 8rem 0; background: #fafafa; }
     .footer-cta h2 { font-size: 2.5rem; margin-bottom: 2rem; }
-    .contact-links { font-size: 1.2rem; display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;}
-    .contact-links a { text-decoration: underline; text-underline-offset: 4px; }
+    .contact-links { font-size: 1.1rem; display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;}
+    .contact-links div { display: flex; flex-direction: column; align-items: center; }
+    .contact-links span { font-size: 0.8em; color: #999; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;}
+    .contact-links a { border-bottom: 1px solid #ccc; padding-bottom: 2px;}
 
     footer { 
       padding: 2rem var(--gutter); 
       display: flex; 
       justify-content: space-between; 
-      font-size: 0.85rem; 
+      font-size: 0.8rem; 
       color: #999; 
       border-top: 1px solid #eee;
     }
 
-    /* --- 9. 响应式适配 --- */
+    /* --- 9. 响应式 --- */
     @media (max-width: 768px) {
       .nav-links { 
         display: none; 
@@ -213,13 +230,13 @@
       .nav-links.open { display: flex; }
       .menu-toggle { display: block; }
       
-      .hero h1 { font-size: 2.5rem; }
-      .work-grid { grid-template-columns: 1fr; } /* 手机端单栏 */
+      .hero h1 { font-size: 2rem; }
+      .work-grid { grid-template-columns: 1fr; } 
       .resume-item { grid-template-columns: 1fr; gap: 0.5rem; }
-      .contact-links { flex-direction: column; gap: 1rem; }
+      .contact-links { flex-direction: column; gap: 2rem; }
     }
 
-    /* --- 10. 简单的入场动画类 --- */
+    /* 动画 */
     .fade-in-up {
       opacity: 0;
       transform: translateY(20px);
@@ -240,27 +257,44 @@
         <a href="#" class="logo">SALLY.</a>
         
         <div class="nav-links">
-          <a href="#work">Work</a>
-          <a href="#about">About</a>
-          <a href="#branding">Branding</a>
-          <a href="#contact">Contact</a>
+          <a href="#work">作品 <span class="nav-en">Work</span></a>
+          <a href="#about">关于 <span class="nav-en">About</span></a>
+          <a href="#contact">联系 <span class="nav-en">Contact</span></a>
         </div>
         
-        <button class="menu-toggle" id="navToggle">Menu</button>
+        <button class="menu-toggle" id="navToggle">MENU</button>
       </nav>
     </div>
   </header>
 
   <main>
-    <!-- Hero 区域：自我介绍 -->
+    <!-- Hero 区域 -->
     <section class="hero container">
       <div class="fade-in-up">
-        <p class="section-subtitle">VISUAL DESIGNER & ART DIRECTOR</p>
-        <h1>Crafting digital experiences & brand identities that drive conversion.</h1>
-        <p>专注于全球化电商营销、品牌全案视觉与用户体验设计。</p>
+        <p class="section-subtitle" style="color:#666; letter-spacing: 1px; font-size: 0.9rem; margin-bottom: 1rem;">
+          视觉设计师 & 艺术指导 <br> 
+          <span style="font-size:0.8em; opacity:0.6;">VISUAL DESIGNER & ART DIRECTOR</span>
+        </p>
+        
+        <h1>
+          打造驱动转化的数字体验与品牌形象。
+          <span class="en-sub">Crafting digital experiences & brand identities that drive conversion.</span>
+        </h1>
+        
+        <p>
+          专注于全球化电商营销、品牌全案视觉与用户体验设计。
+          <span class="en-sub">Specializing in global eCommerce marketing, brand identity, and UX design.</span>
+        </p>
+        
         <div class="cta-group">
-          <a href="#work" class="btn btn-primary">查看作品 / Selected Work</a>
-          <a href="#contact" class="btn btn-outline">联系我 / Contact</a>
+          <a href="#work" class="btn btn-primary">
+            查看作品
+            <span>Selected Work</span>
+          </a>
+          <a href="#contact" class="btn btn-outline">
+            联系我
+            <span>Contact Me</span>
+          </a>
         </div>
       </div>
     </section>
@@ -268,34 +302,58 @@
     <!-- 关于 / 简历部分 -->
     <section id="about" class="container">
       <div class="section-header fade-in-up">
-        <h2 class="section-title">Experience</h2>
-        <span class="section-subtitle">My Journey</span>
+        <h2 class="section-title">
+          个人经历
+          <span class="en-sub">Experience & Journey</span>
+        </h2>
       </div>
       
       <div class="resume-list fade-in-up">
         <div class="resume-item">
-          <div class="resume-year">Education</div>
+          <div class="resume-year">
+            教育经历
+            <span class="en-sub">Education</span>
+          </div>
           <div class="resume-detail">
-            <h4>你的大学 / 专业名称</h4>
-            <p>学士学位 | 20xx - 20xx</p>
+            <h4>
+              [此处填写你的大学]
+              <span class="en-sub" style="font-size:0.8em; font-weight:400; display:inline;">/ Bachelor of Design</span>
+            </h4>
+            <p>
+              学士学位 | 20xx - 20xx
+            </p>
           </div>
         </div>
+        
         <div class="resume-item">
-          <div class="resume-year">Work</div>
+          <div class="resume-year">
+            工作经历
+            <span class="en-sub">Work Experience</span>
+          </div>
           <div class="resume-detail">
-            <h4>职位名称 Title</h4>
-            <p>公司名称 Company Name | 20xx - Present</p>
-            <p style="margin-top:0.5rem; font-size:0.85rem;">负责品牌视觉升级、电商平台 UI 优化及团队摄影指导。</p>
+            <h4>
+              [此处填写职位 Title]
+              <span class="en-sub" style="font-size:0.8em; font-weight:400; display:inline;">/ Senior Designer</span>
+            </h4>
+            <p style="margin-bottom: 5px; font-weight: 500;">
+              公司名称 Company Name | 20xx - Present
+            </p>
+            <p>
+              负责品牌视觉升级、电商平台 UI 优化及团队摄影指导，提升品牌点击率与转化率。
+              <span class="en-sub">Responsible for brand visual upgrade, eCommerce UI optimization, and photography direction.</span>
+            </p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 核心作品集：按照你的表格分类 -->
+    <!-- 核心作品集 -->
     <section id="work" class="container">
       <div class="section-header fade-in-up">
-        <h2 class="section-title">Selected Work</h2>
-        <span class="section-subtitle">2023 - 2025</span>
+        <h2 class="section-title">
+          精选作品
+          <span class="en-sub">Selected Work</span>
+        </h2>
       </div>
 
       <div class="work-grid">
@@ -303,25 +361,37 @@
         <!-- 1. 电商营销 -->
         <div class="project-card fade-in-up">
           <div class="media-wrapper">
-            <!-- 你的图片放在这里，建议尺寸：1600x1000 -->
+            <!-- 替换图片 -->
             <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1600&auto=format&fit=crop" alt="DTC Website">
           </div>
           <div class="project-info">
-            <h3>Global eCommerce & DTC</h3>
-            <p>独立站 UI/UX 设计、购物车流程优化与高转化率落地页设计。</p>
-            <div class="tags"><span class="tag">UI/UX</span><span class="tag">Web Design</span></div>
+            <h3>
+              全球化电商与独立站 (DTC)
+              <span class="en-sub">Global eCommerce & DTC UI/UX</span>
+            </h3>
+            <p>
+              独立站 UI/UX 设计、购物车流程优化与高转化率落地页设计。
+              <span class="en-sub">Website UI/UX design, cart optimization, and high-conversion landing pages.</span>
+            </p>
+            <div class="tags"><span class="tag">Web Design</span><span class="tag">UI/UX</span></div>
           </div>
         </div>
 
-        <!-- 2. 亚马逊/电商平台 -->
+        <!-- 2. 亚马逊 -->
         <div class="project-card fade-in-up">
           <div class="media-wrapper">
             <img src="https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?q=80&w=1600&auto=format&fit=crop" alt="Amazon Design">
           </div>
           <div class="project-info">
-            <h3>Amazon & TikTok Shop</h3>
-            <p>店铺装修、A+ 页面设计与移动端界面适配，提升品牌信任度。</p>
-            <div class="tags"><span class="tag">Amazon A+</span><span class="tag">Mobile</span></div>
+            <h3>
+              亚马逊与 TikTok Shop 装修
+              <span class="en-sub">Amazon Storefront & TikTok Shop</span>
+            </h3>
+            <p>
+              店铺装修、A+ 页面设计与移动端界面适配，提升品牌信任度。
+              <span class="en-sub">Store design, A+ content, and mobile interface adaptation for brand trust.</span>
+            </p>
+            <div class="tags"><span class="tag">Amazon A+</span><span class="tag">E-Commerce</span></div>
           </div>
         </div>
 
@@ -331,60 +401,96 @@
             <img src="https://images.unsplash.com/photo-1533750516457-a7f992034fec?q=80&w=1600&auto=format&fit=crop" alt="Ads Creative">
           </div>
           <div class="project-info">
-            <h3>Video Marketing & Ads</h3>
-            <p>FB / Google Ads 视频广告创意，动态剪辑与高点击率素材制作。</p>
-            <div class="tags"><span class="tag">Motion</span><span class="tag">Advertising</span></div>
+            <h3>
+              视频营销与广告创意
+              <span class="en-sub">Video Marketing & Ad Creatives</span>
+            </h3>
+            <p>
+              FB / Google Ads 视频广告创意，动态剪辑与高点击率素材制作。
+              <span class="en-sub">Motion graphics and video editing for high-CTR social media campaigns.</span>
+            </p>
+            <div class="tags"><span class="tag">Motion</span><span class="tag">Social Ads</span></div>
           </div>
         </div>
 
-        <!-- 4. 品牌全案 (Redtop) -->
-        <div id="branding" class="project-card fade-in-up">
+        <!-- 4. 品牌全案 -->
+        <div class="project-card fade-in-up">
           <div class="media-wrapper">
             <img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=1600&auto=format&fit=crop" alt="Redtop Branding">
           </div>
           <div class="project-info">
-            <h3>Redtop 西部牛仔鞋全案</h3>
-            <p>从市场定位到 VI 视觉识别系统的完整品牌重塑。</p>
-            <div class="tags"><span class="tag">Branding</span><span class="tag">Identity</span></div>
+            <h3>
+              Redtop 牛仔鞋品牌全案
+              <span class="en-sub">Redtop Brand Identity System</span>
+            </h3>
+            <p>
+              从市场定位到 VI 视觉识别系统的完整品牌重塑。
+              <span class="en-sub">Complete rebranding from market positioning to visual identity system (VI).</span>
+            </p>
+            <div class="tags"><span class="tag">Branding</span><span class="tag">Visual Identity</span></div>
           </div>
         </div>
 
-        <!-- 5. 空间与导视 -->
+        <!-- 5. 空间视觉 -->
         <div class="project-card fade-in-up">
           <div class="media-wrapper">
             <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=1600&auto=format&fit=crop" alt="Spatial Design">
           </div>
           <div class="project-info">
-            <h3>Spatial & Wayfinding</h3>
-            <p>工法馆与展示厅空间视觉设计，导视系统规划。</p>
-            <div class="tags"><span class="tag">Spatial</span><span class="tag">Signage</span></div>
+            <h3>
+              空间视觉与导视系统
+              <span class="en-sub">Spatial Design & Wayfinding</span>
+            </h3>
+            <p>
+              工法馆与展示厅空间视觉设计，导视系统规划。
+              <span class="en-sub">Visual design for exhibition halls and signage system planning.</span>
+            </p>
+            <div class="tags"><span class="tag">Spatial</span><span class="tag">Exhibition</span></div>
           </div>
         </div>
 
-        <!-- 6. 摄影指导 & 3D -->
+        <!-- 6. 摄影指导 -->
         <div class="project-card fade-in-up">
           <div class="media-wrapper">
             <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1600&auto=format&fit=crop" alt="Photography Direction">
           </div>
           <div class="project-info">
-            <h3>Art Direction & 3D</h3>
-            <p>模特/产品拍摄现场指导，以及 3D 建模渲染视觉探索。</p>
-            <div class="tags"><span class="tag">Photography</span><span class="tag">3D Render</span></div>
+            <h3>
+              摄影指导与三维渲染
+              <span class="en-sub">Art Direction & 3D Rendering</span>
+            </h3>
+            <p>
+              模特/产品拍摄现场指导，以及 3D 建模视觉探索。
+              <span class="en-sub">On-site photography direction and 3D modeling visual exploration.</span>
+            </p>
+            <div class="tags"><span class="tag">Art Direction</span><span class="tag">3D</span></div>
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- 底部召唤行动 -->
+    <!-- 底部 -->
     <section id="contact" class="footer-cta">
       <div class="container fade-in-up">
-        <p class="section-subtitle">LET'S WORK TOGETHER</p>
-        <h2>Have a project in mind?</h2>
+        <h2 style="line-height:1.2;">
+          有合作意向？
+          <span class="en-sub" style="font-size:0.4em; letter-spacing:1px; margin-top:10px;">Have a project in mind?</span>
+        </h2>
+        
         <div class="contact-links">
-          <a href="mailto:sally00kk@gmail.com">sally00kk@gmail.com</a>
-          <a href="mailto:1355652997@qq.com">1355652997@qq.com</a>
-          <span>Tel: 178-9100-3233</span>
+          <div>
+            <span>Email</span>
+            <a href="mailto:sally00kk@gmail.com">sally00kk@gmail.com</a>
+          </div>
+          <div>
+            <span>Email (CN)</span>
+            <a href="mailto:1355652997@qq.com">1355652997@qq.com</a>
+          </div>
+          <div>
+            <span>Phone</span>
+            <a href="#">178-9100-3233</a>
+          </div>
         </div>
       </div>
     </section>
@@ -393,41 +499,32 @@
   <footer>
     <div class="container">
       <span>&copy; 2025 Sally Portfolio.</span>
-      <span>Designed with Minimalist Style.</span>
+      <span>Designed with Bilingual Style.</span>
     </div>
   </footer>
 
   <script>
-    // 1. 移动端菜单切换
+    // 菜单切换
     const navLinks = document.querySelector('.nav-links');
     const navToggle = document.getElementById('navToggle');
 
     navToggle.addEventListener('click', () => {
       navLinks.classList.toggle('open');
-      navToggle.textContent = navLinks.classList.contains('open') ? 'Close' : 'Menu';
+      navToggle.textContent = navLinks.classList.contains('open') ? 'CLOSE' : 'MENU';
     });
 
-    // 2. 简单的滚动淡入效果 (Intersection Observer)
-    // 这是一个现代浏览器 API，能检测元素是否进入屏幕
-    const observerOptions = {
-      threshold: 0.1 // 元素出现 10% 时触发
-    };
-
+    // 滚动动画
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          // 如果只想触发一次，可以取消注释下面这行
-          // observer.unobserve(entry.target);
         }
       });
-    }, observerOptions);
+    }, { threshold: 0.1 });
 
     document.querySelectorAll('.fade-in-up').forEach(el => {
       observer.observe(el);
     });
   </script>
 </body>
-
 </html>
-
