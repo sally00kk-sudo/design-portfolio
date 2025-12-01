@@ -4,8 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sally's Portfolio | Visionary Designer</title>
-  <!-- 强制预加载第一张 Banner 图 -->
-<link rel="preload" as="image" href="images/banner-1.jpg">
+  
+  <!-- 【优化1】强制预加载第一张 Banner 图 (解决首屏慢的核心) -->
+  <link rel="preload" as="image" href="images/banner-1.jpg">
+
   <!-- 引入 Font Awesome 图标库 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -106,6 +108,8 @@
       opacity: 0;
       transition: opacity 1.5s ease-in-out, transform 8s ease;
       transform: scale(1.1);
+      /* 优化：使用硬件加速防止卡顿 */
+      will-change: opacity, transform; 
     }
     .hero-slide.active { opacity: 1; transform: scale(1); }
 
@@ -174,7 +178,7 @@
     /* --- 4. Section 通用 --- */
     .section-container { max-width: 1200px; margin: 0 auto; padding: 8rem 2rem; border-top: 1px solid #f0f0f0; }
     
-    /* --- 5. Tab Switcher 样式 --- */
+    /* --- 5. Tab Switcher --- */
     .tab-header {
       display: flex;
       align-items: center;
@@ -182,8 +186,11 @@
       margin-bottom: 4rem;
       padding-bottom: 1rem;
       border-bottom: 1px solid #eee;
-      overflow-x: auto; /* 手机上支持横滑 */
+      overflow-x: auto;
+      white-space: nowrap; /* 防止手机端换行 */
     }
+    /* 隐藏滚动条 */
+    .tab-header::-webkit-scrollbar { display: none; }
     
     .tab-btn {
       background: none;
@@ -215,10 +222,8 @@
     .resume-detail h4 { font-size: 1.25rem; margin-bottom: 0.3rem; font-weight: 700;}
     .resume-detail p { color: var(--text-sub); margin-bottom: 0.5rem; }
     
-    /* 普通列表 */
     .resume-detail ul.normal-list { list-style: disc; padding-left: 20px; color: var(--text-sub); font-size: 0.95rem; margin-top: 0.5rem; }
     
-    /* 课程/证书 标签式列表 */
     .detail-group { margin-top: 1rem; }
     .detail-label { font-size: 0.9rem; font-weight: 700; color: #333; margin-bottom: 0.5rem; display: block;}
     .detail-text { font-size: 0.95rem; color: #666; line-height: 1.6; }
@@ -295,7 +300,10 @@
   <!-- 1. Split Hero (Banner) -->
   <section class="hero-split">
     <div class="hero-visual">
-      <img src="images/banner-1.jpg" class="hero-slide active" alt="Banner 1">
+      <!-- 【优化2】fetchpriority="high"：告诉浏览器这张图最重要，必须先加载 -->
+      <img src="images/banner-1.jpg" class="hero-slide active" alt="Banner 1" fetchpriority="high">
+      
+      <!-- 剩下的图片 -->
       <img src="images/banner-2.jpg" class="hero-slide" alt="Banner 2">
       <img src="images/banner-3.jpg" class="hero-slide" alt="Banner 3">
     </div>
@@ -318,27 +326,26 @@
     </div>
   </section>
 
-  <!-- 2. Resume 简历 (含3个Tab) -->
+  <!-- 2. Resume 简历 -->
   <section id="about" class="section-container">
     
     <!-- Tab 按钮区 -->
     <div class="tab-header scroll-reveal">
-      
-      <!-- 1. 教育背景 (新加) -->
+      <!-- 1. 教育 (默认激活) -->
       <button class="tab-btn active" onclick="switchTab('education', this)">
         <i class="fa-solid fa-user-graduate" style="font-size: 0.5em; margin-bottom:5px;"></i>
         教育背景
         <span class="en-sub">Education</span>
       </button>
 
-      <!-- 2. 工作经历 -->
+      <!-- 2. 工作 -->
       <button class="tab-btn" onclick="switchTab('jobs', this)">
         <i class="fa-solid fa-briefcase" style="font-size: 0.5em; margin-bottom:5px;"></i>
         工作经历
         <span class="en-sub">Work Experience</span>
       </button>
 
-      <!-- 3. 校园实践 -->
+      <!-- 3. 校园 -->
       <button class="tab-btn" onclick="switchTab('campus', this)">
         <i class="fa-solid fa-graduation-cap" style="font-size: 0.5em; margin-bottom:5px;"></i>
         校园实践
@@ -346,7 +353,7 @@
       </button>
     </div>
     
-    <!-- 内容1: 教育背景 (默认显示) -->
+    <!-- 内容1: 教育背景 -->
     <div id="education" class="resume-list tab-content active">
       <div class="resume-item scroll-reveal">
         <div class="resume-year">
@@ -357,14 +364,12 @@
           <h4>湖南农业大学 <span class="en-sub">/ Hunan Agricultural University</span></h4>
           <p><strong>视觉传达设计专业 (本科)</strong></p>
           <p class="en-sub">Bachelor of Arts in Visual Communication Design</p>
-
           <div class="detail-group">
             <span class="detail-label">主修课程 (Core Courses):</span>
             <p class="detail-text">
               交互设计、插画设计、版式设计、动画设计、字体设计、展示设计、设计思维、包装设计、招贴设计、书籍设计
             </p>
           </div>
-
           <div class="detail-group">
             <span class="detail-label">选修 / 证书 / 荣誉:</span>
             <ul class="normal-list">
@@ -377,7 +382,7 @@
       </div>
     </div>
 
-    <!-- 内容2: 工作经历 (ID=jobs) -->
+    <!-- 内容2: 工作经历 -->
     <div id="jobs" class="resume-list tab-content">
       <div class="resume-item">
         <div class="resume-year"><i class="fa-solid fa-briefcase" style="font-size:0.6em; margin-top:6px;"></i> 2022.10 - Present <span class="en-sub">至今</span></div>
@@ -474,10 +479,11 @@
     </h2>
     
     <div class="cases-grid">
+      <!-- 【优化3】作品图片使用懒加载 loading="lazy" -->
       <!-- P1 -->
       <a href="works.html#p1-1" class="case-card scroll-reveal">
         <div class="case-image">
-          <img src="images/p1-ecommerce.jpg" alt="Work">
+          <img src="images/p1-ecommerce.jpg" alt="Work" loading="lazy">
           <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
         <div class="case-info">
@@ -489,7 +495,7 @@
       <!-- P2 -->
       <a href="works.html#p2-1" class="case-card scroll-reveal">
         <div class="case-image">
-          <img src="images/p2-marketing.jpg" alt="Work">
+          <img src="images/p2-marketing.jpg" alt="Work" loading="lazy">
           <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
         <div class="case-info">
@@ -501,7 +507,7 @@
       <!-- P3 -->
       <a href="works.html#p3-1" class="case-card scroll-reveal">
         <div class="case-image">
-          <img src="images/p3-branding.jpg" alt="Work">
+          <img src="images/p3-branding.jpg" alt="Work" loading="lazy">
           <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
         <div class="case-info">
@@ -513,7 +519,7 @@
       <!-- P4 -->
       <a href="works.html#p4-1" class="case-card scroll-reveal">
         <div class="case-image">
-          <img src="images/p4-spatial.jpg" alt="Work">
+          <img src="images/p4-spatial.jpg" alt="Work" loading="lazy">
           <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
         <div class="case-info">
@@ -525,7 +531,7 @@
       <!-- P5 -->
       <a href="works.html#p5-1" class="case-card scroll-reveal">
         <div class="case-image">
-          <img src="images/p5-photography.jpg" alt="Work">
+          <img src="images/p5-photography.jpg" alt="Work" loading="lazy">
           <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
         <div class="case-info">
@@ -537,7 +543,7 @@
       <!-- P6 -->
       <a href="works.html#p6-1" class="case-card scroll-reveal">
         <div class="case-image">
-          <img src="images/p6-3d.jpg" alt="Work">
+          <img src="images/p6-3d.jpg" alt="Work" loading="lazy">
           <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
         <div class="case-info">
@@ -615,4 +621,3 @@
   </script>
 </body>
 </html>
-
