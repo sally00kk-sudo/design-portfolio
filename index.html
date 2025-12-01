@@ -4,17 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sally's Portfolio | Visionary Designer</title>
-  <meta name="description" content="康胜玲(Sally)的设计作品集 - 专注于全球化电商营销、品牌全案视觉与用户体验设计。">
   <style>
     /* --- 1. Reset & 核心变量 --- */
     :root {
-      --text-main: #111111;
+      --text-main: #000000;
       --text-sub: #666666;
-      --text-light: #999999;
       --bg-color: #ffffff;
-      --bg-footer: #1a1a1a; /* 深色页脚 */
       --accent: #000;
-      --transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.4s ease;
+      --transition: all 0.4s ease;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -24,383 +21,248 @@
       line-height: 1.4;
       color: var(--text-main);
       background: var(--bg-color);
-      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden; /* 防止横向滚动条 */
     }
 
     a { text-decoration: none; color: inherit; transition: opacity 0.3s; }
-    a:hover { opacity: 0.6; }
-    img { display: block; width: 100%; height: auto; object-fit: cover; }
     ul { list-style: none; }
+    img { display: block; width: 100%; height: auto; object-fit: cover; }
 
-    /* 中英辅助排版 */
-    .en-sub {
-      display: block;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      font-weight: 300;
-      color: var(--text-light);
-      margin-top: 5px;
-      letter-spacing: 0.5px;
-    }
-    .hero h1 .en-sub { font-size: 0.35em; line-height: 1.5; margin-top: 15px; font-weight: 400; opacity: 0.8; }
-    p .en-sub { font-size: 0.9em; margin-top: 4px; }
+    /* 辅助类 */
+    .en-sub { font-family: "Helvetica Neue", Arial, sans-serif; font-weight: 300; color: #999; margin-top: 5px; font-size: 0.9em; }
 
-    /* --- 2. 导航栏 (右对齐) --- */
+    /* --- 2. 导航栏 (悬浮透明) --- */
     .nav {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-between; /* Logo左，菜单右 */
-      align-items: center;
+      top: 0; left: 0; width: 100%;
+      display: flex; justify-content: space-between; align-items: center;
       padding: 1.5rem 3rem;
       z-index: 1000;
-      background: rgba(255,255,255,0.95); /* 微微透白 */
-      transition: padding 0.3s;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent); /* 渐变防遮挡 */
     }
     
-    .logo { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px; text-transform: uppercase; }
-    
-    .nav-links { display: flex; align-items: center; }
-    .nav-links a { margin-left: 2.5rem; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
+    .logo { font-size: 1.2rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+    .nav-links a { margin-left: 2rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
 
-    /* --- 3. Hero Section (全屏居中大字) --- */
-    .hero {
+    /* --- 3. Split Hero Section (核心修改部分) --- */
+    .hero-split {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh; /* 占满一屏 */
-      text-align: center;
-      padding: 0 20px;
-      background: #fcfcfc; /* 极淡的灰白背景 */
-    }
-
-    .hero h1 {
-      font-size: clamp(2.5rem, 5.5vw, 5rem); /* 响应式超大字体 */
-      line-height: 1.1;
-      font-weight: 800;
-      margin-bottom: 2rem;
-      letter-spacing: -1.5px;
-      color: #000;
-    }
-    
-    .hero-desc {
-      font-size: 1.1rem;
-      max-width: 700px;
-      color: var(--text-sub);
-      margin-bottom: 3rem;
-    }
-
-    /* 向下箭头动画 */
-    .scroll-down {
-      margin-top: 2rem;
-      font-size: 2rem;
-      animation: bounce 2s infinite;
-      opacity: 0.3;
-    }
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-      40% {transform: translateY(-10px);}
-      60% {transform: translateY(-5px);}
-    }
-
-    /* --- 4. Resume Section (简约列表) --- */
-    .section-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 6rem 2rem;
-    }
-
-    .section-title {
-      font-size: 2rem;
-      margin-bottom: 4rem;
-      font-weight: 700;
-      border-bottom: 2px solid #000;
-      padding-bottom: 1rem;
-      display: inline-block;
-    }
-
-    .resume-grid {
-      display: grid;
-      gap: 3rem;
-    }
-    .resume-item {
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid #eee;
-    }
-    .resume-item:last-child { border-bottom: none; }
-    .resume-year { font-weight: 700; font-size: 1.1rem; }
-    
-    .resume-content h4 { font-size: 1.3rem; margin-bottom: 0.5rem; }
-    .resume-content ul { list-style: disc; padding-left: 20px; color: var(--text-sub); margin-top: 10px; }
-    .resume-content ul li { margin-bottom: 5px; }
-
-    /* --- 5. Cases / Work Grid (参考核心) --- */
-    .work-section { background: #fff; }
-    
-    .cases-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr)); /* 大卡片 */
-      gap: 4rem 3rem; /* 行间距大，列间距适中 */
-    }
-
-    .case-card {
-      display: block;
-      group-hover: none; /* 防止移动端误触 */
-    }
-
-    /* 图片容器：做放大动效 */
-    .case-image {
+      height: 100vh; /* 占满全屏 */
       width: 100%;
-      aspect-ratio: 16 / 10; /* 统一比例 */
-      overflow: hidden;
-      background: #f0f0f0;
-      border-radius: 4px;
       position: relative;
     }
 
-    .case-image img {
-      width: 100%;
+    /* 左侧：幻灯片 */
+    .hero-visual {
+      width: 50%;
       height: 100%;
-      transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1); /* 平滑缩放 */
+      position: relative;
+      background-color: #f0f0f0;
+      overflow: hidden;
     }
 
-    /* 悬停放大 */
-    .case-card:hover .case-image img {
-      transform: scale(1.06);
+    .hero-slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out; /* 淡入淡出时间 */
+      transform: scale(1.05); /* 微微放大效果 */
     }
 
-    .case-info {
-      padding-top: 1.5rem;
+    .hero-slide.active {
+      opacity: 1;
+      transform: scale(1);
     }
+
+    /* 右侧：文字内容 */
+    .hero-content {
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 5rem; /* 文字两侧留白 */
+      background: #fff;
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 6vw, 6rem); /* 响应式大字体 */
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      letter-spacing: -2px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      color: var(--text-sub);
+      font-weight: 400;
+      margin-bottom: 3rem;
+      letter-spacing: 2px;
+    }
+
+    .btn-group { display: flex; gap: 1.5rem; }
+
+    .btn-hero {
+      padding: 12px 32px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 2px solid #000;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .btn-black { background: #000; color: #fff; }
+    .btn-black:hover { background: transparent; color: #000; }
+
+    .btn-outline { background: transparent; color: #000; }
+    .btn-outline:hover { background: #000; color: #fff; }
+
+
+    /* --- 4. Works Grid (保持不变) --- */
+    .section-container { max-width: 1200px; margin: 0 auto; padding: 6rem 2rem; }
+    .section-title { font-size: 2rem; margin-bottom: 3rem; font-weight: 700; border-bottom: 2px solid #000; padding-bottom: 1rem; display: inline-block; }
     
-    .case-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .case-desc { color: var(--text-sub); font-size: 1rem; }
-    .case-tags { margin-top: 0.8rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .tag { font-size: 0.75rem; border: 1px solid #ddd; padding: 2px 8px; border-radius: 4px; color: #888; text-transform: uppercase; }
+    .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(500px, 1fr)); gap: 4rem 3rem; }
+    .case-card { display: block; }
+    .case-image { width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: #f0f0f0; margin-bottom: 1rem; }
+    .case-image img { width: 100%; height: 100%; transition: transform 0.6s; }
+    .case-card:hover .case-image img { transform: scale(1.05); }
+    .case-title { font-size: 1.4rem; font-weight: 700; }
+    .case-tags { margin-top: 0.5rem; display: flex; gap: 0.5rem; }
+    .tag { font-size: 0.75rem; border: 1px solid #ddd; padding: 2px 8px; color: #888; text-transform: uppercase; }
 
-    /* --- 6. Footer (深色风格) --- */
-    .footer {
-      background: var(--bg-footer);
-      color: #fff;
-      padding: 6rem 2rem;
-      text-align: center;
-    }
-    
-    .footer h2 { font-size: 2.5rem; margin-bottom: 2rem; }
-    .footer-links { 
-      display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; 
-      font-size: 1.1rem;
-    }
-    .footer-links a { border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 2px; }
-    .footer-links a:hover { border-bottom-color: #fff; opacity: 1; }
-    .copyright { margin-top: 4rem; font-size: 0.8rem; color: #666; }
+    /* --- 5. Footer --- */
+    .footer { background: #1a1a1a; color: #fff; padding: 4rem 2rem; text-align: center; }
+    .footer-links { margin-top: 2rem; display: flex; justify-content: center; gap: 2rem; }
+    .footer-links a { color: #ccc; border-bottom: 1px solid #555; }
 
     /* --- Mobile Responsive --- */
     @media (max-width: 768px) {
-      .nav { padding: 1rem; }
-      .nav-links { display: none; } /* 暂且隐藏，可以加JS做折叠菜单，或者保持简单 */
-      .hero h1 { font-size: 2.5rem; }
-      .resume-item { grid-template-columns: 1fr; gap: 0.5rem; }
-      .cases-grid { grid-template-columns: 1fr; gap: 3rem; }
-      .section-container { padding: 4rem 1.5rem; }
+      .hero-split { flex-direction: column; } /* 手机上下排列 */
+      .hero-visual { width: 100%; height: 45vh; } /* 图片占上半屏 */
+      .hero-content { width: 100%; height: 55vh; padding: 2rem; align-items: center; text-align: center;} /* 文字占下半屏 */
+      .hero-title { font-size: 3rem; }
+      .nav { padding: 1rem; background: rgba(255,255,255,0.5); }
+      .nav-links { display: none; }
+      .cases-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- 1. 导航栏 -->
+  <!-- 导航栏 -->
   <nav class="nav">
     <a href="#" class="logo">SALLY.</a>
     <div class="nav-links">
       <a href="#work">Work</a>
-      <a href="#about">Resume</a>
+      <a href="#about">About</a>
       <a href="#contact">Contact</a>
     </div>
   </nav>
 
-  <!-- 2. Hero 区域 (全屏居中) -->
-  <section class="hero">
-    <h1>
-      打造驱动转化的<br>数字体验与品牌形象
-      <span class="en-sub">Crafting digital experiences & brand identities <br>that drive conversion.</span>
-    </h1>
+  <!-- 核心：Split Hero 区域 -->
+  <section class="hero-split">
     
-    <div class="hero-desc">
-      <p>
-        专注于全球化电商营销、品牌全案视觉与用户体验设计。
-        <span class="en-sub">Specializing in global eCommerce marketing, brand identity, and UX design.</span>
-      </p>
+    <!-- 左侧：幻灯片 -->
+    <div class="hero-visual">
+      <!-- 幻灯片图片 1 -->
+      <img src="images/p1-ecommerce.jpg" class="hero-slide active" alt="Slide 1">
+      <!-- 幻灯片图片 2 -->
+      <img src="images/p3-branding.jpg" class="hero-slide" alt="Slide 2">
+      <!-- 幻灯片图片 3 -->
+      <img src="images/p5-photography.jpg" class="hero-slide" alt="Slide 3">
     </div>
 
-    <div class="scroll-down">↓</div>
+    <!-- 右侧：文字内容 -->
+    <div class="hero-content">
+      <h1 class="hero-title">Portfolio</h1>
+      <p class="hero-subtitle">个人作品集 <span style="font-size:0.5em; opacity:0.5; display:block; margin-top:5px;">DESIGN BY SALLY</span></p>
+      
+      <div class="btn-group">
+        <a href="#work" class="btn-hero btn-black">Work</a>
+        <a href="#contact" class="btn-hero btn-outline">Contact Me</a>
+      </div>
+    </div>
   </section>
 
-  <!-- 3. Works / Cases (参考风格网格) -->
-  <section id="work" class="work-section section-container">
-    <h2 class="section-title">Selected Work <span style="font-size:0.5em; font-weight:400; color:#999; margin-left:10px;">精选作品</span></h2>
-    
+  <!-- 作品列表 (和之前保持一致) -->
+  <section id="work" class="section-container">
+    <h2 class="section-title">Selected Work</h2>
     <div class="cases-grid">
-      
-      <!-- Case 1 -->
+      <!-- 作品1 -->
       <a href="#" class="case-card">
-        <div class="case-image">
-          <img src="images/p1-ecommerce.jpg" alt="跨境电商网页设计">
-        </div>
+        <div class="case-image"><img src="images/p1-ecommerce.jpg" alt="Work"></div>
         <div class="case-info">
           <h3 class="case-title">跨境电商网页设计</h3>
-          <p class="case-desc">涵盖独立站全案设计、亚马逊店铺装修及 TikTok Shop 界面视觉优化。<br><span class="en-sub">Global eCommerce & DTC UI/UX Design</span></p>
-          <div class="case-tags"><span class="tag">Web</span><span class="tag">UI/UX</span></div>
+          <p class="en-sub">Global eCommerce UI/UX</p>
         </div>
       </a>
-
-      <!-- Case 2 -->
+      <!-- 作品2 -->
       <a href="#" class="case-card">
-        <div class="case-image">
-          <img src="images/p2-marketing.jpg" alt="视频营销与广告设计">
-        </div>
+        <div class="case-image"><img src="images/p2-marketing.jpg" alt="Work"></div>
         <div class="case-info">
           <h3 class="case-title">视频营销与广告设计</h3>
-          <p class="case-desc">FB/Google Ads 创意广告及高级 A+ 页面设计。<br><span class="en-sub">Video Marketing & Premium A+ Content</span></p>
-          <div class="case-tags"><span class="tag">Ads</span><span class="tag">Motion</span></div>
+          <p class="en-sub">Video Marketing & Ads</p>
         </div>
       </a>
-
-      <!-- Case 3 -->
+      <!-- 作品3 -->
       <a href="#" class="case-card">
-        <div class="case-image">
-          <img src="images/p3-branding.jpg" alt="品牌视觉与全案设计">
-        </div>
+        <div class="case-image"><img src="images/p3-branding.jpg" alt="Work"></div>
         <div class="case-info">
-          <h3 class="case-title">品牌视觉与全案设计</h3>
-          <p class="case-desc">巴西酸奶与美国牛仔靴品牌全案 VIS 及包装设计。<br><span class="en-sub">Brand Identity (VIS) & Packaging</span></p>
-          <div class="case-tags"><span class="tag">Branding</span><span class="tag">Logo</span></div>
+          <h3 class="case-title">品牌视觉全案</h3>
+          <p class="en-sub">Brand Identity</p>
         </div>
       </a>
-
-      <!-- Case 4 -->
+      <!-- 作品4 -->
       <a href="#" class="case-card">
-        <div class="case-image">
-          <img src="images/p4-spatial.jpg" alt="空间视觉与导视系统">
-        </div>
+        <div class="case-image"><img src="images/p4-spatial.jpg" alt="Work"></div>
         <div class="case-info">
-          <h3 class="case-title">空间视觉与导视系统</h3>
-          <p class="case-desc">工法馆与展示厅空间视觉规划。<br><span class="en-sub">Spatial Visuals & Wayfinding</span></p>
-          <div class="case-tags"><span class="tag">Space</span><span class="tag">Design</span></div>
+          <h3 class="case-title">空间视觉系统</h3>
+          <p class="en-sub">Spatial Design</p>
         </div>
       </a>
-
-      <!-- Case 5 -->
-      <a href="#" class="case-card">
-        <div class="case-image">
-          <img src="images/p5-photography.jpg" alt="摄影指导">
-        </div>
-        <div class="case-info">
-          <h3 class="case-title">模特/产品摄影策划与指导</h3>
-          <p class="case-desc">全流程拍摄策划与现场艺术指导。<br><span class="en-sub">Photography Direction & Art Direction</span></p>
-          <div class="case-tags"><span class="tag">Photo</span><span class="tag">Direction</span></div>
-        </div>
-      </a>
-
-      <!-- Case 6 -->
-      <a href="#" class="case-card">
-        <div class="case-image">
-          <img src="images/p6-3d.jpg" alt="三维建模与渲染">
-        </div>
-        <div class="case-info">
-          <h3 class="case-title">三维建模与渲染</h3>
-          <p class="case-desc">C4D/Blender 产品建模与视觉探索。<br><span class="en-sub">3D Modeling & Rendering</span></p>
-          <div class="case-tags"><span class="tag">3D</span><span class="tag">Render</span></div>
-        </div>
-      </a>
-
     </div>
   </section>
 
-  <!-- 4. Resume Section (简约版) -->
-  <section id="about" class="section-container" style="background: #f9f9f9;">
-    <h2 class="section-title">Resume <span style="font-size:0.5em; font-weight:400; color:#999; margin-left:10px;">个人履历</span></h2>
-    
-    <div class="resume-grid">
-      <!-- 工作 1 -->
-      <div class="resume-item">
-        <div class="resume-year">2022.10 - Present<span class="en-sub">至今</span></div>
-        <div class="resume-content">
-          <h4>电商网页设计师 / Web Designer</h4>
-          <p style="font-weight:600; margin-bottom:5px;">@安徽美瑞邦达跨境电商有限公司</p>
-          <ul>
-            <li>负责独立站网页设计、亚马逊店铺装修(A+)、品牌VI升级。</li>
-            <li>节日活动海报、EDM 邮件设计及摄影策划方案输出。</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- 工作 2 -->
-      <div class="resume-item">
-        <div class="resume-year">2022.07 - 2022.08</div>
-        <div class="resume-content">
-          <h4>设计师助理 / Designer Assistant</h4>
-          <p style="font-weight:600; margin-bottom:5px;">@赛飞广告传播有限公司</p>
-          <ul>
-            <li>参与画册、海报及品牌导视系统设计。</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- 学历 -->
-      <div class="resume-item">
-        <div class="resume-year">2017 - 2021</div>
-        <div class="resume-content">
-          <h4>湖南农业大学 / Hunan Agricultural University</h4>
-          <p>视觉传达设计专业 · 学士学位<br><span class="en-sub">Bachelor of Arts in Visual Communication Design</span></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. Footer (深色) -->
+  <!-- Footer -->
   <section id="contact" class="footer">
-    <h2>Let's create something together.</h2>
-    <p style="color:#888; margin-bottom:2rem;">有项目合作意向？随时联系。</p>
-    
+    <h2>Let's work together.</h2>
     <div class="footer-links">
       <a href="mailto:sally00kk@gmail.com">sally00kk@gmail.com</a>
       <a href="mailto:1355652997@qq.com">1355652997@qq.com</a>
-      <span>Tel: 178-9100-3233</span>
-    </div>
-
-    <div class="copyright">
-      &copy; 2025 Sally Portfolio. All rights reserved.
     </div>
   </section>
 
   <script>
-    // 平滑滚动脚本
+    // --- 幻灯片自动播放脚本 ---
+    const slides = document.querySelectorAll('.hero-slide');
+    let currentSlide = 0;
+    const slideInterval = 3000; // 每3秒切换一次
+
+    function nextSlide() {
+      // 移除当前图片的 active 类
+      slides[currentSlide].classList.remove('active');
+      // 计算下一张图片的索引
+      currentSlide = (currentSlide + 1) % slides.length;
+      // 给下一张图片添加 active 类
+      slides[currentSlide].classList.add('active');
+    }
+
+    // 启动定时器
+    setInterval(nextSlide, slideInterval);
+
+    // 平滑滚动
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
-        if(target){
-          target.scrollIntoView({
-            behavior: 'smooth'
-          });
-        }
+        if(target) target.scrollIntoView({ behavior: 'smooth' });
       });
-    });
-
-    // 导航栏滚动变色效果 (可选)
-    window.addEventListener('scroll', () => {
-      const nav = document.querySelector('.nav');
-      if (window.scrollY > 50) {
-        nav.style.padding = '1rem 3rem';
-        nav.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)';
-      } else {
-        nav.style.padding = '1.5rem 3rem';
-        nav.style.boxShadow = 'none';
-      }
     });
   </script>
 </body>
