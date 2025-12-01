@@ -8,253 +8,338 @@
     /* --- 1. Reset & 核心变量 --- */
     :root {
       --text-main: #000000;
-      --text-sub: #666666;
+      --text-sub: #555555;
+      --text-light: #999999;
       --bg-color: #ffffff;
       --accent: #000;
-      --transition: all 0.4s ease;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-      line-height: 1.4;
+      line-height: 1.5;
       color: var(--text-main);
       background: var(--bg-color);
-      overflow-x: hidden; /* 防止横向滚动条 */
+      overflow-x: hidden;
     }
 
     a { text-decoration: none; color: inherit; transition: opacity 0.3s; }
     ul { list-style: none; }
     img { display: block; width: 100%; height: auto; object-fit: cover; }
 
-    /* 辅助类 */
-    .en-sub { font-family: "Helvetica Neue", Arial, sans-serif; font-weight: 300; color: #999; margin-top: 5px; font-size: 0.9em; }
+    /* 辅助排版类 */
+    .en-sub { 
+      display: block; 
+      font-family: "Helvetica Neue", Arial, sans-serif; 
+      font-weight: 300; 
+      color: var(--text-light); 
+      margin-top: 4px; 
+      font-size: 0.9em; 
+      line-height: 1.4;
+    }
 
-    /* --- 2. 导航栏 (悬浮透明) --- */
+    /* --- 2. 导航栏 (悬浮) --- */
     .nav {
       position: fixed;
       top: 0; left: 0; width: 100%;
       display: flex; justify-content: space-between; align-items: center;
       padding: 1.5rem 3rem;
       z-index: 1000;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent); /* 渐变防遮挡 */
+      background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0)); /* 渐变防遮挡 */
+      transition: background 0.3s;
     }
+    .nav.scrolled { background: rgba(255,255,255,0.95); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
     
     .logo { font-size: 1.2rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
-    .nav-links a { margin-left: 2rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+    .nav-links a { margin-left: 2rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; cursor: pointer;}
 
-    /* --- 3. Split Hero Section (核心修改部分) --- */
+    /* --- 3. Split Hero (左图右文) --- */
     .hero-split {
       display: flex;
-      height: 100vh; /* 占满全屏 */
+      height: 100vh;
       width: 100%;
       position: relative;
     }
 
-    /* 左侧：幻灯片 */
+    /* 左侧幻灯片 */
     .hero-visual {
       width: 50%;
       height: 100%;
       position: relative;
-      background-color: #f0f0f0;
+      background-color: #f4f4f4;
       overflow: hidden;
     }
-
     .hero-slide {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
       object-fit: cover;
       opacity: 0;
-      transition: opacity 1.5s ease-in-out; /* 淡入淡出时间 */
-      transform: scale(1.05); /* 微微放大效果 */
+      transition: opacity 1.5s ease-in-out, transform 8s ease;
+      transform: scale(1.1);
     }
+    .hero-slide.active { opacity: 1; transform: scale(1); }
 
-    .hero-slide.active {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    /* 右侧：文字内容 */
+    /* 右侧文字 */
     .hero-content {
       width: 50%;
       height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 0 5rem; /* 文字两侧留白 */
+      padding: 0 5rem;
       background: #fff;
     }
-
     .hero-title {
-      font-size: clamp(3rem, 6vw, 6rem); /* 响应式大字体 */
+      font-size: clamp(3rem, 5.5vw, 6rem);
       font-weight: 900;
       line-height: 1;
       margin-bottom: 0.5rem;
       letter-spacing: -2px;
     }
-
     .hero-subtitle {
       font-size: 1.5rem;
       color: var(--text-sub);
       font-weight: 400;
       margin-bottom: 3rem;
-      letter-spacing: 2px;
+      letter-spacing: 1px;
     }
-
-    .btn-group { display: flex; gap: 1.5rem; }
-
-    .btn-hero {
+    .btn-group { display: flex; gap: 1rem; }
+    .btn {
       padding: 12px 32px;
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 0.85rem;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
       border: 2px solid #000;
       transition: all 0.3s;
       cursor: pointer;
     }
-
     .btn-black { background: #000; color: #fff; }
-    .btn-black:hover { background: transparent; color: #000; }
-
+    .btn-black:hover { background: #fff; color: #000; }
     .btn-outline { background: transparent; color: #000; }
     .btn-outline:hover { background: #000; color: #fff; }
 
-
-    /* --- 4. Works Grid (保持不变) --- */
-    .section-container { max-width: 1200px; margin: 0 auto; padding: 6rem 2rem; }
-    .section-title { font-size: 2rem; margin-bottom: 3rem; font-weight: 700; border-bottom: 2px solid #000; padding-bottom: 1rem; display: inline-block; }
+    /* --- 4. Section 通用 --- */
+    .section-container { max-width: 1200px; margin: 0 auto; padding: 6rem 2rem; border-top: 1px solid #f0f0f0; }
+    .section-title { font-size: 2rem; margin-bottom: 3rem; font-weight: 700; padding-bottom: 1rem; color: #000; }
     
-    .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(500px, 1fr)); gap: 4rem 3rem; }
-    .case-card { display: block; }
-    .case-image { width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: #f0f0f0; margin-bottom: 1rem; }
-    .case-image img { width: 100%; height: 100%; transition: transform 0.6s; }
-    .case-card:hover .case-image img { transform: scale(1.05); }
-    .case-title { font-size: 1.4rem; font-weight: 700; }
-    .case-tags { margin-top: 0.5rem; display: flex; gap: 0.5rem; }
-    .tag { font-size: 0.75rem; border: 1px solid #ddd; padding: 2px 8px; color: #888; text-transform: uppercase; }
+    /* --- 5. 作品集 Grid --- */
+    .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 4rem 3rem; }
+    .case-card { display: block; group-hover: none; }
+    .case-image { width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: #f0f0f0; margin-bottom: 1.2rem; }
+    .case-image img { width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1); }
+    .case-card:hover .case-image img { transform: scale(1.06); }
+    
+    .case-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .case-desc { color: var(--text-sub); font-size: 1rem; margin-bottom: 0.5rem; }
+    .tag { font-size: 0.7rem; border: 1px solid #eee; padding: 3px 8px; color: #888; text-transform: uppercase; margin-right: 5px; background: #fafafa;}
 
-    /* --- 5. Footer --- */
-    .footer { background: #1a1a1a; color: #fff; padding: 4rem 2rem; text-align: center; }
-    .footer-links { margin-top: 2rem; display: flex; justify-content: center; gap: 2rem; }
-    .footer-links a { color: #ccc; border-bottom: 1px solid #555; }
+    /* --- 6. 简历 Resume List --- */
+    .resume-list { display: grid; gap: 2.5rem; }
+    .resume-item { display: grid; grid-template-columns: 200px 1fr; padding-bottom: 2rem; border-bottom: 1px solid #f9f9f9; }
+    .resume-year { font-weight: 700; font-size: 1.1rem; }
+    .resume-detail h4 { font-size: 1.25rem; margin-bottom: 0.3rem; font-weight: 700;}
+    .resume-detail p { color: var(--text-sub); margin-bottom: 0.5rem; }
+    .resume-detail ul { list-style: disc; padding-left: 20px; color: var(--text-sub); font-size: 0.95rem; margin-top: 0.5rem; }
+
+    /* --- 7. Footer --- */
+    .footer { background: #111; color: #fff; padding: 5rem 2rem; text-align: center; }
+    .footer h2 { font-size: 2.5rem; margin-bottom: 2rem; }
+    .footer-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+    .footer-links a { color: #aaa; border-bottom: 1px solid #333; padding-bottom: 2px; }
+    .footer-links a:hover { color: #fff; border-bottom-color: #fff; }
 
     /* --- Mobile Responsive --- */
     @media (max-width: 768px) {
-      .hero-split { flex-direction: column; } /* 手机上下排列 */
-      .hero-visual { width: 100%; height: 45vh; } /* 图片占上半屏 */
-      .hero-content { width: 100%; height: 55vh; padding: 2rem; align-items: center; text-align: center;} /* 文字占下半屏 */
-      .hero-title { font-size: 3rem; }
-      .nav { padding: 1rem; background: rgba(255,255,255,0.5); }
+      .hero-split { flex-direction: column; height: auto; }
+      .hero-visual { width: 100%; height: 50vh; }
+      .hero-content { width: 100%; padding: 3rem 2rem; height: auto; text-align: center; align-items: center;}
+      .hero-title { font-size: 2.5rem; }
+      .btn-group { justify-content: center; }
+      .nav { padding: 1rem; background: rgba(255,255,255,0.9); }
       .nav-links { display: none; }
-      .cases-grid { grid-template-columns: 1fr; }
+      .cases-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .resume-item { grid-template-columns: 1fr; gap: 0.5rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- 导航栏 -->
+  <!-- 导航 -->
   <nav class="nav">
     <a href="#" class="logo">SALLY.</a>
     <div class="nav-links">
       <a href="#work">Work</a>
-      <a href="#about">About</a>
+      <a href="#about">Resume</a>
       <a href="#contact">Contact</a>
     </div>
   </nav>
 
-  <!-- 核心：Split Hero 区域 -->
+  <!-- 1. Split Hero (左幻灯片 / 右文字) -->
   <section class="hero-split">
-    
-    <!-- 左侧：幻灯片 -->
     <div class="hero-visual">
-      <!-- 幻灯片图片 1 -->
+      <!-- 轮播图：请确保这些图片在 images 文件夹里 -->
       <img src="images/p1-ecommerce.jpg" class="hero-slide active" alt="Slide 1">
-      <!-- 幻灯片图片 2 -->
       <img src="images/p3-branding.jpg" class="hero-slide" alt="Slide 2">
-      <!-- 幻灯片图片 3 -->
       <img src="images/p5-photography.jpg" class="hero-slide" alt="Slide 3">
     </div>
-
-    <!-- 右侧：文字内容 -->
+    
     <div class="hero-content">
       <h1 class="hero-title">Portfolio</h1>
-      <p class="hero-subtitle">个人作品集 <span style="font-size:0.5em; opacity:0.5; display:block; margin-top:5px;">DESIGN BY SALLY</span></p>
+      <p class="hero-subtitle">
+        个人作品集
+        <span class="en-sub" style="margin-top:5px; font-size:0.6em; text-transform:uppercase; letter-spacing:2px;">Designed by Sally</span>
+      </p>
       
       <div class="btn-group">
-        <a href="#work" class="btn-hero btn-black">Work</a>
-        <a href="#contact" class="btn-hero btn-outline">Contact Me</a>
+        <a href="#work" class="btn btn-black">Work</a>
+        <a href="#contact" class="btn btn-outline">Contact Me</a>
       </div>
     </div>
   </section>
 
-  <!-- 作品列表 (和之前保持一致) -->
+  <!-- 2. Resume 简历 -->
+  <section id="about" class="section-container">
+    <h2 class="section-title">Resume <span class="en-sub" style="display:inline; margin-left:10px;">个人履历</span></h2>
+    
+    <div class="resume-list">
+      <!-- 工作 1 -->
+      <div class="resume-item">
+        <div class="resume-year">2022.10 - Present <span class="en-sub">至今</span></div>
+        <div class="resume-detail">
+          <h4>电商网页设计师 <span class="en-sub">/ E-commerce Web Designer</span></h4>
+          <p><strong>@安徽美瑞邦达跨境电商有限公司</strong></p>
+          <ul>
+            <li>海外独立站设计、改版及产品图精修</li>
+            <li>跨境电商 A+ 页面设计与店铺装修</li>
+            <li>品牌 VI、Logo 升级优化及包装物料设计</li>
+            <li>节日活动海报、EDM 邮件设计及摄影策划方案输出</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 工作 2 -->
+      <div class="resume-item">
+        <div class="resume-year">2022.07 - 2022.08</div>
+        <div class="resume-detail">
+          <h4>设计师助理 <span class="en-sub">/ Designer Assistant</span></h4>
+          <p><strong>@赛飞广告传播有限公司</strong></p>
+          <ul>
+            <li>参与设计部的创意设计工作（画册、折页、海报等）</li>
+            <li>品牌工法墙标识导视系统设计</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 学历 -->
+      <div class="resume-item">
+        <div class="resume-year">2017 - 2021</div>
+        <div class="resume-detail">
+          <h4>湖南农业大学 <span class="en-sub">/ Hunan Agricultural University</span></h4>
+          <p>视觉传达设计专业 · 学士学位</p>
+          <span class="en-sub">Bachelor of Arts in Visual Communication Design</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Work 作品集 -->
   <section id="work" class="section-container">
-    <h2 class="section-title">Selected Work</h2>
+    <h2 class="section-title">Selected Work <span class="en-sub" style="display:inline; margin-left:10px;">精选作品</span></h2>
+    
     <div class="cases-grid">
-      <!-- 作品1 -->
+      <!-- P1 -->
       <a href="#" class="case-card">
         <div class="case-image"><img src="images/p1-ecommerce.jpg" alt="Work"></div>
         <div class="case-info">
           <h3 class="case-title">跨境电商网页设计</h3>
-          <p class="en-sub">Global eCommerce UI/UX</p>
+          <p class="case-desc">独立站网站设计、亚马逊店铺装修、TK界面设计</p>
+          <span class="en-sub">Global eCommerce & DTC UI/UX</span>
         </div>
       </a>
-      <!-- 作品2 -->
+
+      <!-- P2 -->
       <a href="#" class="case-card">
         <div class="case-image"><img src="images/p2-marketing.jpg" alt="Work"></div>
         <div class="case-info">
           <h3 class="case-title">视频营销与广告设计</h3>
-          <p class="en-sub">Video Marketing & Ads</p>
+          <p class="case-desc">社交媒体广告创意 (FB / Google Ads)，高级A+页面设计</p>
+          <span class="en-sub">Video Marketing & Premium A+ Content</span>
         </div>
       </a>
-      <!-- 作品3 -->
+
+      <!-- P3 -->
       <a href="#" class="case-card">
         <div class="case-image"><img src="images/p3-branding.jpg" alt="Work"></div>
         <div class="case-info">
-          <h3 class="case-title">品牌视觉全案</h3>
-          <p class="en-sub">Brand Identity</p>
+          <h3 class="case-title">品牌视觉与全案设计</h3>
+          <p class="case-desc">巴西酸奶/美国牛仔靴品牌全案，包装设计与物料延展</p>
+          <span class="en-sub">Brand Identity (VIS) & Packaging</span>
         </div>
       </a>
-      <!-- 作品4 -->
+
+      <!-- P4 -->
       <a href="#" class="case-card">
         <div class="case-image"><img src="images/p4-spatial.jpg" alt="Work"></div>
         <div class="case-info">
-          <h3 class="case-title">空间视觉系统</h3>
-          <p class="en-sub">Spatial Design</p>
+          <h3 class="case-title">空间视觉与导视系统</h3>
+          <p class="case-desc">工法馆与展示厅视觉设计</p>
+          <span class="en-sub">Spatial Visuals & Wayfinding</span>
+        </div>
+      </a>
+
+      <!-- P5 -->
+      <a href="#" class="case-card">
+        <div class="case-image"><img src="images/p5-photography.jpg" alt="Work"></div>
+        <div class="case-info">
+          <h3 class="case-title">摄影策划与指导</h3>
+          <p class="case-desc">拍摄策划、服饰搭配场景选择、现场调度</p>
+          <span class="en-sub">Photography Direction & Planning</span>
+        </div>
+      </a>
+
+      <!-- P6 -->
+      <a href="#" class="case-card">
+        <div class="case-image"><img src="images/p6-3d.jpg" alt="Work"></div>
+        <div class="case-info">
+          <h3 class="case-title">三维建模与渲染</h3>
+          <p class="case-desc">3D建模和渲染视觉表现</p>
+          <span class="en-sub">3D Modeling & Rendering</span>
         </div>
       </a>
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- 4. Footer -->
   <section id="contact" class="footer">
-    <h2>Let's work together.</h2>
+    <h2>Let's create something together.</h2>
     <div class="footer-links">
       <a href="mailto:sally00kk@gmail.com">sally00kk@gmail.com</a>
       <a href="mailto:1355652997@qq.com">1355652997@qq.com</a>
+      <span>Tel: 178-9100-3233</span>
     </div>
   </section>
 
   <script>
-    // --- 幻灯片自动播放脚本 ---
+    // 幻灯片自动轮播
     const slides = document.querySelectorAll('.hero-slide');
     let currentSlide = 0;
-    const slideInterval = 3000; // 每3秒切换一次
-
+    
     function nextSlide() {
-      // 移除当前图片的 active 类
       slides[currentSlide].classList.remove('active');
-      // 计算下一张图片的索引
       currentSlide = (currentSlide + 1) % slides.length;
-      // 给下一张图片添加 active 类
       slides[currentSlide].classList.add('active');
     }
+    setInterval(nextSlide, 3500); // 3.5秒切换
 
-    // 启动定时器
-    setInterval(nextSlide, slideInterval);
+    // 导航栏滚动变色
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('.nav');
+      if(window.scrollY > 50) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    });
 
     // 平滑滚动
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
