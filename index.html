@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sally's Portfolio | Visionary Designer</title>
+  
+  <!-- 引入 Font Awesome 图标库 (免费CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
     /* --- 1. Reset & 核心变量 --- */
     :root {
@@ -12,7 +16,6 @@
       --text-light: #999999;
       --bg-color: #ffffff;
       --accent: #000;
-      /* 动效曲线 */
       --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
     }
 
@@ -41,6 +44,11 @@
       font-size: 0.9em; 
       line-height: 1.4;
     }
+
+    /* 图标通用样式调整 */
+    i { margin-right: 8px; } /* 图标右侧留白 */
+    .btn i { margin-right: 0; margin-left: 8px; transition: transform 0.3s; } /* 按钮内图标在右侧 */
+    .btn:hover i { transform: translateX(4px); } /* 悬停时图标移动 */
 
     /* --- 2. 导航栏 --- */
     .nav {
@@ -149,6 +157,8 @@
       position: relative;
       overflow: hidden;
       z-index: 1;
+      display: inline-flex;
+      align-items: center;
     }
     .btn::before {
       content: ''; position: absolute; top: 0; left: 0; width: 0; height: 100%;
@@ -173,28 +183,41 @@
 
     /* --- 5. Section 通用 --- */
     .section-container { max-width: 1200px; margin: 0 auto; padding: 8rem 2rem; border-top: 1px solid #f0f0f0; }
-    .section-title { font-size: 2rem; margin-bottom: 4rem; font-weight: 700; padding-bottom: 1rem; color: #000; }
+    .section-title { font-size: 2rem; margin-bottom: 4rem; font-weight: 700; padding-bottom: 1rem; color: #000; display: flex; align-items: center;}
+    .section-title i { font-size: 0.8em; color: #ccc; margin-right: 15px; } /* 标题图标颜色淡一点 */
     
     /* --- 6. 作品集 Grid --- */
     .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 5rem 3rem; }
     .case-card { display: block; group-hover: none; }
     
     .case-image { 
-      width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: #f0f0f0; margin-bottom: 1.5rem; 
+      width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: #f0f0f0; margin-bottom: 1.5rem; position: relative;
     }
+    /* 图片右下角的跳转图标 */
+    .case-icon {
+      position: absolute; bottom: 15px; right: 15px;
+      width: 40px; height: 40px; background: #fff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: translateY(10px); transition: all 0.4s ease;
+      color: #000; font-size: 14px;
+    }
+    .case-card:hover .case-icon { opacity: 1; transform: translateY(0); }
+
     .case-image img { 
       width: 100%; height: 100%; transition: transform 1.2s var(--ease-out-expo), filter 0.5s ease; 
     }
     .case-card:hover .case-image img { transform: scale(1.05); filter: brightness(1.02); }
     
-    .case-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.3rem; transition: color 0.3s;}
+    .case-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.3rem; transition: color 0.3s; display: flex; align-items: center;}
     .case-card:hover .case-title { color: #666; }
     .case-desc { color: var(--text-sub); font-size: 1rem; margin-bottom: 0.5rem; }
 
     /* --- 7. 简历 Resume List --- */
     .resume-list { display: grid; gap: 3rem; }
     .resume-item { display: grid; grid-template-columns: 200px 1fr; padding-bottom: 2rem; border-bottom: 1px solid #f9f9f9; }
-    .resume-year { font-weight: 700; font-size: 1.1rem; }
+    .resume-year { font-weight: 700; font-size: 1.1rem; color: #000; display: flex; align-items: flex-start;}
+    .resume-year i { color: #ccc; font-size: 0.8em; margin-top: 4px; margin-right: 10px;}
+    
     .resume-detail h4 { font-size: 1.25rem; margin-bottom: 0.3rem; font-weight: 700;}
     .resume-detail p { color: var(--text-sub); margin-bottom: 0.5rem; }
     .resume-detail ul { list-style: disc; padding-left: 20px; color: var(--text-sub); font-size: 0.95rem; margin-top: 0.5rem; }
@@ -205,8 +228,9 @@
     .footer-links { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; margin-top: 3rem;}
     .footer-links a { 
       color: #888; border-bottom: 1px solid transparent; padding-bottom: 5px; transition: all 0.3s;
-      font-size: 1.1rem;
+      font-size: 1.1rem; display: flex; align-items: center;
     }
+    .footer-links a i { margin-right: 8px; font-size: 0.9em; }
     .footer-links a:hover { color: #fff; border-bottom-color: #fff; transform: translateY(-3px); }
 
     /* --- Mobile Responsive --- */
@@ -229,9 +253,9 @@
   <nav class="nav">
     <a href="#" class="logo">SALLY.</a>
     <div class="nav-links">
-      <a href="#work">Work</a>
-      <a href="#about">Resume</a>
-      <a href="#contact">Contact</a>
+      <a href="#work"><i class="fa-solid fa-layer-group"></i>Work</a>
+      <a href="#about"><i class="fa-regular fa-id-card"></i>Resume</a>
+      <a href="#contact"><i class="fa-regular fa-envelope"></i>Contact</a>
     </div>
   </nav>
 
@@ -252,21 +276,32 @@
       </p>
       
       <div class="btn-group reveal-text delay-3">
-        <a href="#work" class="btn btn-black">Work</a>
-        <a href="#contact" class="btn btn-outline">Contact Me</a>
+        <!-- 按钮加了图标 -->
+        <a href="#work" class="btn btn-black">
+          See Work <i class="fa-solid fa-arrow-right-long"></i>
+        </a>
+        <a href="#contact" class="btn btn-outline">
+          Contact Me <i class="fa-regular fa-paper-plane"></i>
+        </a>
       </div>
     </div>
   </section>
 
   <!-- 2. Resume 简历 -->
   <section id="about" class="section-container">
-    <h2 class="section-title scroll-reveal">Resume <span class="en-sub" style="display:inline; margin-left:10px;">个人履历</span></h2>
+    <h2 class="section-title scroll-reveal">
+      <i class="fa-solid fa-briefcase"></i> Resume 
+      <span class="en-sub" style="display:inline; margin-left:10px;">个人履历</span>
+    </h2>
     
     <div class="resume-list">
       
       <!-- 工作 1 -->
       <div class="resume-item scroll-reveal">
-        <div class="resume-year">2022.10 - Present <span class="en-sub">至今</span></div>
+        <div class="resume-year">
+          <i class="fa-solid fa-circle-dot" style="font-size:0.6em; margin-top:6px;"></i>
+          2022.10 - Present <span class="en-sub">至今</span>
+        </div>
         <div class="resume-detail">
           <h4>电商网页设计师 <span class="en-sub">/ E-commerce Web Designer</span></h4>
           <p><strong>@安徽美瑞邦达跨境电商有限公司</strong></p>
@@ -281,7 +316,10 @@
 
       <!-- 工作 2 -->
       <div class="resume-item scroll-reveal">
-        <div class="resume-year">2022.07 - 2022.08</div>
+        <div class="resume-year">
+           <i class="fa-regular fa-circle" style="font-size:0.6em; margin-top:6px;"></i>
+           2022.07 - 2022.08
+        </div>
         <div class="resume-detail">
           <h4>设计师助理 <span class="en-sub">/ Designer Assistant</span></h4>
           <p><strong>@赛飞广告传播有限公司</strong></p>
@@ -294,7 +332,10 @@
 
       <!-- 工作 3 -->
       <div class="resume-item scroll-reveal">
-        <div class="resume-year">2022.02 - 2022.05</div>
+        <div class="resume-year">
+           <i class="fa-regular fa-circle" style="font-size:0.6em; margin-top:6px;"></i>
+           2022.02 - 2022.05
+        </div>
         <div class="resume-detail">
           <h4>美术教师 <span class="en-sub">/ Art Teacher</span></h4>
           <p><strong>@安徽朗声教育咨询有限公司</strong></p>
@@ -307,7 +348,10 @@
 
       <!-- 学历 -->
       <div class="resume-item scroll-reveal">
-        <div class="resume-year">2017 - 2021</div>
+        <div class="resume-year">
+           <i class="fa-solid fa-graduation-cap"></i>
+           2017 - 2021
+        </div>
         <div class="resume-detail">
           <h4>湖南农业大学 <span class="en-sub">/ Hunan Agricultural University</span></h4>
           <p>视觉传达设计专业 · 学士学位</p>
@@ -317,14 +361,20 @@
     </div>
   </section>
 
-  <!-- 3. Work 作品集 (链接已指向 works.html 的具体锚点) -->
+  <!-- 3. Work 作品集 -->
   <section id="work" class="section-container">
-    <h2 class="section-title scroll-reveal">Selected Work <span class="en-sub" style="display:inline; margin-left:10px;">精选作品</span></h2>
+    <h2 class="section-title scroll-reveal">
+      <i class="fa-solid fa-pen-nib"></i> Selected Work 
+      <span class="en-sub" style="display:inline; margin-left:10px;">精选作品</span>
+    </h2>
     
     <div class="cases-grid">
       <!-- P1 -->
       <a href="works.html#p1-1" class="case-card scroll-reveal">
-        <div class="case-image"><img src="images/p1-ecommerce.jpg" alt="Work"></div>
+        <div class="case-image">
+          <img src="images/p1-ecommerce.jpg" alt="Work">
+          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
+        </div>
         <div class="case-info">
           <h3 class="case-title">跨境电商网页设计</h3>
           <p class="case-desc">独立站网站设计、亚马逊店铺装修、TK界面设计</p>
@@ -334,7 +384,10 @@
 
       <!-- P2 -->
       <a href="works.html#p2-1" class="case-card scroll-reveal">
-        <div class="case-image"><img src="images/p2-marketing.jpg" alt="Work"></div>
+        <div class="case-image">
+          <img src="images/p2-marketing.jpg" alt="Work">
+          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
+        </div>
         <div class="case-info">
           <h3 class="case-title">视频营销与广告设计</h3>
           <p class="case-desc">社交媒体广告创意 (FB / Google Ads)，高级A+页面设计</p>
@@ -344,7 +397,10 @@
 
       <!-- P3 -->
       <a href="works.html#p3-1" class="case-card scroll-reveal">
-        <div class="case-image"><img src="images/p3-branding.jpg" alt="Work"></div>
+        <div class="case-image">
+          <img src="images/p3-branding.jpg" alt="Work">
+          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
+        </div>
         <div class="case-info">
           <h3 class="case-title">品牌视觉与全案设计</h3>
           <p class="case-desc">巴西酸奶/美国牛仔靴品牌全案，包装设计与物料延展</p>
@@ -354,7 +410,10 @@
 
       <!-- P4 -->
       <a href="works.html#p4-1" class="case-card scroll-reveal">
-        <div class="case-image"><img src="images/p4-spatial.jpg" alt="Work"></div>
+        <div class="case-image">
+          <img src="images/p4-spatial.jpg" alt="Work">
+          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
+        </div>
         <div class="case-info">
           <h3 class="case-title">空间视觉与导视系统</h3>
           <p class="case-desc">工法馆与展示厅视觉设计</p>
@@ -364,7 +423,10 @@
 
       <!-- P5 -->
       <a href="works.html#p5-1" class="case-card scroll-reveal">
-        <div class="case-image"><img src="images/p5-photography.jpg" alt="Work"></div>
+        <div class="case-image">
+          <img src="images/p5-photography.jpg" alt="Work">
+          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
+        </div>
         <div class="case-info">
           <h3 class="case-title">摄影策划与指导</h3>
           <p class="case-desc">拍摄策划、服饰搭配场景选择、现场调度</p>
@@ -374,7 +436,10 @@
 
       <!-- P6 -->
       <a href="works.html#p6-1" class="case-card scroll-reveal">
-        <div class="case-image"><img src="images/p6-3d.jpg" alt="Work"></div>
+        <div class="case-image">
+          <img src="images/p6-3d.jpg" alt="Work">
+          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
+        </div>
         <div class="case-info">
           <h3 class="case-title">三维建模与渲染</h3>
           <p class="case-desc">3D建模和渲染视觉表现</p>
@@ -389,9 +454,9 @@
     <div class="scroll-reveal">
       <h2>Let's create something together.</h2>
       <div class="footer-links">
-        <a href="mailto:sally00kk@gmail.com">sally00kk@gmail.com</a>
-        <a href="mailto:1355652997@qq.com">1355652997@qq.com</a>
-        <span>Tel: 178-9100-3233</span>
+        <a href="mailto:sally00kk@gmail.com"><i class="fa-solid fa-envelope"></i> sally00kk@gmail.com</a>
+        <a href="mailto:1355652997@qq.com"><i class="fa-brands fa-qq"></i> 1355652997@qq.com</a>
+        <span><i class="fa-solid fa-phone"></i> 178-9100-3233</span>
       </div>
     </div>
   </section>
