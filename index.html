@@ -101,7 +101,7 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      object-fit: cover; /* 这里的 cover 会保证图片铺满，竖图效果最好 */
+      object-fit: cover;
       opacity: 0;
       transition: opacity 1.5s ease-in-out, transform 8s ease;
       transform: scale(1.1);
@@ -285,7 +285,7 @@
   <!-- 1. Split Hero (Banner) -->
   <section class="hero-split">
     <div class="hero-visual">
-      <!-- 【注意】这里使用了新的 banner 图片名 -->
+      <!-- Banner 图片 -->
       <img src="images/banner-1.jpg" class="hero-slide active" alt="Banner 1">
       <img src="images/banner-2.jpg" class="hero-slide" alt="Banner 2">
       <img src="images/banner-3.jpg" class="hero-slide" alt="Banner 3">
@@ -309,12 +309,12 @@
     </div>
   </section>
 
-  <!-- 2. Resume 简历 -->
+  <!-- 2. Resume 简历 (含 Tab 切换) -->
   <section id="about" class="section-container">
     
-    <!-- Tab 按钮区 -->
+    <!-- Tab 按钮区 (注意 onclick 中的参数改成了 'jobs' 以免冲突) -->
     <div class="tab-header scroll-reveal">
-      <button class="tab-btn active" onclick="switchTab('work', this)">
+      <button class="tab-btn active" onclick="switchTab('jobs', this)">
         <i class="fa-solid fa-briefcase" style="font-size: 0.5em; margin-bottom:5px;"></i>
         工作经历
         <span class="en-sub">Work Experience</span>
@@ -327,8 +327,8 @@
       </button>
     </div>
     
-    <!-- 内容1: 工作经历 -->
-    <div id="work" class="resume-list tab-content active">
+    <!-- 内容1: 工作经历 (ID 改为 jobs) -->
+    <div id="jobs" class="resume-list tab-content active">
       <div class="resume-item scroll-reveal">
         <div class="resume-year"><i class="fa-solid fa-circle-dot" style="font-size:0.6em; margin-top:6px;"></i> 2022.10 - Present <span class="en-sub">至今</span></div>
         <div class="resume-detail">
@@ -416,7 +416,7 @@
 
   </section>
 
-  <!-- 3. Work 作品集 -->
+  <!-- 3. Work 作品集 (ID 保持为 work) -->
   <section id="work" class="section-container">
     <h2 class="section-title scroll-reveal">
       <i class="fa-solid fa-pen-nib"></i> Selected Work 
