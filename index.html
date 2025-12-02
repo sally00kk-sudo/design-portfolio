@@ -25,7 +25,7 @@
       line-height: 1.5;
       color: var(--text-main);
       background: var(--bg-color);
-      overflow-x: hidden;
+      overflow-x: hidden; /* 防止侧边栏导致横向滚动 */
       scroll-behavior: smooth;
     }
 
@@ -38,7 +38,7 @@
       font-weight: 300; color: #999; margin-top: 4px; font-size: 0.9em; line-height: 1.4;
     }
 
-    /* --- 2. 导航栏 --- */
+    /* --- 2. 导航栏 (极简版) --- */
     .nav {
       position: fixed; top: 0; left: 0; width: 100%;
       display: flex; justify-content: space-between; align-items: center;
@@ -47,12 +47,76 @@
       transition: all 0.3s;
       transform: translateY(-100%); animation: slideDown 0.8s var(--ease-out-expo) 0.5s forwards;
     }
-    .nav.scrolled { background: rgba(255,255,255,0.95); padding: 1rem 3rem; box-shadow: 0 5px 20px rgba(0,0,0,0.03); }
+    .nav.scrolled { background: rgba(255,255,255,0.98); padding: 1rem 3rem; box-shadow: 0 5px 20px rgba(0,0,0,0.03); }
     @keyframes slideDown { to { transform: translateY(0); } }
     
     .logo { font-size: 1.2rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
-    .nav-links a { margin-left: 2rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* 汉堡菜单按钮 */
+    .menu-toggle {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      transition: opacity 0.3s;
+    }
+    .menu-toggle:hover { opacity: 0.6; }
+    .menu-toggle i { font-size: 1.2rem; margin-left: 10px; }
+
+    /* --- 2.1 侧边栏 (Sidebar Menu) --- */
+    .sidebar-menu {
+      position: fixed;
+      top: 0; right: 0;
+      width: 400px; /* 电脑端宽度 */
+      height: 100vh;
+      background: #111; /* 深色背景更显高级 */
+      color: #fff;
+      z-index: 2000;
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      /* 核心动画：位移 */
+      transform: translateX(100%);
+      transition: transform 0.6s var(--ease-out-expo);
+      box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+    }
     
+    /* 遮罩层 */
+    .sidebar-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+      background: rgba(0,0,0,0.3);
+      z-index: 1999;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.6s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    /* 激活状态 */
+    body.menu-open .sidebar-menu { transform: translateX(0); }
+    body.menu-open .sidebar-overlay { opacity: 1; pointer-events: auto; }
+    body.menu-open { overflow: hidden; /* 打开菜单时禁止页面滚动 */ }
+
+    /* 侧边栏内容 */
+    .sidebar-header { display: flex; justify-content: flex-end; }
+    .close-btn { cursor: pointer; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; letter-spacing: 1px;}
+    .close-btn i { margin-left: 10px; font-size: 1.2rem; transition: transform 0.3s;}
+    .close-btn:hover i { transform: rotate(90deg); }
+
+    .sidebar-links ul { display: flex; flex-direction: column; gap: 2rem; margin-top: 4rem;}
+    .sidebar-links a { 
+      font-size: 2.5rem; font-weight: 800; color: #fff; 
+      transition: color 0.3s, padding-left 0.3s; 
+      display: inline-block;
+    }
+    .sidebar-links a:hover { color: #999; padding-left: 10px; }
+    .sidebar-links span { font-size: 0.9rem; font-weight: 400; color: #666; margin-left: 10px; display: block; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px;}
+
+    .sidebar-footer { font-size: 0.85rem; color: #555; border-top: 1px solid #333; padding-top: 2rem; }
+    .sidebar-footer p { margin-bottom: 5px; }
+
     /* --- 3. Split Hero --- */
     .hero-split { display: flex; height: 100vh; width: 100%; position: relative; }
     .hero-visual {
@@ -170,44 +234,29 @@
     .scroll-reveal { opacity: 0; transform: translateY(50px); transition: all 1s var(--ease-out-expo); }
     .scroll-reveal.is-visible { opacity: 1; transform: translateY(0); }
 
-    /* --- Mobile Responsive (修复版) --- */
+    /* --- Mobile Responsive --- */
     @media (max-width: 900px) {
-      /* 修复1：Hero区域被导航遮挡 -> 增加 padding-top */
-      .hero-split { 
-        flex-direction: column; 
-        height: auto; 
-        padding-top: 80px; /* 增加这个内边距，让图片下移 */
-      }
-      .hero-visual { 
-        width: 100%; height: 50vh; 
-        transform: none; opacity: 1; animation: none;
-      }
+      .sidebar-menu { width: 100%; } /* 手机侧边栏全屏 */
+      .hero-split { flex-direction: column; height: auto; padding-top: 80px; }
+      .hero-visual { width: 100%; height: 50vh; transform: none; opacity: 1; animation: none;}
       .hero-content { width: 100%; padding: 4rem 2rem; }
       .hero-title { font-size: 3rem; }
       .hero-badge { display: none; }
       .hero-meta, .hero-desc-box { display: none; }
       
-      /* Works Mobile */
       .works-container { max-width: 100%; padding: 4rem 1.5rem; }
       .cases-grid { grid-template-columns: 1fr; gap: 4rem; }
       .work-item:nth-child(even) { margin-top: 0; }
       .section-header { padding-left: 0; margin-bottom: 3rem; }
       .work-title { font-size: 1.5rem; }
       
-      /* 修复2：履历板块时间与内容变成一栏 */
-      .resume-item { 
-        grid-template-columns: 1fr; /* 强制变1列 */
-        gap: 0.5rem; 
-      }
-      .resume-year {
-        margin-bottom: 5px; /* 年份和内容拉开一点距离 */
-      }
-      
-      /* 修复3：手机端隐藏作品箭头 */
+      .resume-item { grid-template-columns: 1fr; gap: 0.5rem; }
+      .resume-year { margin-bottom: 5px; }
       .work-arrow { display: none; }
-
       .footer-container { grid-template-columns: 1fr; gap: 3rem; }
       .contact-value { font-size: 1.1rem; }
+      .contact-row:hover { padding-left: 0; background: none;}
+      .contact-arrow { opacity: 1; transform: none; }
     }
   </style>
 </head>
@@ -215,13 +264,47 @@
 
   <!-- 导航 -->
   <nav class="nav">
-    <a href="#" class="logo">SALLY.</a>
-    <div class="nav-links">
-      <a href="#work"><i class="fa-solid fa-layer-group"></i>Work</a>
-      <a href="#about"><i class="fa-regular fa-id-card"></i>Resume</a>
-      <a href="#contact"><i class="fa-regular fa-envelope"></i>Contact</a>
+    <a href="index.html" class="logo">SALLY.</a>
+    
+    <!-- 右侧汉堡菜单按钮 -->
+    <div class="menu-toggle" onclick="toggleMenu()">
+      MENU <i class="fa-solid fa-bars"></i>
     </div>
   </nav>
+
+  <!-- 遮罩层 -->
+  <div class="sidebar-overlay" onclick="toggleMenu()"></div>
+
+  <!-- 侧边栏菜单 -->
+  <aside class="sidebar-menu">
+    <div class="sidebar-header">
+      <div class="close-btn" onclick="toggleMenu()">
+        CLOSE <i class="fa-solid fa-xmark"></i>
+      </div>
+    </div>
+    
+    <div class="sidebar-links">
+      <ul>
+        <li>
+          <a href="#work" onclick="toggleMenu()">Work</a>
+          <span class="en-sub">Selected Projects</span>
+        </li>
+        <li>
+          <a href="#about" onclick="toggleMenu()">Resume</a>
+          <span class="en-sub">Experience & Skills</span>
+        </li>
+        <li>
+          <a href="#contact" onclick="toggleMenu()">Contact</a>
+          <span class="en-sub">Get in touch</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="sidebar-footer">
+      <p>SALLY PORTFOLIO</p>
+      <p>&copy; 2025 All Rights Reserved.</p>
+    </div>
+  </aside>
 
   <!-- 1. Banner -->
   <section class="hero-split">
@@ -382,7 +465,6 @@
     </div>
     
     <div class="cases-grid">
-      
       <!-- P1 -->
       <a href="works.html#p1-1" class="work-item">
         <div class="work-image-box">
@@ -397,7 +479,6 @@
         </div>
         <div class="work-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
       </a>
-
       <!-- P2 -->
       <a href="works.html#p2-1" class="work-item">
         <div class="work-image-box">
@@ -412,7 +493,6 @@
         </div>
         <div class="work-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
       </a>
-
       <!-- P3 -->
       <a href="works.html#p3-1" class="work-item">
         <div class="work-image-box">
@@ -427,7 +507,6 @@
         </div>
         <div class="work-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
       </a>
-
       <!-- P4 -->
       <a href="works.html#p4-1" class="work-item">
         <div class="work-image-box">
@@ -442,7 +521,6 @@
         </div>
         <div class="work-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
       </a>
-
       <!-- P5 -->
       <a href="works.html#p5-1" class="work-item">
         <div class="work-image-box">
@@ -457,7 +535,6 @@
         </div>
         <div class="work-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
       </a>
-
       <!-- P6 -->
       <a href="works.html#p6-1" class="work-item">
         <div class="work-image-box">
@@ -472,7 +549,6 @@
         </div>
         <div class="work-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
       </a>
-
     </div>
   </section>
 
@@ -508,6 +584,11 @@
   </section>
 
   <script>
+    // 菜单切换逻辑
+    function toggleMenu() {
+      document.body.classList.toggle('menu-open');
+    }
+
     function switchTab(tabId, btnElement) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
