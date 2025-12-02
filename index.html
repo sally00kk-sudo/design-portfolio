@@ -5,16 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sally's Portfolio | Visionary Designer</title>
   
-  <!-- 【优化1】强制预加载第一张 Banner 图 (解决首屏慢的核心) -->
-  <link rel="preload" as="image" href="images/banner-1.jpg">
-
   <!-- 引入 Font Awesome 图标库 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     /* --- 1. Reset & 核心变量 --- */
     :root {
-      --text-main: #000000;
+      --text-main: #111111;
       --text-sub: #555555;
       --text-light: #999999;
       --bg-color: #ffffff;
@@ -80,7 +77,7 @@
     }
     .nav-links a:hover::after { width: 100%; }
 
-    /* --- 3. Split Hero (Banner) --- */
+    /* --- 3. Split Hero (Banner) - 设计感增强版 --- */
     .hero-split {
       display: flex;
       height: 100vh;
@@ -89,7 +86,7 @@
     }
 
     .hero-visual {
-      width: 50%;
+      width: 45%; /* 图片稍微窄一点，给右边留更多空间 */
       height: 100%;
       position: relative;
       background-color: #f4f4f4;
@@ -108,21 +105,43 @@
       opacity: 0;
       transition: opacity 1.5s ease-in-out, transform 8s ease;
       transform: scale(1.1);
-      /* 优化：使用硬件加速防止卡顿 */
       will-change: opacity, transform; 
     }
     .hero-slide.active { opacity: 1; transform: scale(1); }
 
     .hero-content {
-      width: 50%;
+      width: 55%;
       height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 0 5rem;
+      padding: 0 6rem; /* 增加内边距 */
       background: #fff;
+      position: relative;
     }
 
+    /* 装饰：顶部小标签 */
+    .hero-meta {
+      position: absolute; top: 120px; left: 6rem;
+      font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #999;
+      display: flex; align-items: center;
+    }
+    .hero-meta::before { content: ''; width: 40px; height: 1px; background: #000; margin-right: 15px; }
+
+    /* 装饰：右下角旋转徽章 */
+    .hero-badge {
+      position: absolute;
+      bottom: 60px;
+      right: 60px;
+      width: 140px;
+      height: 140px;
+      animation: spin 10s linear infinite;
+      opacity: 0.8;
+      display: block;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    /* 核心文字排版 */
     .reveal-text { opacity: 0; transform: translateY(40px); }
     .loaded .reveal-text { animation: fadeInUp 1s var(--ease-out-expo) forwards; }
     .delay-1 { animation-delay: 0.2s !important; }
@@ -132,23 +151,32 @@
     @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
     .hero-title {
-      font-size: clamp(3rem, 5.5vw, 6rem);
-      font-weight: 900;
-      line-height: 1;
-      margin-bottom: 0.5rem;
-      letter-spacing: -2px;
+      font-size: clamp(3.5rem, 7vw, 7.5rem); /* 更大的字体 */
+      font-weight: 800; /* 略微减细一点，更显高级 */
+      line-height: 0.95;
+      margin-bottom: 1.5rem;
+      letter-spacing: -3px;
+      color: #000;
     }
+    
+    .hero-desc-box {
+      max-width: 500px;
+      border-left: 2px solid #eee;
+      padding-left: 2rem;
+      margin-bottom: 3rem;
+    }
+
     .hero-subtitle {
-      font-size: 1.5rem;
+      font-size: 1.1rem;
       color: var(--text-sub);
       font-weight: 400;
-      margin-bottom: 3rem;
-      letter-spacing: 1px;
+      line-height: 1.8;
     }
+
     .btn-group { display: flex; gap: 1rem; }
     
     .btn {
-      padding: 14px 36px;
+      padding: 16px 40px; /* 更大的按钮 */
       font-size: 0.85rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -178,7 +206,7 @@
     /* --- 4. Section 通用 --- */
     .section-container { max-width: 1200px; margin: 0 auto; padding: 8rem 2rem; border-top: 1px solid #f0f0f0; }
     
-    /* --- 5. Tab Switcher --- */
+    /* --- 5. Tab Switcher 样式 --- */
     .tab-header {
       display: flex;
       align-items: center;
@@ -187,9 +215,8 @@
       padding-bottom: 1rem;
       border-bottom: 1px solid #eee;
       overflow-x: auto;
-      white-space: nowrap; /* 防止手机端换行 */
+      white-space: nowrap;
     }
-    /* 隐藏滚动条 */
     .tab-header::-webkit-scrollbar { display: none; }
     
     .tab-btn {
@@ -221,9 +248,7 @@
     .resume-year i { color: #ccc; font-size: 0.8em; margin-top: 4px; margin-right: 10px;}
     .resume-detail h4 { font-size: 1.25rem; margin-bottom: 0.3rem; font-weight: 700;}
     .resume-detail p { color: var(--text-sub); margin-bottom: 0.5rem; }
-    
     .resume-detail ul.normal-list { list-style: disc; padding-left: 20px; color: var(--text-sub); font-size: 0.95rem; margin-top: 0.5rem; }
-    
     .detail-group { margin-top: 1rem; }
     .detail-label { font-size: 0.9rem; font-weight: 700; color: #333; margin-bottom: 0.5rem; display: block;}
     .detail-text { font-size: 0.95rem; color: #666; line-height: 1.6; }
@@ -234,7 +259,6 @@
 
     .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 5rem 3rem; }
     .case-card { display: block; group-hover: none; }
-    
     .case-image { 
       width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: #f0f0f0; margin-bottom: 1.5rem; position: relative;
     }
@@ -274,7 +298,12 @@
       .hero-split { flex-direction: column; height: auto; }
       .hero-visual { width: 100%; height: 50vh; transform: translateX(0); opacity: 1; animation: none;}
       .hero-content { width: 100%; padding: 4rem 2rem; height: auto; text-align: center; align-items: center;}
-      .hero-title { font-size: 2.8rem; }
+      .hero-title { font-size: 3rem; margin-bottom: 1rem;}
+      .hero-desc-box { border-left: none; padding-left: 0; margin-bottom: 2rem; }
+      .hero-meta { position: static; margin-bottom: 1rem; justify-content: center; }
+      .hero-meta::before { display: none; }
+      .hero-badge { display: none; /* 手机上隐藏徽章，避免遮挡 */ }
+      
       .btn-group { justify-content: center; }
       .nav { padding: 1rem; background: rgba(255,255,255,0.9); transform: translateY(0); animation: none;}
       .nav-links { display: none; }
@@ -300,20 +329,30 @@
   <!-- 1. Split Hero (Banner) -->
   <section class="hero-split">
     <div class="hero-visual">
-      <!-- 【优化2】fetchpriority="high"：告诉浏览器这张图最重要，必须先加载 -->
       <img src="images/banner-1.jpg" class="hero-slide active" alt="Banner 1" fetchpriority="high">
-      
-      <!-- 剩下的图片 -->
       <img src="images/banner-2.jpg" class="hero-slide" alt="Banner 2">
       <img src="images/banner-3.jpg" class="hero-slide" alt="Banner 3">
     </div>
     
     <div class="hero-content">
-      <h1 class="hero-title reveal-text delay-1">Portfolio</h1>
-      <p class="hero-subtitle reveal-text delay-2">
-        个人作品集
-        <span class="en-sub" style="margin-top:5px; font-size:0.6em; text-transform:uppercase; letter-spacing:2px;">Designed by Sally</span>
-      </p>
+      
+      <!-- 装饰：顶部元数据 -->
+      <div class="hero-meta reveal-text delay-1">
+        Based in China
+      </div>
+
+      <!-- 标题 -->
+      <h1 class="hero-title reveal-text delay-1">
+        PORT<br>FOLIO
+      </h1>
+      
+      <!-- 描述框 -->
+      <div class="hero-desc-box reveal-text delay-2">
+        <p class="hero-subtitle">
+          Creating digital experiences & brand identities that drive conversion.
+          <span class="en-sub" style="margin-top:10px; color:#999; font-size:0.9em;">打造驱动转化的数字体验与品牌形象。<br>Designed by Sally.</span>
+        </p>
+      </div>
       
       <div class="btn-group reveal-text delay-3">
         <a href="#work" class="btn btn-black">
@@ -323,29 +362,26 @@
           Contact Me <i class="fa-regular fa-paper-plane"></i>
         </a>
       </div>
+
+      <!-- 装饰：旋转徽章 SVG -->
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGRlZnM+CiAgICA8cGF0aCBpZD0iY2lyY2xlIiBkPSJNMSA1MCBhIDQ5IDQ5IDAgMCAxIDk4IDAgYSA0OSA0OSAwIDAgMSAtOTggMCIgLz4KICA8L2RlZnM+CiAgPHRleHQgZm9udC1zaXplPSIxMiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXdlaWdodD0iYm9sZCIgbGV0dGVyLXNwYWNpbmc9IjEiPgogICAgPHRleHRQYXRoIHhsaW5rOmhyZWY9IiNjaXJjbGUiPlNBTExZIFBPUlRGT0xJTyAtIDIwMjUgLSBERSBTSUdOIC0gPC90ZXh0UGF0aD4KICA8L3RleHQ+Cjwvc3ZnPg==" class="hero-badge" alt="Badge">
+    
     </div>
   </section>
 
   <!-- 2. Resume 简历 -->
   <section id="about" class="section-container">
-    
-    <!-- Tab 按钮区 -->
     <div class="tab-header scroll-reveal">
-      <!-- 1. 教育 (默认激活) -->
       <button class="tab-btn active" onclick="switchTab('education', this)">
         <i class="fa-solid fa-user-graduate" style="font-size: 0.5em; margin-bottom:5px;"></i>
         教育背景
         <span class="en-sub">Education</span>
       </button>
-
-      <!-- 2. 工作 -->
       <button class="tab-btn" onclick="switchTab('jobs', this)">
         <i class="fa-solid fa-briefcase" style="font-size: 0.5em; margin-bottom:5px;"></i>
         工作经历
         <span class="en-sub">Work Experience</span>
       </button>
-
-      <!-- 3. 校园 -->
       <button class="tab-btn" onclick="switchTab('campus', this)">
         <i class="fa-solid fa-graduation-cap" style="font-size: 0.5em; margin-bottom:5px;"></i>
         校园实践
@@ -356,26 +392,20 @@
     <!-- 内容1: 教育背景 -->
     <div id="education" class="resume-list tab-content active">
       <div class="resume-item scroll-reveal">
-        <div class="resume-year">
-          <i class="fa-solid fa-circle-dot" style="font-size:0.6em; margin-top:6px;"></i> 
-          2017.09 - 2021.06
-        </div>
+        <div class="resume-year"><i class="fa-solid fa-circle-dot" style="font-size:0.6em; margin-top:6px;"></i> 2017.09 - 2021.06</div>
         <div class="resume-detail">
           <h4>湖南农业大学 <span class="en-sub">/ Hunan Agricultural University</span></h4>
           <p><strong>视觉传达设计专业 (本科)</strong></p>
-          <p class="en-sub">Bachelor of Arts in Visual Communication Design</p>
           <div class="detail-group">
-            <span class="detail-label">主修课程 (Core Courses):</span>
-            <p class="detail-text">
-              交互设计、插画设计、版式设计、动画设计、字体设计、展示设计、设计思维、包装设计、招贴设计、书籍设计
-            </p>
+            <span class="detail-label">主修课程:</span>
+            <p class="detail-text">交互设计、插画设计、版式设计、动画设计、字体设计、展示设计、设计思维、包装设计</p>
           </div>
           <div class="detail-group">
             <span class="detail-label">选修 / 证书 / 荣誉:</span>
             <ul class="normal-list">
-              <li><strong>选修：</strong>药膳学、艺术哲学、欧洲文明的现代历程</li>
-              <li><strong>证书：</strong>普通话二级甲等、大学生英语四级 (CET-4)、教师资格证 (高级中学美术)</li>
-              <li><strong>荣誉：</strong>2019届“优秀助班”奖</li>
+              <li>选修：药膳学、艺术哲学、欧洲文明的现代历程</li>
+              <li>证书：普通话二级甲等、英语四级、高中美术教资</li>
+              <li>荣誉：2019届“优秀助班”奖</li>
             </ul>
           </div>
         </div>
@@ -468,19 +498,15 @@
         </div>
       </div>
     </div>
-
   </section>
 
-  <!-- 3. Work 作品集 (ID=work) -->
+  <!-- 3. Work 作品集 -->
   <section id="work" class="section-container">
     <h2 class="section-title scroll-reveal">
       <i class="fa-solid fa-pen-nib"></i> Selected Work 
       <span class="en-sub" style="display:inline; margin-left:10px;">精选作品</span>
     </h2>
-    
     <div class="cases-grid">
-      <!-- 【优化3】作品图片使用懒加载 loading="lazy" -->
-      <!-- P1 -->
       <a href="works.html#p1-1" class="case-card scroll-reveal">
         <div class="case-image">
           <img src="images/p1-ecommerce.jpg" alt="Work" loading="lazy">
@@ -492,7 +518,6 @@
           <span class="en-sub">Global eCommerce & DTC UI/UX</span>
         </div>
       </a>
-      <!-- P2 -->
       <a href="works.html#p2-1" class="case-card scroll-reveal">
         <div class="case-image">
           <img src="images/p2-marketing.jpg" alt="Work" loading="lazy">
@@ -504,7 +529,6 @@
           <span class="en-sub">Video Marketing & Premium A+ Content</span>
         </div>
       </a>
-      <!-- P3 -->
       <a href="works.html#p3-1" class="case-card scroll-reveal">
         <div class="case-image">
           <img src="images/p3-branding.jpg" alt="Work" loading="lazy">
@@ -516,7 +540,6 @@
           <span class="en-sub">Brand Identity (VIS) & Packaging</span>
         </div>
       </a>
-      <!-- P4 -->
       <a href="works.html#p4-1" class="case-card scroll-reveal">
         <div class="case-image">
           <img src="images/p4-spatial.jpg" alt="Work" loading="lazy">
@@ -528,7 +551,6 @@
           <span class="en-sub">Spatial Visuals & Wayfinding</span>
         </div>
       </a>
-      <!-- P5 -->
       <a href="works.html#p5-1" class="case-card scroll-reveal">
         <div class="case-image">
           <img src="images/p5-photography.jpg" alt="Work" loading="lazy">
@@ -540,7 +562,6 @@
           <span class="en-sub">Photography Direction & Planning</span>
         </div>
       </a>
-      <!-- P6 -->
       <a href="works.html#p6-1" class="case-card scroll-reveal">
         <div class="case-image">
           <img src="images/p6-3d.jpg" alt="Work" loading="lazy">
@@ -568,7 +589,7 @@
   </section>
 
   <script>
-    // --- 1. Tab 切换逻辑 ---
+    // Tab 切换逻辑
     function switchTab(tabId, btnElement) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -576,10 +597,10 @@
       document.getElementById(tabId).classList.add('active');
     }
 
-    // --- 2. 页面加载动画 ---
+    // 页面加载动画
     window.addEventListener('load', () => { document.body.classList.add('loaded'); });
 
-    // --- 3. 幻灯片自动轮播 ---
+    // 幻灯片自动轮播
     const slides = document.querySelectorAll('.hero-slide');
     let currentSlide = 0;
     function nextSlide() {
@@ -589,14 +610,14 @@
     }
     setInterval(nextSlide, 3500);
 
-    // --- 4. 导航栏滚动变色 ---
+    // 导航栏滚动变色
     window.addEventListener('scroll', () => {
       const nav = document.querySelector('.nav');
       if(window.scrollY > 50) nav.classList.add('scrolled');
       else nav.classList.remove('scrolled');
     });
 
-    // --- 5. 滚动显现动画 ---
+    // 滚动显现动画
     const observer = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -608,7 +629,7 @@
 
     document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
 
-    // --- 6. 平滑滚动 ---
+    // 平滑滚动
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         if(this.getAttribute('href').startsWith('#')) {
