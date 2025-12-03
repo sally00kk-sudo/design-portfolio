@@ -5,87 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sally's Portfolio | Visionary Designer</title>
   
-  <!-- 【优化1】强制预加载第一张 Banner 图 (解决首屏慢的核心) -->
   <link rel="preload" as="image" href="images/banner-1.jpg">
-
-  <!-- 引入 Font Awesome 图标库 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /* --- 1. Reset & 核心变量 --- */
+    /* --- 1. Reset & 变量 --- */
     :root {
       --text-main: #000000;
       --text-sub: #555555;
-      --text-light: #999999;
-      --bg-color: #ffffff;
-      --accent: #000;
+      --accent: #4452FE; /* 参考图中的蓝色 */
+      --menu-bg: #000000;
       --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-      line-height: 1.5;
-      color: var(--text-main);
-      background: var(--bg-color);
-      overflow-x: hidden;
-      scroll-behavior: smooth;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: #ffffff;
+      /* 锁定滚动，只保留第一屏 */
+      overflow: hidden; 
+      height: 100vh;
+      width: 100vw;
     }
 
     a { text-decoration: none; color: inherit; transition: opacity 0.3s; }
-    ul { list-style: none; }
-    img { display: block; width: 100%; height: auto; object-fit: cover; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
-    /* 辅助排版类 */
-    .en-sub { 
-      display: block; 
-      font-family: "Helvetica Neue", Arial, sans-serif; 
-      font-weight: 300; 
-      color: var(--text-light); 
-      margin-top: 4px; 
-      font-size: 0.9em; 
-      line-height: 1.4;
-    }
-
-    /* 图标通用样式 */
-    i { margin-right: 8px; }
-    .btn i { margin-right: 0; margin-left: 8px; transition: transform 0.3s; }
-    .btn:hover i { transform: translateX(4px); }
-
-    /* --- 2. 导航栏 --- */
-    .nav {
-      position: fixed;
-      top: 0; left: 0; width: 100%;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.5rem 3rem;
-      z-index: 1000;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0));
-      transition: background 0.3s, padding 0.3s;
-      transform: translateY(-100%);
-      animation: slideDown 0.8s var(--ease-out-expo) 0.5s forwards;
-    }
-    .nav.scrolled { 
-      background: rgba(255,255,255,0.95); 
-      box-shadow: 0 2px 20px rgba(0,0,0,0.03); 
-      padding: 1rem 3rem;
-    }
-    @keyframes slideDown { to { transform: translateY(0); } }
-    
-    .logo { font-size: 1.2rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
-    .nav-links a { margin-left: 2rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; position: relative;}
-    .nav-links a::after {
-      content: ''; position: absolute; width: 0; height: 1px; bottom: -2px; left: 0;
-      background-color: #000; transition: width 0.3s ease;
-    }
-    .nav-links a:hover::after { width: 100%; }
-
-    /* --- 3. Split Hero (Banner) --- */
+    /* --- 2. 简化的 Split Hero (只保留第一屏) --- */
     .hero-split {
       display: flex;
       height: 100vh;
       width: 100%;
       position: relative;
+      z-index: 1; /* 保证在菜单之下 */
+      transition: transform 0.6s var(--ease-out-expo);
+    }
+
+    /* 菜单打开时，主内容稍微缩小或变暗 (可选效果) */
+    body.menu-open .hero-split {
+      transform: scale(0.95);
+      filter: brightness(0.5);
+      pointer-events: none;
     }
 
     .hero-visual {
@@ -94,11 +55,7 @@
       position: relative;
       background-color: #f4f4f4;
       overflow: hidden;
-      transform: translateX(-10%);
-      opacity: 0;
-      animation: slideInLeft 1.2s var(--ease-out-expo) forwards;
     }
-    @keyframes slideInLeft { to { transform: translateX(0); opacity: 1; } }
 
     .hero-slide {
       position: absolute;
@@ -108,7 +65,6 @@
       opacity: 0;
       transition: opacity 1.5s ease-in-out, transform 8s ease;
       transform: scale(1.1);
-      /* 优化：使用硬件加速防止卡顿 */
       will-change: opacity, transform; 
     }
     .hero-slide.active { opacity: 1; transform: scale(1); }
@@ -123,463 +79,296 @@
       background: #fff;
     }
 
-    .reveal-text { opacity: 0; transform: translateY(40px); }
-    .loaded .reveal-text { animation: fadeInUp 1s var(--ease-out-expo) forwards; }
-    .delay-1 { animation-delay: 0.2s !important; }
-    .delay-2 { animation-delay: 0.4s !important; }
-    .delay-3 { animation-delay: 0.6s !important; }
-
-    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
-
     .hero-title {
       font-size: clamp(3rem, 5.5vw, 6rem);
       font-weight: 900;
       line-height: 1;
       margin-bottom: 0.5rem;
       letter-spacing: -2px;
+      opacity: 0; transform: translateY(30px);
+      animation: fadeInUp 1s var(--ease-out-expo) 0.2s forwards;
     }
+    
     .hero-subtitle {
       font-size: 1.5rem;
       color: var(--text-sub);
-      font-weight: 400;
       margin-bottom: 3rem;
       letter-spacing: 1px;
+      opacity: 0; transform: translateY(30px);
+      animation: fadeInUp 1s var(--ease-out-expo) 0.4s forwards;
     }
-    .btn-group { display: flex; gap: 1rem; }
-    
-    .btn {
-      padding: 14px 36px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border: 1px solid #000;
-      transition: all 0.4s var(--ease-out-expo);
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
-      display: inline-flex;
-      align-items: center;
-    }
-    .btn::before {
-      content: ''; position: absolute; top: 0; left: 0; width: 0; height: 100%;
-      background: #000; z-index: -1; transition: width 0.4s var(--ease-out-expo);
-    }
-    .btn:hover::before { width: 100%; }
-    
-    .btn-black { background: #000; color: #fff; }
-    .btn-black:hover { background: transparent; color: #000; border-color: #000; }
-    .btn-black::before { background: #fff; }
-    
-    .btn-outline { background: transparent; color: #000; }
-    .btn-outline:hover { color: #fff; }
 
-    /* --- 4. Section 通用 --- */
-    .section-container { max-width: 1200px; margin: 0 auto; padding: 8rem 2rem; border-top: 1px solid #f0f0f0; }
-    
-    /* --- 5. Tab Switcher --- */
-    .tab-header {
-      display: flex;
-      align-items: center;
-      gap: 3rem;
-      margin-bottom: 4rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #eee;
-      overflow-x: auto;
-      white-space: nowrap; /* 防止手机端换行 */
+    .en-sub { 
+      display: block; 
+      font-size: 0.6em; 
+      text-transform: uppercase; 
+      letter-spacing: 2px; 
+      margin-top: 5px; 
+      color: #999;
     }
-    /* 隐藏滚动条 */
-    .tab-header::-webkit-scrollbar { display: none; }
-    
-    .tab-btn {
-      background: none;
-      border: none;
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #ccc;
-      cursor: pointer;
-      transition: all 0.3s;
-      position: relative;
-      padding: 0;
+
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+    /* --- 3. 底部圆形菜单触发器 --- */
+    .menu-trigger-container {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      text-align: left;
-      flex-shrink: 0;
+      align-items: center;
+      cursor: pointer;
     }
-    .tab-btn .en-sub { font-size: 0.45em; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px;}
-    .tab-btn.active { color: #000; }
+
+    .menu-btn {
+      width: 60px;
+      height: 60px;
+      background-color: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(68, 82, 254, 0.4);
+      transition: all 0.4s var(--ease-out-expo);
+      position: relative;
+    }
+
+    .menu-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 15px 40px rgba(68, 82, 254, 0.6);
+    }
+
+    /* 按钮内的图标线条 */
+    .menu-icon-line {
+      width: 24px;
+      height: 2px;
+      background: #fff;
+      position: absolute;
+      transition: transform 0.3s ease;
+    }
+    .menu-icon-line:first-child { transform: translateY(-4px); }
+    .menu-icon-line:last-child { transform: translateY(4px); }
+
+    /* 打开状态下的按钮变形 (变成X) */
+    body.menu-open .menu-icon-line:first-child { transform: translateY(0) rotate(45deg); }
+    body.menu-open .menu-icon-line:last-child { transform: translateY(0) rotate(-45deg); }
+
+    .menu-label {
+      margin-top: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #000;
+      transition: color 0.3s;
+    }
     
-    .tab-content { display: none; opacity: 0; transition: opacity 0.5s ease; }
-    .tab-content.active { display: grid; opacity: 1; }
+    body.menu-open .menu-label {
+      color: #fff; /* 菜单打开时文字变白 */
+    }
 
-    /* --- 6. 简历 Resume List --- */
-    .resume-list { gap: 3rem; width: 100%; }
-    .resume-item { display: grid; grid-template-columns: 220px 1fr; padding-bottom: 2rem; border-bottom: 1px solid #f9f9f9; }
-    .resume-year { font-weight: 700; font-size: 1.1rem; color: #000; display: flex; align-items: flex-start;}
-    .resume-year i { color: #ccc; font-size: 0.8em; margin-top: 4px; margin-right: 10px;}
-    .resume-detail h4 { font-size: 1.25rem; margin-bottom: 0.3rem; font-weight: 700;}
-    .resume-detail p { color: var(--text-sub); margin-bottom: 0.5rem; }
+    /* --- 4. 黑色弹出式菜单 (Mega Menu) --- */
+    .menu-overlay {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 85vh; /* 占据屏幕大部分，像抽屉一样 */
+      background: var(--menu-bg);
+      z-index: 900;
+      transform: translateY(100%);
+      transition: transform 0.6s var(--ease-out-expo);
+      padding: 4rem 3rem 8rem 3rem; /* 底部留空间给按钮 */
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body.menu-open .menu-overlay {
+      transform: translateY(0);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 4列布局 */
+      gap: 2rem;
+      height: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .menu-column {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(255,255,255,0.1);
+      padding-right: 2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.5s ease;
+    }
     
-    .resume-detail ul.normal-list { list-style: disc; padding-left: 20px; color: var(--text-sub); font-size: 0.95rem; margin-top: 0.5rem; }
-    
-    .detail-group { margin-top: 1rem; }
-    .detail-label { font-size: 0.9rem; font-weight: 700; color: #333; margin-bottom: 0.5rem; display: block;}
-    .detail-text { font-size: 0.95rem; color: #666; line-height: 1.6; }
+    .menu-column:last-child { border-right: none; }
 
-    /* --- 7. 作品集 Grid --- */
-    .section-title { font-size: 2rem; margin-bottom: 4rem; font-weight: 700; display: flex; align-items: center; }
-    .section-title i { font-size: 0.8em; color: #ccc; margin-right: 15px; }
+    /* 菜单内容依次出现的动画 */
+    body.menu-open .menu-column:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
+    body.menu-open .menu-column:nth-child(2) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+    body.menu-open .menu-column:nth-child(3) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
+    body.menu-open .menu-column:nth-child(4) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
 
-    .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); gap: 5rem 3rem; }
-    .case-card { display: block; group-hover: none; }
-    
-    .case-image { 
-      width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: #f0f0f0; margin-bottom: 1.5rem; position: relative;
+    .menu-col-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
     }
-    .case-icon {
-      position: absolute; bottom: 15px; right: 15px;
-      width: 40px; height: 40px; background: #fff; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; transform: translateY(10px); transition: all 0.4s ease;
-      color: #000; font-size: 14px;
-    }
-    .case-card:hover .case-icon { opacity: 1; transform: translateY(0); }
-    .case-image img { 
-      width: 100%; height: 100%; transition: transform 1.2s var(--ease-out-expo), filter 0.5s ease; 
-    }
-    .case-card:hover .case-image img { transform: scale(1.05); filter: brightness(1.02); }
-    .case-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.3rem; transition: color 0.3s; }
-    .case-card:hover .case-title { color: #666; }
-    .case-desc { color: var(--text-sub); font-size: 1rem; margin-bottom: 0.5rem; }
 
-    /* --- 8. Footer --- */
-    .footer { background: #111; color: #fff; padding: 6rem 2rem; text-align: center; }
-    .footer h2 { font-size: 2.5rem; margin-bottom: 2rem; }
-    .footer-links { display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; margin-top: 3rem;}
-    .footer-links a { 
-      color: #888; border-bottom: 1px solid transparent; padding-bottom: 5px; transition: all 0.3s;
-      font-size: 1.1rem; display: flex; align-items: center;
+    .menu-link-large {
+      font-size: 2.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      display: block;
+      color: #fff;
     }
-    .footer-links a i { margin-right: 8px; font-size: 0.9em; }
-    .footer-links a:hover { color: #fff; border-bottom-color: #fff; transform: translateY(-3px); }
+    .menu-link-large:hover { color: var(--accent); }
 
-    /* --- 滚动动画 --- */
-    .scroll-reveal { opacity: 0; transform: translateY(50px); transition: all 1s var(--ease-out-expo); }
-    .scroll-reveal.is-visible { opacity: 1; transform: translateY(0); }
+    .menu-desc {
+      font-size: 0.9rem;
+      color: #aaa;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    /* 菜单里的预览图 */
+    .menu-image {
+      width: 100%;
+      aspect-ratio: 16/10;
+      background: #222;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: auto; /* 推到底部 */
+    }
+    .menu-image img {
+      opacity: 0.7;
+      transition: transform 0.5s;
+    }
+    .menu-column:hover .menu-image img {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+
+    /* Contact List */
+    .contact-list a {
+      display: flex;
+      align-items: center;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: #ccc;
+    }
+    .contact-list a i { margin-right: 10px; width: 20px; text-align: center; }
+    .contact-list a:hover { color: #fff; }
 
     /* --- Mobile Responsive --- */
     @media (max-width: 768px) {
-      .hero-split { flex-direction: column; height: auto; }
-      .hero-visual { width: 100%; height: 50vh; transform: translateX(0); opacity: 1; animation: none;}
-      .hero-content { width: 100%; padding: 4rem 2rem; height: auto; text-align: center; align-items: center;}
-      .hero-title { font-size: 2.8rem; }
-      .btn-group { justify-content: center; }
-      .nav { padding: 1rem; background: rgba(255,255,255,0.9); transform: translateY(0); animation: none;}
-      .nav-links { display: none; }
-      .cases-grid { grid-template-columns: 1fr; gap: 4rem; }
-      .resume-item { grid-template-columns: 1fr; gap: 0.5rem; }
-      .tab-header { gap: 2rem; padding-bottom: 1.5rem; }
-      .tab-btn { font-size: 1.2rem; }
+      .hero-split { flex-direction: column; }
+      .hero-visual, .hero-content { width: 100%; height: 50%; }
+      .hero-content { padding: 2rem; align-items: center; text-align: center; }
+      .hero-title { font-size: 3rem; }
+      
+      .menu-overlay { height: 100vh; padding: 2rem 1.5rem 6rem 1.5rem; overflow-y: auto; }
+      .menu-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .menu-column { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2rem; padding-right: 0;}
+      .menu-image { display: none; /* 手机端隐藏菜单里的图片以节省空间 */ }
     }
   </style>
 </head>
-<body class="loading">
+<body>
 
-  <!-- 导航 -->
-  <nav class="nav">
-    <a href="#" class="logo">SALLY.</a>
-    <div class="nav-links">
-      <a href="#work"><i class="fa-solid fa-layer-group"></i>Work</a>
-      <a href="#about"><i class="fa-regular fa-id-card"></i>Resume</a>
-      <a href="#contact"><i class="fa-regular fa-envelope"></i>Contact</a>
-    </div>
-  </nav>
-
-  <!-- 1. Split Hero (Banner) -->
+  <!-- 1. 第一屏主要内容 (Split Hero) -->
   <section class="hero-split">
     <div class="hero-visual">
-      <!-- 【优化2】fetchpriority="high"：告诉浏览器这张图最重要，必须先加载 -->
+      <!-- 轮播图 -->
       <img src="images/banner-1.jpg" class="hero-slide active" alt="Banner 1" fetchpriority="high">
-      
-      <!-- 剩下的图片 -->
       <img src="images/banner-2.jpg" class="hero-slide" alt="Banner 2">
       <img src="images/banner-3.jpg" class="hero-slide" alt="Banner 3">
     </div>
     
     <div class="hero-content">
-      <h1 class="hero-title reveal-text delay-1">Portfolio</h1>
-      <p class="hero-subtitle reveal-text delay-2">
-        个人作品集
-        <span class="en-sub" style="margin-top:5px; font-size:0.6em; text-transform:uppercase; letter-spacing:2px;">Designed by Sally</span>
+      <h1 class="hero-title">SALLY.</h1>
+      <p class="hero-subtitle">
+        Portfolio
+        <span class="en-sub">Visual Designer & Art Director</span>
       </p>
+    </div>
+  </section>
+
+  <!-- 2. 底部弹出的全屏菜单 -->
+  <div class="menu-overlay">
+    <div class="menu-grid">
       
-      <div class="btn-group reveal-text delay-3">
-        <a href="#work" class="btn btn-black">
-          See Work <i class="fa-solid fa-arrow-right-long"></i>
-        </a>
-        <a href="#contact" class="btn btn-outline">
-          Contact Me <i class="fa-regular fa-paper-plane"></i>
-        </a>
+      <!-- Column 1: HOME -->
+      <div class="menu-column">
+        <h3 class="menu-col-title">01</h3>
+        <a href="#" class="menu-link-large" onclick="toggleMenu()">HOME</a>
+        <p class="menu-desc">Return to the visual showcase start.</p>
+        <div class="menu-image">
+          <!-- 替换为你的封面图 -->
+          <img src="images/banner-1.jpg" alt="Home Preview">
+        </div>
       </div>
+
+      <!-- Column 2: WORK -->
+      <div class="menu-column">
+        <h3 class="menu-col-title">02</h3>
+        <a href="work.html" class="menu-link-large">WORK</a>
+        <p class="menu-desc">Selected projects involving UI/UX, Branding, and Photography.</p>
+        <div class="menu-image">
+          <!-- 替换为你的作品集封面 -->
+          <img src="images/p1-ecommerce.jpg" alt="Work Preview">
+        </div>
+      </div>
+
+      <!-- Column 3: ABOUT ME -->
+      <div class="menu-column">
+        <h3 class="menu-col-title">03</h3>
+        <a href="about.html" class="menu-link-large">ABOUT ME</a>
+        <p class="menu-desc">My resume, journey, education, and design philosophy.</p>
+        <div class="menu-image">
+          <!-- 替换为你的个人照 -->
+          <img src="images/banner-2.jpg" alt="About Preview">
+        </div>
+      </div>
+
+      <!-- Column 4: CONTACT ME -->
+      <div class="menu-column">
+        <h3 class="menu-col-title">04</h3>
+        <a href="contact.html" class="menu-link-large">CONTACT</a>
+        <div class="contact-list">
+          <a href="mailto:sally00kk@gmail.com"><i class="fa-solid fa-envelope"></i> Email Me</a>
+          <a href="#"><i class="fa-brands fa-weixin"></i> WeChat</a>
+          <a href="#"><i class="fa-solid fa-phone"></i> 178-9100-3233</a>
+        </div>
+      </div>
+
     </div>
-  </section>
+  </div>
 
-  <!-- 2. Resume 简历 -->
-  <section id="about" class="section-container">
-    
-    <!-- Tab 按钮区 -->
-    <div class="tab-header scroll-reveal">
-      <!-- 1. 教育 (默认激活) -->
-      <button class="tab-btn active" onclick="switchTab('education', this)">
-        <i class="fa-solid fa-user-graduate" style="font-size: 0.5em; margin-bottom:5px;"></i>
-        教育背景
-        <span class="en-sub">Education</span>
-      </button>
-
-      <!-- 2. 工作 -->
-      <button class="tab-btn" onclick="switchTab('jobs', this)">
-        <i class="fa-solid fa-briefcase" style="font-size: 0.5em; margin-bottom:5px;"></i>
-        工作经历
-        <span class="en-sub">Work Experience</span>
-      </button>
-
-      <!-- 3. 校园 -->
-      <button class="tab-btn" onclick="switchTab('campus', this)">
-        <i class="fa-solid fa-graduation-cap" style="font-size: 0.5em; margin-bottom:5px;"></i>
-        校园实践
-        <span class="en-sub">Campus Practice</span>
-      </button>
+  <!-- 3. 底部圆形按钮 (Trigger) -->
+  <div class="menu-trigger-container" onclick="toggleMenu()">
+    <div class="menu-btn">
+      <span class="menu-icon-line"></span>
+      <span class="menu-icon-line"></span>
     </div>
-    
-    <!-- 内容1: 教育背景 -->
-    <div id="education" class="resume-list tab-content active">
-      <div class="resume-item scroll-reveal">
-        <div class="resume-year">
-          <i class="fa-solid fa-circle-dot" style="font-size:0.6em; margin-top:6px;"></i> 
-          2017.09 - 2021.06
-        </div>
-        <div class="resume-detail">
-          <h4>湖南农业大学 <span class="en-sub">/ Hunan Agricultural University</span></h4>
-          <p><strong>视觉传达设计专业 (本科)</strong></p>
-          <p class="en-sub">Bachelor of Arts in Visual Communication Design</p>
-          <div class="detail-group">
-            <span class="detail-label">主修课程 (Core Courses):</span>
-            <p class="detail-text">
-              交互设计、插画设计、版式设计、动画设计、字体设计、展示设计、设计思维、包装设计、招贴设计、书籍设计
-            </p>
-          </div>
-          <div class="detail-group">
-            <span class="detail-label">选修 / 证书 / 荣誉:</span>
-            <ul class="normal-list">
-              <li><strong>选修：</strong>药膳学、艺术哲学、欧洲文明的现代历程</li>
-              <li><strong>证书：</strong>普通话二级甲等、大学生英语四级 (CET-4)、教师资格证 (高级中学美术)</li>
-              <li><strong>荣誉：</strong>2019届“优秀助班”奖</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 内容2: 工作经历 -->
-    <div id="jobs" class="resume-list tab-content">
-      <div class="resume-item">
-        <div class="resume-year"><i class="fa-solid fa-briefcase" style="font-size:0.6em; margin-top:6px;"></i> 2022.10 - Present <span class="en-sub">至今</span></div>
-        <div class="resume-detail">
-          <h4>电商网页设计师 <span class="en-sub">/ E-commerce Web Designer</span></h4>
-          <p><strong>@安徽美瑞邦达跨境电商有限公司</strong></p>
-          <ul class="normal-list">
-            <li>海外独立站设计、改版及产品图精修</li>
-            <li>跨境电商 A+ 页面设计与店铺装修</li>
-            <li>品牌 VI、Logo 升级优化及包装物料设计</li>
-            <li>节日活动海报、EDM 邮件设计及摄影策划方案输出</li>
-          </ul>
-        </div>
-      </div>
-      <div class="resume-item">
-        <div class="resume-year"><i class="fa-regular fa-circle" style="font-size:0.6em; margin-top:6px;"></i> 2022.07 - 2022.08</div>
-        <div class="resume-detail">
-          <h4>设计师助理 <span class="en-sub">/ Designer Assistant</span></h4>
-          <p><strong>@赛飞广告传播有限公司</strong></p>
-          <ul class="normal-list">
-            <li>参与设计部的创意设计工作（画册、折页、海报等）</li>
-            <li>品牌工法墙标识导视系统设计</li>
-          </ul>
-        </div>
-      </div>
-      <div class="resume-item">
-        <div class="resume-year"><i class="fa-regular fa-circle" style="font-size:0.6em; margin-top:6px;"></i> 2022.02 - 2022.05</div>
-        <div class="resume-detail">
-          <h4>美术教师 <span class="en-sub">/ Art Teacher</span></h4>
-          <p><strong>@安徽朗声教育咨询有限公司</strong></p>
-          <ul class="normal-list">
-            <li>创意美术：定制教学计划，因材施教，增进家长沟通</li>
-            <li>素描教学：几何石膏、静物、人物头像教学</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- 内容3: 校园实践 -->
-    <div id="campus" class="resume-list tab-content">
-      <div class="resume-item">
-        <div class="resume-year"><i class="fa-solid fa-school" style="font-size:0.6em; margin-top:6px;"></i> 2019.09 - 2019.10</div>
-        <div class="resume-detail">
-          <h4>新生助理班主任 <span class="en-sub">/ Assistant Class Teacher</span></h4>
-          <p><strong>@ 2019级视觉传达设计一班</strong></p>
-          <ul class="normal-list">
-            <li>管理并组织班级同学参加军训以及各种活动</li>
-            <li>协助辅导员处理新生入学适宜及班级建设</li>
-          </ul>
-        </div>
-      </div>
-      <div class="resume-item">
-        <div class="resume-year"><i class="fa-solid fa-users-rays" style="font-size:0.6em; margin-top:6px;"></i> 2018.09 - 2019.09</div>
-        <div class="resume-detail">
-          <h4>科幻俱乐部团长 <span class="en-sub">/ President of Sci-Fi Club</span></h4>
-          <p><strong>@ 湖南农业大学科幻俱乐部</strong></p>
-          <ul class="normal-list">
-            <li>负责社团日常运营、活动策划与执行</li>
-            <li>组织30余名成员参与校园社团文化艺术节及音响演出</li>
-          </ul>
-        </div>
-      </div>
-      <div class="resume-item">
-        <div class="resume-year"><i class="fa-solid fa-microphone-lines" style="font-size:0.6em; margin-top:6px;"></i> 2017.09 - 2018.09</div>
-        <div class="resume-detail">
-          <h4>广播播音员 & 宣传组负责人 <span class="en-sub">/ Broadcaster & Publicity Lead</span></h4>
-          <p><strong>@ 湖南农业大学广播电视台</strong></p>
-          <ul class="normal-list">
-            <li>负责宣传海报、喷绘、易拉宝等平面物料设计</li>
-            <li>负责校园广播播音，脚本编辑、录制及后期剪辑</li>
-          </ul>
-        </div>
-      </div>
-      <div class="resume-item">
-        <div class="resume-year"><i class="fa-solid fa-bullhorn" style="font-size:0.6em; margin-top:6px;"></i> 2017.09 - 2021.09</div>
-        <div class="resume-detail">
-          <h4>班级宣传员 <span class="en-sub">/ Class Publicity Committee</span></h4>
-          <p><strong>@ 2017级视传一班</strong></p>
-          <ul class="normal-list">
-            <li>负责班级形象建设与活动宣传</li>
-            <li>运营与管理班级官方微信公众号</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- 3. Work 作品集 (ID=work) -->
-  <section id="work" class="section-container">
-    <h2 class="section-title scroll-reveal">
-      <i class="fa-solid fa-pen-nib"></i> Selected Work 
-      <span class="en-sub" style="display:inline; margin-left:10px;">精选作品</span>
-    </h2>
-    
-    <div class="cases-grid">
-      <!-- 【优化3】作品图片使用懒加载 loading="lazy" -->
-      <!-- P1 -->
-      <a href="works.html#p1-1" class="case-card scroll-reveal">
-        <div class="case-image">
-          <img src="images/p1-ecommerce.jpg" alt="Work" loading="lazy">
-          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
-        </div>
-        <div class="case-info">
-          <h3 class="case-title">跨境电商网页设计</h3>
-          <p class="case-desc">独立站网站设计、亚马逊店铺装修、TK界面设计</p>
-          <span class="en-sub">Global eCommerce & DTC UI/UX</span>
-        </div>
-      </a>
-      <!-- P2 -->
-      <a href="works.html#p2-1" class="case-card scroll-reveal">
-        <div class="case-image">
-          <img src="images/p2-marketing.jpg" alt="Work" loading="lazy">
-          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
-        </div>
-        <div class="case-info">
-          <h3 class="case-title">视频营销与广告设计</h3>
-          <p class="case-desc">社交媒体广告创意 (FB / Google Ads)，高级A+页面设计</p>
-          <span class="en-sub">Video Marketing & Premium A+ Content</span>
-        </div>
-      </a>
-      <!-- P3 -->
-      <a href="works.html#p3-1" class="case-card scroll-reveal">
-        <div class="case-image">
-          <img src="images/p3-branding.jpg" alt="Work" loading="lazy">
-          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
-        </div>
-        <div class="case-info">
-          <h3 class="case-title">品牌视觉与全案设计</h3>
-          <p class="case-desc">巴西酸奶/美国牛仔靴品牌全案，包装设计与物料延展</p>
-          <span class="en-sub">Brand Identity (VIS) & Packaging</span>
-        </div>
-      </a>
-      <!-- P4 -->
-      <a href="works.html#p4-1" class="case-card scroll-reveal">
-        <div class="case-image">
-          <img src="images/p4-spatial.jpg" alt="Work" loading="lazy">
-          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
-        </div>
-        <div class="case-info">
-          <h3 class="case-title">空间视觉与导视系统</h3>
-          <p class="case-desc">工法馆与展示厅视觉设计</p>
-          <span class="en-sub">Spatial Visuals & Wayfinding</span>
-        </div>
-      </a>
-      <!-- P5 -->
-      <a href="works.html#p5-1" class="case-card scroll-reveal">
-        <div class="case-image">
-          <img src="images/p5-photography.jpg" alt="Work" loading="lazy">
-          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
-        </div>
-        <div class="case-info">
-          <h3 class="case-title">摄影策划与指导</h3>
-          <p class="case-desc">拍摄策划、服饰搭配场景选择、现场调度</p>
-          <span class="en-sub">Photography Direction & Planning</span>
-        </div>
-      </a>
-      <!-- P6 -->
-      <a href="works.html#p6-1" class="case-card scroll-reveal">
-        <div class="case-image">
-          <img src="images/p6-3d.jpg" alt="Work" loading="lazy">
-          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
-        </div>
-        <div class="case-info">
-          <h3 class="case-title">三维建模与渲染</h3>
-          <p class="case-desc">3D建模和渲染视觉表现</p>
-          <span class="en-sub">3D Modeling & Rendering</span>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <!-- 4. Footer -->
-  <section id="contact" class="footer">
-    <div class="scroll-reveal">
-      <h2>Let's create something together.</h2>
-      <div class="footer-links">
-        <a href="mailto:sally00kk@gmail.com"><i class="fa-solid fa-envelope"></i> sally00kk@gmail.com</a>
-        <a href="mailto:1355652997@qq.com"><i class="fa-brands fa-qq"></i> 1355652997@qq.com</a>
-        <span><i class="fa-solid fa-phone"></i> 178-9100-3233</span>
-      </div>
-    </div>
-  </section>
+    <span class="menu-label" id="menuText">Menu</span>
+  </div>
 
   <script>
-    // --- 1. Tab 切换逻辑 ---
-    function switchTab(tabId, btnElement) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-      btnElement.classList.add('active');
-      document.getElementById(tabId).classList.add('active');
-    }
-
-    // --- 2. 页面加载动画 ---
-    window.addEventListener('load', () => { document.body.classList.add('loaded'); });
-
-    // --- 3. 幻灯片自动轮播 ---
+    // --- 1. 幻灯片自动轮播 ---
     const slides = document.querySelectorAll('.hero-slide');
     let currentSlide = 0;
     function nextSlide() {
@@ -587,37 +376,21 @@
       currentSlide = (currentSlide + 1) % slides.length;
       slides[currentSlide].classList.add('active');
     }
-    setInterval(nextSlide, 3500);
+    setInterval(nextSlide, 4000);
 
-    // --- 4. 导航栏滚动变色 ---
-    window.addEventListener('scroll', () => {
-      const nav = document.querySelector('.nav');
-      if(window.scrollY > 50) nav.classList.add('scrolled');
-      else nav.classList.remove('scrolled');
-    });
+    // --- 2. 菜单开关逻辑 ---
+    const body = document.body;
+    const menuText = document.getElementById('menuText');
 
-    // --- 5. 滚动显现动画 ---
-    const observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
-
-    // --- 6. 平滑滚动 ---
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        if(this.getAttribute('href').startsWith('#')) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute('href'));
-          if(target) target.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    });
+    function toggleMenu() {
+      body.classList.toggle('menu-open');
+      
+      if (body.classList.contains('menu-open')) {
+        menuText.textContent = "Close";
+      } else {
+        menuText.textContent = "Menu";
+      }
+    }
   </script>
 </body>
 </html>
