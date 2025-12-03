@@ -32,119 +32,53 @@
     a { text-decoration: none; color: inherit; transition: opacity 0.3s; }
     img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
-    /* --- 2. 页面容器 --- */
+    /* --- 2. Logo & 页面容器 --- */
     .logo-fixed {
-      position: fixed;
-      top: 2rem;
-      left: 3rem;
-      font-size: 1.5rem;
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      z-index: 800;
-      color: #fff;
-      mix-blend-mode: difference; 
-      transition: transform 0.6s var(--ease-out-expo);
+      position: fixed; top: 2rem; left: 3rem; font-size: 1.5rem; font-weight: 800;
+      letter-spacing: 2px; text-transform: uppercase; z-index: 800; color: #fff;
+      mix-blend-mode: difference; transition: transform 0.6s var(--ease-out-expo);
     }
-    
-    body.menu-open .logo-fixed {
-      transform: translateY(calc(var(--menu-height) * -1));
-    }
+    body.menu-open .logo-fixed { transform: translateY(calc(var(--menu-height) * -1)); }
 
     /* --- 3. Split Hero (主视觉) --- */
     .hero-split {
-      display: flex;
-      height: 100vh;
-      width: 100%;
-      position: relative;
-      transition: transform 0.6s var(--ease-out-expo), filter 0.6s;
-      will-change: transform;
+      display: flex; height: 100vh; width: 100%; position: relative;
+      transition: transform 0.6s var(--ease-out-expo), filter 0.6s; will-change: transform;
     }
 
     body.menu-open .hero-split {
       transform: translateY(calc(var(--menu-height) * -1)); 
-      filter: brightness(0.8); 
-      border-radius: 0 0 20px 20px;
-      overflow: hidden; 
+      filter: brightness(0.8); border-radius: 0 0 20px 20px; overflow: hidden; 
     }
 
-    .hero-visual {
-      width: 50%;
-      height: 100%;
-      position: relative;
-      background-color: #f4f4f4;
-      overflow: hidden;
-    }
-
+    .hero-visual { width: 50%; height: 100%; position: relative; background-color: #f4f4f4; overflow: hidden; }
     .hero-slide {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transition: opacity 1.5s ease-in-out, transform 8s ease;
-      transform: scale(1.1);
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+      opacity: 0; transition: opacity 1.5s ease-in-out, transform 8s ease; transform: scale(1.1);
     }
     .hero-slide.active { opacity: 1; transform: scale(1); }
 
-    .hero-content {
-      width: 50%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 0 5rem;
-      background: #fff;
-    }
+    .hero-content { width: 50%; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 0 5rem; background: #fff; }
 
-    /* --- 文案样式优化 (针对中文) --- */
+    /* 文案样式 */
     .hero-title {
-      font-size: clamp(2.5rem, 4vw, 4.5rem); /* 稍微调小一点以适应中文 */
-      font-weight: 900;
-      line-height: 1.2;
-      margin-bottom: 0.8rem;
-      letter-spacing: -1px;
-      color: var(--text-main);
+      font-size: clamp(2.5rem, 4vw, 4.5rem); font-weight: 900; line-height: 1.2; margin-bottom: 0.8rem;
+      letter-spacing: -1px; color: var(--text-main); opacity: 0; transform: translateY(30px);
       animation: fadeInUp 1s var(--ease-out-expo) 0.2s forwards;
-      opacity: 0; transform: translateY(30px);
     }
-    
-    /* 副标题：电商体验 x ... */
     .hero-subtitle-tags {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--accent); /* 蓝色高亮 */
-      margin-bottom: 1.5rem;
-      letter-spacing: 1px;
-      animation: fadeInUp 1s var(--ease-out-expo) 0.3s forwards;
-      opacity: 0; transform: translateY(30px);
+      font-size: 1.2rem; font-weight: 700; color: var(--accent); margin-bottom: 1.5rem; letter-spacing: 1px;
+      opacity: 0; transform: translateY(30px); animation: fadeInUp 1s var(--ease-out-expo) 0.3s forwards;
     }
-
-    /* 正文描述 */
     .hero-desc {
-      font-size: 1rem;
-      color: var(--text-sub);
-      line-height: 1.8; /* 增加行高，提升阅读舒适度 */
-      margin-bottom: 2.5rem;
-      max-width: 540px; /* 限制宽度，防止单行过长 */
-      text-align: justify; /* 两端对齐，更整齐 */
-      animation: fadeInUp 1s var(--ease-out-expo) 0.4s forwards;
-      opacity: 0; transform: translateY(30px);
+      font-size: 1rem; color: var(--text-sub); line-height: 1.8; margin-bottom: 2.5rem; max-width: 540px; text-align: justify;
+      opacity: 0; transform: translateY(30px); animation: fadeInUp 1s var(--ease-out-expo) 0.4s forwards;
     }
 
-    .btn-group {
-      display: flex; gap: 1.5rem;
-      animation: fadeInUp 1s var(--ease-out-expo) 0.6s forwards;
-      opacity: 0; transform: translateY(30px);
-    }
-
-    .btn {
-      padding: 16px 40px; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-      cursor: pointer; position: relative; transition: all 0.3s ease; display: inline-flex; align-items: center;
-    }
+    .btn-group { display: flex; gap: 1.5rem; opacity: 0; transform: translateY(30px); animation: fadeInUp 1s var(--ease-out-expo) 0.6s forwards; }
+    .btn { padding: 16px 40px; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; transition: all 0.3s ease; display: inline-flex; align-items: center; }
     .btn i { margin-left: 10px; transition: transform 0.3s; }
     .btn:hover i { transform: translateX(5px); }
-
     .btn-black { background: #000; color: #fff; border: 1px solid #000; }
     .btn-black:hover { background: transparent; color: #000; }
     .btn-outline { background: transparent; color: #000; border: 1px solid #000; }
@@ -154,203 +88,75 @@
 
     /* --- 4. 黑色菜单区域 --- */
     .menu-overlay {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: var(--menu-height); 
-      background: var(--menu-bg);
-      z-index: 900;
-      transform: translateY(100%);
-      transition: transform 0.6s var(--ease-out-expo);
-      padding: 3rem 3rem 2rem 3rem; 
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      border-top: 1px solid rgba(255,255,255,0.1);
+      position: fixed; bottom: 0; left: 0; width: 100%; height: var(--menu-height); 
+      background: var(--menu-bg); z-index: 900; transform: translateY(100%);
+      transition: transform 0.6s var(--ease-out-expo); padding: 3rem 3rem 2rem 3rem; 
+      color: #fff; display: flex; flex-direction: column; border-top: 1px solid rgba(255,255,255,0.1);
     }
-
     body.menu-open .menu-overlay { transform: translateY(0); }
 
-    .menu-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 2rem;
-      height: 100%;
-      max-width: 1600px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .menu-column {
-      display: flex;
-      flex-direction: column;
-      border-right: none; 
-      padding-right: 1rem;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.5s ease;
-      height: 100%;
-      position: relative;
-    }
-
-    .col-dot {
-      display: inline-block; width: 8px; height: 8px; 
-      background-color: var(--accent); border-radius: 50%; margin-right: 8px;
-    }
-
+    .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; height: 100%; max-width: 1600px; margin: 0 auto; width: 100%; }
+    .menu-column { display: flex; flex-direction: column; opacity: 0; transform: translateY(30px); transition: all 0.5s ease; height: 100%; position: relative; }
+    .col-dot { display: inline-block; width: 8px; height: 8px; background-color: var(--accent); border-radius: 50%; margin-right: 8px; }
     body.menu-open .menu-column:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
     body.menu-open .menu-column:nth-child(2) { transition-delay: 0.15s; opacity: 1; transform: translateY(0); }
     body.menu-open .menu-column:nth-child(3) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
     body.menu-open .menu-column:nth-child(4) { transition-delay: 0.25s; opacity: 1; transform: translateY(0); }
 
-    .menu-col-title {
-      font-size: 0.75rem; 
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #999;
-      margin-bottom: 0.8rem;
-      font-weight: 700;
-      display: flex; align-items: center;
-    }
-
-    .menu-link-large {
-      font-size: 1.8rem; 
-      font-weight: 700;
-      line-height: 1.1;
-      margin-bottom: 0.5rem;
-      display: block;
-      color: #fff;
-      transition: color 0.3s;
-    }
+    .menu-link-large { font-size: 1.8rem; font-weight: 700; line-height: 1.1; margin-bottom: 0.5rem; display: block; color: #fff; transition: color 0.3s; }
     .menu-link-large:hover { color: var(--accent); }
-
-    .menu-desc {
-      font-size: 0.85rem; color: #666; margin-bottom: 1rem; line-height: 1.4;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-    }
-
-    .menu-image {
-      width: 100%;
-      flex: 1; 
-      background: #222;
-      border-radius: 4px;
-      overflow: hidden;
-      margin-top: auto; 
-      min-height: 120px; 
-    }
+    .menu-col-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 0.8rem; font-weight: 700; display: flex; align-items: center; }
+    .menu-desc { font-size: 0.85rem; color: #666; margin-bottom: 1rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .menu-image { width: 100%; flex: 1; background: #222; border-radius: 4px; overflow: hidden; margin-top: auto; min-height: 120px; }
     .menu-image img { opacity: 0.8; transition: transform 0.6s, opacity 0.6s; height: 100%; width: 100%; object-fit: cover; }
     .menu-column:hover .menu-image img { transform: scale(1.05); opacity: 1; }
 
     /* Contact List */
     .contact-list { margin-top: 1.5rem; }
-    
-    .contact-item {
-      display: flex; align-items: center; margin-bottom: 0.5rem; cursor: pointer; padding: 10px;
-      border-radius: 6px; transition: background 0.2s; position: relative;
-    }
+    .contact-item { display: flex; align-items: center; margin-bottom: 0.5rem; cursor: pointer; padding: 10px; border-radius: 6px; transition: background 0.2s; position: relative; }
     .contact-item:hover { background: rgba(255,255,255,0.1); }
-    
-    .contact-icon {
-      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-      background: #333; border-radius: 50%; margin-right: 12px; color: #fff; font-size: 0.8em;
-    }
+    .contact-icon { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: #333; border-radius: 50%; margin-right: 12px; color: #fff; font-size: 0.8em; }
     .contact-item:hover .contact-icon { background: var(--accent); }
-    
     .contact-info { display: flex; flex-direction: column; }
     .contact-value { font-size: 0.95rem; color: #ddd; font-weight: 500;}
-
-    .copy-feedback {
-      font-size: 0.7rem; color: var(--accent); margin-left: auto; opacity: 0;
-      transform: translateX(-5px); transition: all 0.3s; font-weight: 700; text-transform: uppercase;
-    }
+    .copy-feedback { font-size: 0.7rem; color: var(--accent); margin-left: auto; opacity: 0; transform: translateX(-5px); transition: all 0.3s; font-weight: 700; text-transform: uppercase; }
     .contact-item:hover .copy-feedback { opacity: 1; transform: translateX(0); }
 
     /* --- 5. 底部胶囊按钮 --- */
-    .menu-trigger-container {
-      position: fixed;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      cursor: pointer;
-    }
-    
-    .menu-btn {
-      width: 75px; 
-      height: 75px;
-      background-color: var(--accent);
-      border-radius: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 10px 30px rgba(68, 82, 254, 0.4);
-      transition: width 0.5s var(--ease-out-expo), box-shadow 0.3s, background-color 0.3s;
-      overflow: hidden;
-      position: relative;
-      border: 2px solid transparent;
-    }
-
-    body.menu-open .menu-btn {
-      background-color: #fff; 
-      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
-    }
+    .menu-trigger-container { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000; cursor: pointer; }
+    .menu-btn { width: 75px; height: 75px; background-color: var(--accent); border-radius: 50px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(68, 82, 254, 0.4); transition: width 0.5s var(--ease-out-expo), box-shadow 0.3s, background-color 0.3s; overflow: hidden; position: relative; border: 2px solid transparent; }
+    body.menu-open .menu-btn { background-color: #fff; box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2); }
     body.menu-open .menu-icon-line { background: #000; } 
     body.menu-open .menu-label { color: #000; }
-
     .menu-btn:hover { width: 170px; box-shadow: 0 15px 40px rgba(68, 82, 254, 0.6); }
     body.menu-open .menu-btn:hover { box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3); }
-
-    .icon-wrapper {
-      width: 24px; height: 24px; position: relative; flex-shrink: 0;
-      transition: transform 0.5s var(--ease-out-expo);
-      transform: translateX(0); 
-    }
+    .icon-wrapper { width: 24px; height: 24px; position: relative; flex-shrink: 0; transition: transform 0.5s var(--ease-out-expo); transform: translateX(0); }
     .menu-btn:hover .icon-wrapper { transform: translateX(-35px); }
-
-    .menu-icon-line {
-      width: 24px; height: 2px; background: #fff; position: absolute; left: 0; transition: all 0.3s ease;
-    }
-    .menu-icon-line:first-child { top: 8px; }
-    .menu-icon-line:last-child { bottom: 8px; }
-
+    .menu-icon-line { width: 24px; height: 2px; background: #fff; position: absolute; left: 0; transition: all 0.3s ease; }
+    .menu-icon-line:first-child { top: 8px; } .menu-icon-line:last-child { bottom: 8px; }
     body.menu-open .menu-icon-line:first-child { top: 50%; transform: translateY(-50%) rotate(45deg); }
     body.menu-open .menu-icon-line:last-child { bottom: 50%; transform: translateY(50%) rotate(-45deg); }
-
-    .menu-label {
-      position: absolute; left: 50%; font-size: 0.9rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 2px; color: #fff; white-space: nowrap; opacity: 0;
-      transform: translateX(10px); transition: all 0.4s ease 0.1s; pointer-events: none;
-    }
+    .menu-label { position: absolute; left: 50%; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #fff; white-space: nowrap; opacity: 0; transform: translateX(10px); transition: all 0.4s ease 0.1s; pointer-events: none; }
     .menu-btn:hover .menu-label { opacity: 1; transform: translateX(15px); }
 
-
-    /* --- Mobile Responsive --- */
+    /* Mobile Responsive */
     @media (max-width: 768px) {
       :root { --menu-height: 100vh; } 
-      
       .logo-fixed { left: 1.5rem; top: 1.5rem; font-size: 1.2rem; }
       body.menu-open .logo-fixed { transform: translateY(0); mix-blend-mode: normal; color: #fff; } 
-
       .hero-split { flex-direction: column; }
       body.menu-open .hero-split { transform: translateY(0); opacity: 0; } 
-
       .hero-visual, .hero-content { width: 100%; height: 50%; }
       .hero-content { padding: 2rem; align-items: center; text-align: center; }
-      
-      /* 移动端字体调整 */
       .hero-title { font-size: 2.2rem; margin-top: -30px; }
       .hero-subtitle-tags { font-size: 1rem; margin-bottom: 1rem; }
       .hero-desc { font-size: 0.9rem; line-height: 1.6; text-align: left; }
-      
       .btn-group { justify-content: center; width: 100%; }
       .btn { padding: 12px 25px; font-size: 0.8rem; }
-      
       .menu-overlay { padding: 4rem 1.5rem 8rem 1.5rem; overflow-y: auto; }
       .menu-grid { grid-template-columns: 1fr; gap: 2.5rem; display: block; }
       .menu-column { margin-bottom: 2rem; border-bottom: 1px solid #222; padding-bottom: 1.5rem; height: auto;}
       .menu-image { display: none; }
-      
       .menu-trigger-container { bottom: 20px; }
       .menu-btn { width: 60px; height: 60px; }
       .menu-btn:hover { width: 60px; }
@@ -361,7 +167,8 @@
 </head>
 <body>
 
-  <a href="#" class="logo-fixed">SALLY.</a>
+  <!-- Logo -->
+  <a href="index.html" class="logo-fixed">SALLY.</a>
 
   <section class="hero-split">
     <div class="hero-visual">
@@ -371,20 +178,16 @@
     </div>
     
     <div class="hero-content">
-      <!-- 1. 标题 -->
       <h1 class="hero-title">Sally 设计作品集</h1>
-      
-      <!-- 2. 副标题 (Tags) -->
       <div class="hero-subtitle-tags">
         电商体验 × 品牌视觉 × 多维创意
       </div>
-      
-      <!-- 3. 正文描述 -->
       <p class="hero-desc">
         具备电商全链路设计能力，精通 DTC 独立站 / 亚马逊 / TikTok 店铺视觉搭建、社交广告创意产出；同时掌握品牌 VI 设计、3D 建模渲染等技能，可高效承接电商场景下从视觉创意到体验落地的全流程设计需求。
       </p>
 
       <div class="btn-group">
+        <!-- 【重点修正】这里必须写 work.html -->
         <a href="work.html" class="btn btn-black">
           See Work <i class="fa-solid fa-arrow-right"></i>
         </a>
@@ -395,39 +198,33 @@
     </div>
   </section>
 
-  <!-- 菜单内容 (高度约为 48vh) -->
+  <!-- 菜单内容 -->
   <div class="menu-overlay">
     <div class="menu-grid">
-      <!-- 01 -->
       <div class="menu-column">
         <h3 class="menu-col-title"><span class="col-dot"></span>01</h3>
-        <a href="#" class="menu-link-large" onclick="toggleMenu()">HOME</a>
+        <a href="index.html" class="menu-link-large" onclick="toggleMenu()">HOME</a>
         <p class="menu-desc">Return to the visual showcase start.</p>
         <div class="menu-image"><img src="images/banner-1.jpg" alt="Home"></div>
       </div>
-      <!-- 02 -->
       <div class="menu-column">
         <h3 class="menu-col-title"><span class="col-dot"></span>02</h3>
+        <!-- 【重点修正】这里必须写 work.html -->
         <a href="work.html" class="menu-link-large">WORK</a>
         <p class="menu-desc">Selected projects involving UI/UX, Branding.</p>
         <div class="menu-image"><img src="images/p1-ecommerce.jpg" alt="Work"></div>
       </div>
-      <!-- 03 -->
       <div class="menu-column">
         <h3 class="menu-col-title"><span class="col-dot"></span>03</h3>
+        <!-- 【重点修正】这里必须写 about.html -->
         <a href="about.html" class="menu-link-large">ABOUT ME</a>
         <p class="menu-desc">My resume, journey, education, and design philosophy.</p>
         <div class="menu-image"><img src="images/banner-2.jpg" alt="About"></div>
       </div>
-      
-      <!-- 04: Contact -->
       <div class="menu-column">
         <h3 class="menu-col-title"><span class="col-dot"></span>04</h3>
-        <a href="contact.html" class="menu-link-large">CONTACT</a>
-        
+        <a href="#" class="menu-link-large">CONTACT</a>
         <div class="contact-list">
-          
-          <!-- Gmail -->
           <div class="contact-item" onclick="copyToClipboard('sally00kk@gmail.com', this)">
             <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
             <div class="contact-info">
@@ -435,8 +232,6 @@
             </div>
             <span class="copy-feedback">Copy</span>
           </div>
-          
-          <!-- QQ -->
           <div class="contact-item" onclick="copyToClipboard('1355652997@qq.com', this)">
             <div class="contact-icon"><i class="fa-brands fa-qq"></i></div>
             <div class="contact-info">
@@ -444,8 +239,6 @@
             </div>
             <span class="copy-feedback">Copy</span>
           </div>
-
-          <!-- Phone -->
           <div class="contact-item" onclick="copyToClipboard('178-9100-3233', this)">
             <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
             <div class="contact-info">
@@ -453,18 +246,15 @@
             </div>
             <span class="copy-feedback">Copy</span>
           </div>
-
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 胶囊按钮 -->
   <div class="menu-trigger-container" onclick="toggleMenu()">
     <div class="menu-btn">
       <div class="icon-wrapper">
-        <span class="menu-icon-line"></span>
-        <span class="menu-icon-line"></span>
+        <span class="menu-icon-line"></span><span class="menu-icon-line"></span>
       </div>
       <span class="menu-label" id="menuText">Menu</span>
     </div>
@@ -482,32 +272,20 @@
 
     const body = document.body;
     const menuText = document.getElementById('menuText');
-
     function toggleMenu() {
       body.classList.toggle('menu-open');
-      if (body.classList.contains('menu-open')) {
-        menuText.textContent = "Close";
-      } else {
-        menuText.textContent = "Menu";
-        setTimeout(() => {
-          document.querySelectorAll('.copy-feedback').forEach(el => el.textContent = 'Copy');
-        }, 500);
+      menuText.textContent = body.classList.contains('menu-open') ? "Close" : "Menu";
+      if (!body.classList.contains('menu-open')) {
+        setTimeout(() => { document.querySelectorAll('.copy-feedback').forEach(el => el.textContent = 'Copy'); }, 500);
       }
     }
-
     async function copyToClipboard(text, element) {
       try {
         await navigator.clipboard.writeText(text);
         const feedback = element.querySelector('.copy-feedback');
-        feedback.textContent = "Copied!";
-        feedback.style.color = "#44ff99";
-        setTimeout(() => {
-          feedback.textContent = "Copy";
-          feedback.style.color = "var(--accent)";
-        }, 2000);
-      } catch (err) {
-        console.error('Failed to copy: ', err);
-      }
+        feedback.textContent = "Copied!"; feedback.style.color = "#44ff99";
+        setTimeout(() => { feedback.textContent = "Copy"; feedback.style.color = "var(--accent)"; }, 2000);
+      } catch (err) { console.error('Failed to copy: ', err); }
     }
   </script>
 </body>
