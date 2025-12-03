@@ -37,14 +37,15 @@
     /* --- 2. 页面容器 --- */
     .page-container {
       background: #fff; position: relative; z-index: 10; min-height: 100vh;
-      transition: transform 0.6s var(--ease-out-expo), filter 0.6s;
-      padding-top: 120px; padding-bottom: 120px; will-change: transform;
+      /* 注意：这里移除了 view-transition 相关的干扰属性 */
+      padding-top: 120px; padding-bottom: 120px;
     }
     
     /* 桌面端：菜单打开时内容上移 */
     body.menu-open .page-container {
       transform: translateY(calc(var(--menu-height) * -1));
       filter: brightness(0.8); border-radius: 0 0 20px 20px; overflow: hidden; height: 100vh; 
+      transition: transform 0.6s var(--ease-out-expo), filter 0.6s;
     }
 
     /* --- 3. 头部区域 (Logo + Toggle) --- */
@@ -57,8 +58,7 @@
     }
 
     .toc-btn {
-      display: none; /* 桌面端隐藏三道杠 */
-      background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #000; padding: 5px;
+      display: none; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #000; padding: 5px;
     }
 
     .logo-sally {
@@ -74,15 +74,14 @@
       color: #fff; mix-blend-mode: difference;
     }
 
-    /* --- 4. 侧边栏目录 (桌面端) --- */
+    /* --- 4. 侧边栏目录 --- */
     .sidebar-toc {
       position: fixed; top: 100px; left: 3rem; width: 200px; height: calc(100vh - 100px); 
       overflow-y: auto; z-index: 100; padding-right: 15px; padding-top: 1rem;
       background: transparent; border-right: 1px solid rgba(0,0,0,0.05); 
-      transition: transform 0.6s var(--ease-out-expo), left 0.3s ease, opacity 0.3s;
+      transition: transform 0.6s var(--ease-out-expo), left 0.3s ease;
     }
     
-    /* 右侧投影 */
     .sidebar-toc::after {
       content: ''; position: fixed; top: 100px; left: calc(3rem + 200px); width: 10px; height: calc(100vh - 100px);
       box-shadow: -5px 0 15px -5px rgba(0,0,0,0.08); pointer-events: none; z-index: 101;
@@ -105,7 +104,7 @@
     .toc-link:hover { color: var(--accent); transform: translateX(3px); font-weight: 500;}
     .toc-link span { margin-right: 5px; font-weight: 600; font-size: 0.7rem; color: #ddd; }
 
-    /* 移动端遮罩层 */
+    /* 遮罩层 */
     .toc-overlay-backdrop {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.5); z-index: 99; opacity: 0; visibility: hidden;
@@ -129,10 +128,6 @@
     .section-title-cn { font-size: 2rem; font-weight: 800; color: #000; line-height: 1.2; }
     .section-title-en { font-size: 1rem; font-weight: 400; color: #999; text-transform: uppercase; letter-spacing: 1px; font-family: "Helvetica Neue", Arial, sans-serif;}
 
-    /* 
-       Grid 布局核心：
-       固定高度 (500px) 确保绝对对齐
-    */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -155,7 +150,6 @@
     }
     .work-card:hover img { transform: scale(1.05); filter: brightness(0.9); }
 
-    /* 标签 (毛玻璃胶囊) */
     .work-tag {
       position: absolute; top: 15px; right: 15px;
       background: rgba(0, 0, 0, 0.3); 
@@ -222,7 +216,7 @@
     .copy-feedback { font-size: 0.7rem; color: var(--accent); margin-left: auto; opacity: 0; transform: translateX(-5px); transition: all 0.3s; font-weight: 700; text-transform: uppercase; }
     .contact-item:hover .copy-feedback { opacity: 1; transform: translateX(0); }
 
-    /* --- 7. Mobile Responsive (核心修复) --- */
+    /* --- 7. Mobile Responsive --- */
     @media (max-width: 1200px) {
       .sidebar-toc { display: none; } 
       .container { padding: 0 3rem; max-width: 100%; } 
@@ -231,21 +225,21 @@
     @media (max-width: 768px) {
       :root { --menu-height: 100vh; } 
 
-      /* 1. Header: 绝对定位，不随页面滚动 */
+      /* Header: 绝对定位，不随页面滚动 */
       .header-wrapper {
         position: absolute; top: 2rem; left: 1.5rem; width: auto; transform: none !important;
       }
       .toc-btn { display: block; }
       
-      /* 2. 页面容器: 菜单打开时不动 */
+      /* Page Content: 菜单打开时不动 */
       body.menu-open .page-container {
         transform: none; filter: none; border-radius: 0;
       }
 
-      /* 3. Logo: 菜单打开时隐藏 */
+      /* Logo: 菜单打开时隐藏 */
       body.menu-open .header-wrapper { opacity: 0; pointer-events: none; }
 
-      /* 4. 侧边栏 Drawer */
+      /* Sidebar Drawer */
       .sidebar-toc {
         display: block; position: fixed; top: 0; left: 0; width: 75%; height: 100vh;
         background: #fff; padding: 4rem 1.5rem; transform: translateX(-100%);
@@ -268,7 +262,7 @@
       .section-title-cn { font-size: 1.5rem; }
       .section-title-en { font-size: 0.9rem; }
 
-      /* 5. 菜单内容与滚动 (修复间距过大问题) */
+      /* 菜单内容与滚动 */
       .menu-overlay { 
         z-index: 2000; 
         padding: 4rem 2rem 8rem 2rem; 
@@ -279,13 +273,61 @@
       .menu-column { height: auto; margin-bottom: 1.5rem; opacity: 1; transform: none; }
       .menu-image { display: none; }
 
-      /* 6. 菜单按钮强制重置 */
+      /* 菜单按钮强制重置 */
       .menu-trigger-container { bottom: 30px; z-index: 2001; }
       .menu-btn { width: 60px !important; height: 60px !important; border-radius: 50% !important; }
       body.menu-open .menu-btn { width: 60px !important; background-color: #fff; }
       .menu-label { display: none !important; } 
       .menu-btn:hover { width: 60px !important; box-shadow: 0 10px 30px rgba(68, 82, 254, 0.4); }
       .menu-btn:hover .icon-wrapper { transform: translateX(0) !important; }
+    }
+
+    /* 
+       =========================================
+       高级过渡动画 (Advanced View Transitions)
+       =========================================
+    */
+    /* 1. 全局配置 */
+    ::view-transition-group(root) {
+      animation-duration: 0.4s;
+    }
+
+    /* 2. 图片 Morph (核心主角) */
+    ::view-transition-group(hero-image) {
+      z-index: 10000; 
+      animation-timing-function: cubic-bezier(0.87, 0, 0.13, 1);
+      animation-duration: 0.8s;
+    }
+
+    /* 3. 图片适配 */
+    ::view-transition-old(hero-image),
+    ::view-transition-new(hero-image) {
+      object-fit: cover;
+      object-position: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 4. 旧页面背景下沉 */
+    ::view-transition-old(root) {
+      animation: fade-out-down 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    /* 5. 新页面背景上浮 */
+    ::view-transition-new(root) {
+      animation: fade-in-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      animation-delay: 0.1s; 
+      opacity: 0;
+    }
+
+    @keyframes fade-out-down {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(20px); }
+    }
+
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
@@ -371,17 +413,17 @@
         <div class="gallery-grid">
           <a href="project.html?id=p1" onclick="navigateToProject(event, this.href)" id="item-1-1" class="work-card span-2">
             <span class="work-tag">Shopify</span>
-            <img src="images/p1-ecommerce.jpg" alt="Independent Site">
+            <img src="images/p1-hero.jpg" alt="Independent Site">
             <div class="card-info"><span class="card-title-cn">独立站网页设计</span><span class="card-title-en">Independent Site Web Design</span></div>
           </a>
           <a href="project.html?id=p2" onclick="navigateToProject(event, this.href)" id="item-1-2" class="work-card">
             <span class="work-tag">Amazon</span>
-            <img src="images/banner-1.jpg" alt="Amazon">
+            <img src="images/p2-hero.jpg" alt="Amazon">
             <div class="card-info"><span class="card-title-cn">亚马逊店铺装修</span><span class="card-title-en">Amazon Storefront Design</span></div>
           </a>
           <a href="project.html?id=p3" onclick="navigateToProject(event, this.href)" id="item-1-3" class="work-card span-full">
             <span class="work-tag">TikTok</span>
-            <img src="images/banner-3.jpg" alt="TikTok">
+            <img src="images/p3-hero.jpg" alt="TikTok">
             <div class="card-info"><span class="card-title-cn">TikTok Shop 界面设计</span><span class="card-title-en">TikTok Shop UI Design</span></div>
           </a>
         </div>
@@ -396,22 +438,22 @@
         <div class="gallery-grid">
           <a href="project.html?id=p4" onclick="navigateToProject(event, this.href)" id="item-2-1" class="work-card">
             <span class="work-tag">FB / Google Ads</span>
-            <img src="images/p2-marketing.jpg" alt="Social Ads">
+            <img src="images/p4-hero.jpg" alt="Social Ads">
             <div class="card-info"><span class="card-title-cn">社交媒体广告创意</span><span class="card-title-en">Social Media Ad Creatives</span></div>
           </a>
           <a href="project.html?id=p5" onclick="navigateToProject(event, this.href)" id="item-2-2" class="work-card span-2">
             <span class="work-tag">DTC / A+</span>
-            <img src="images/banner-2.jpg" alt="DTC A+">
+            <img src="images/p5-hero.jpg" alt="DTC A+">
             <div class="card-info"><span class="card-title-cn">独立站详情页面设计</span><span class="card-title-en">Independent Site Detail Page</span></div>
           </a>
           <a href="project.html?id=p6" onclick="navigateToProject(event, this.href)" id="item-2-3" class="work-card span-2">
             <span class="work-tag">Amazon / A+</span>
-            <img src="images/p3-branding.jpg" alt="Amazon A+">
+            <img src="images/p6-hero.jpg" alt="Amazon A+">
             <div class="card-info"><span class="card-title-cn">亚马逊高级A+页面设计</span><span class="card-title-en">Amazon Premium A+ Design</span></div>
           </a>
           <a href="project.html?id=p7" onclick="navigateToProject(event, this.href)" id="item-2-4" class="work-card">
             <span class="work-tag">TK / A+</span>
-            <img src="images/p1-ecommerce.jpg" alt="TikTok A+">
+            <img src="images/p7-hero.jpg" alt="TikTok A+">
             <div class="card-info"><span class="card-title-cn">tiktokA+页面设计</span><span class="card-title-en">TikTok A+ Page Design</span></div>
           </a>
         </div>
@@ -426,17 +468,17 @@
         <div class="gallery-grid">
           <a href="project.html?id=p8" onclick="navigateToProject(event, this.href)" id="item-3-1" class="work-card">
             <span class="work-tag">Packaging</span>
-            <img src="images/p3-branding.jpg" alt="Packaging">
+            <img src="images/p8-hero.jpg" alt="Packaging">
             <div class="card-info"><span class="card-title-cn">包装设计与物料延展</span><span class="card-title-en">Packaging & Collateral Extension</span></div>
           </a>
           <a href="project.html?id=p9" onclick="navigateToProject(event, this.href)" id="item-3-2" class="work-card">
             <span class="work-tag">Branding</span>
-            <img src="images/banner-1.jpg" alt="Yogurt Brand">
+            <img src="images/p9-hero.jpg" alt="Yogurt Brand">
             <div class="card-info"><span class="card-title-cn">巴西酸奶品牌全案设计</span><span class="card-title-en">Brazilian Yogurt Brand Identity</span></div>
           </a>
           <a href="project.html?id=p10" onclick="navigateToProject(event, this.href)" id="item-3-3" class="work-card">
             <span class="work-tag">Visual Identity</span>
-            <img src="images/p5-photography.jpg" alt="Cowboy Boots">
+            <img src="images/p10-hero.jpg" alt="Cowboy Boots">
             <div class="card-info"><span class="card-title-cn">Redtop 西部牛仔靴品牌全案</span><span class="card-title-en">Redtop Cowboy Boots Identity</span></div>
           </a>
         </div>
@@ -451,7 +493,7 @@
         <div class="gallery-grid">
           <a href="project.html?id=p11" onclick="navigateToProject(event, this.href)" id="item-4-1" class="work-card span-full">
             <span class="work-tag">Spatial Design</span>
-            <img src="images/p4-spatial.jpg" alt="Exhibition">
+            <img src="images/p11-hero.jpg" alt="Exhibition">
             <div class="card-info"><span class="card-title-cn">工法馆与展示厅视觉设计</span><span class="card-title-en">Exhibition Hall & Showroom Visuals</span></div>
           </a>
         </div>
@@ -466,7 +508,7 @@
         <div class="gallery-grid">
           <a href="project.html?id=p12" onclick="navigateToProject(event, this.href)" id="item-5-1" class="work-card span-full">
             <span class="work-tag">Art Direction</span>
-            <img src="images/p5-photography.jpg" alt="Photography">
+            <img src="images/p12-hero.jpg" alt="Photography">
             <div class="card-info"><span class="card-title-cn">策划以及现场调度</span><span class="card-title-en">Planning & On-site Direction</span></div>
           </a>
         </div>
@@ -481,7 +523,7 @@
         <div class="gallery-grid">
           <a href="project.html?id=p13" onclick="navigateToProject(event, this.href)" id="item-6-1" class="work-card span-full">
             <span class="work-tag">C4D / Octane</span>
-            <img src="images/p6-3d.jpg" alt="3D">
+            <img src="images/p13-hero.jpg" alt="3D">
             <div class="card-info"><span class="card-title-cn">3D 建模与渲染练习</span><span class="card-title-en">3D Modeling & Rendering Practice</span></div>
           </a>
         </div>
