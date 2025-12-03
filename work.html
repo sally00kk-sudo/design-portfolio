@@ -15,9 +15,8 @@
       --menu-bg: #000000;
       --menu-height: 48vh; 
       --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
-      /* 定义统一间距变量，方便维护 */
-      --spacing-section: 10rem; /* 版块间距 (加大) */
-      --spacing-grid: 2rem;     /* 图片间距 */
+      --spacing-section: 10rem; 
+      --spacing-grid: 2rem;     
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -53,39 +52,53 @@
     /* --- 3. 作品集排版优化 --- */
     .container { max-width: 1600px; margin: 0 auto; padding: 0 3rem; }
 
-    /* 总标题 */
     .page-header { margin-bottom: 6rem; border-bottom: 1px solid #000; padding-bottom: 2rem; }
     .page-title { font-size: 4rem; font-weight: 900; letter-spacing: -1px; margin-bottom: 0.5rem;}
     .page-subtitle { color: var(--text-sub); font-size: 1.1rem; }
 
-    /* 分类区块 */
     .work-section { 
-      margin-bottom: var(--spacing-section); /* 使用统一的大间距 */
+      margin-bottom: var(--spacing-section); 
       position: relative;
     }
     
-    /* 分类标题 */
     .section-header { margin-bottom: 2.5rem; display: flex; align-items: baseline; gap: 1rem; }
     .section-title-cn { font-size: 2rem; font-weight: 800; color: #000; line-height: 1.2; }
     .section-title-en { font-size: 1rem; font-weight: 400; color: #999; text-transform: uppercase; letter-spacing: 1px; font-family: "Helvetica Neue", Arial, sans-serif;}
 
-    /* 网格布局系统 */
+    /* --- Grid & Aspect Ratio (核心修改) --- */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr); /* 3列网格 */
-      gap: var(--spacing-grid); /* 统一图片间距 */
-      grid-auto-rows: 420px; /* 统一基础高度 */
+      gap: var(--spacing-grid);
+      /* 删除固定行高，改用比例控制 */
     }
 
     /* 卡片样式 */
     .work-card {
       position: relative; display: block; overflow: hidden; border-radius: 4px; background: #f4f4f4;
+      width: 100%;
+      /* 默认单列图片比例：4:3 (比较方正，适合封面) */
+      aspect-ratio: 4/3;
     }
     
-    /* 不同的尺寸类 */
-    .span-2 { grid-column: span 2; } 
-    .span-full { grid-column: 1 / -1; } 
-    .tall { grid-row: span 2; height: 100%; } 
+    /* 跨列控制与比例调整 */
+    
+    /* 跨2列：使用 16:10 比例 (类似MacBook屏幕，适合展示网页) */
+    .span-2 { 
+      grid-column: span 2; 
+      aspect-ratio: 16/10; 
+    } 
+    
+    /* 全宽：使用 16:9 或更宽一点，但保持足够高度 */
+    .span-full { 
+      grid-column: 1 / -1; 
+      aspect-ratio: 21/9; 
+    }
+    
+    /* 竖图模式 (如果需要展示手机端页面) */
+    .portrait {
+      aspect-ratio: 3/4;
+    }
 
     /* 图片动画 */
     .work-card img {
@@ -162,10 +175,9 @@
       .page-header { margin-bottom: 3rem; }
       .page-title { font-size: 2.5rem; }
       
-      /* 手机端全部改为单列 */
-      .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 250px; gap: 1rem;}
-      .span-2, .span-full { grid-column: span 1; } 
-      .tall { grid-row: span 1; }
+      /* 手机端全部改为单列，宽高比设为 4:3 或 1:1 */
+      .gallery-grid { grid-template-columns: 1fr; gap: 1rem;}
+      .work-card, .span-2, .span-full { grid-column: span 1; aspect-ratio: 4/3; } 
       
       .work-section { margin-bottom: 5rem; }
       .section-header { flex-direction: column; gap: 0.2rem; align-items: flex-start; }
@@ -200,7 +212,7 @@
         </div>
         
         <div class="gallery-grid">
-          <!-- Item 1: 独立站 (跨2列 - 强调) -->
+          <!-- Item 1: 独立站 (大图 Span 2) -->
           <a href="#" class="work-card span-2">
             <span class="work-tag">Shopify</span>
             <img src="images/p1-ecommerce.jpg" alt="Independent Site">
@@ -210,7 +222,7 @@
             </div>
           </a>
           
-          <!-- Item 2: 亚马逊 -->
+          <!-- Item 2: 亚马逊 (小图) -->
           <a href="#" class="work-card">
             <span class="work-tag">Amazon</span>
             <img src="images/banner-1.jpg" alt="Amazon">
@@ -220,9 +232,8 @@
             </div>
           </a>
 
-          <!-- Item 3: TikTok (补齐第二行) -->
-          <a href="#" class="work-card span-full" style="height: 350px; grid-auto-flow: dense;">
-            <!-- 这里用 span-full 或 span-2 取决于你想怎么排，这里我放一个单独的 -->
+          <!-- Item 3: TikTok (全宽 Span Full) -->
+          <a href="#" class="work-card span-full" style="aspect-ratio: 21/9;">
             <span class="work-tag">TikTok</span>
             <img src="images/banner-3.jpg" alt="TikTok">
             <div class="card-info">
@@ -233,7 +244,7 @@
         </div>
       </section>
 
-      <!-- 2. 高级A+页面与广告设计 (更新: 4张图布局) -->
+      <!-- 2. 高级A+页面与广告设计 -->
       <section class="work-section">
         <div class="section-header">
           <h2 class="section-title-cn">高级A+页面与广告设计</h2>
@@ -241,8 +252,7 @@
         </div>
         
         <div class="gallery-grid">
-          <!-- Row 1: 小(1) + 大(2) -->
-          <!-- 1. 社交媒体 -->
+          <!-- Item 1: 社交媒体 (小图) -->
           <a href="#" class="work-card">
             <span class="work-tag">FB / Google Ads</span>
             <img src="images/p2-marketing.jpg" alt="Social Ads">
@@ -251,7 +261,8 @@
               <span class="card-title-en">Social Media Ad Creatives</span>
             </div>
           </a>
-          <!-- 2. 独立站详情 (大) -->
+
+          <!-- Item 2: 独立站详情 (大图 Span 2) -->
           <a href="#" class="work-card span-2">
             <span class="work-tag">DTC / A+</span>
             <img src="images/banner-2.jpg" alt="DTC A+">
@@ -261,8 +272,7 @@
             </div>
           </a>
 
-          <!-- Row 2: 大(2) + 小(1) -->
-          <!-- 3. 亚马逊A+ (大) -->
+          <!-- Item 3: 亚马逊A+ (大图 Span 2) -->
           <a href="#" class="work-card span-2">
             <span class="work-tag">Amazon / A+</span>
             <img src="images/p3-branding.jpg" alt="Amazon A+">
@@ -271,7 +281,8 @@
               <span class="card-title-en">Amazon Premium A+ Design</span>
             </div>
           </a>
-          <!-- 4. TikTok A+ -->
+
+          <!-- Item 4: TikTok A+ (小图) -->
           <a href="#" class="work-card">
             <span class="work-tag">TK / A+</span>
             <img src="images/p1-ecommerce.jpg" alt="TikTok A+">
@@ -330,7 +341,7 @@
         
         <div class="gallery-grid">
           <!-- Item 1: 工法馆 (全宽) -->
-          <a href="#" class="work-card span-full" style="height: 500px;">
+          <a href="#" class="work-card span-full" style="aspect-ratio: 21/9;">
             <span class="work-tag">Spatial Design</span>
             <img src="images/p4-spatial.jpg" alt="Exhibition">
             <div class="card-info">
@@ -349,7 +360,7 @@
         </div>
         
         <div class="gallery-grid">
-          <!-- Item 1: 策划 -->
+          <!-- Item 1: 策划 (大图) -->
           <a href="#" class="work-card span-2">
             <span class="work-tag">Art Direction</span>
             <img src="images/p5-photography.jpg" alt="Photography">
