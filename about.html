@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /* 引入基础变量 */
+    /* --- 1. 基础变量 (保持一致) --- */
     :root {
       --text-main: #000000;
       --text-sub: #555555;
@@ -25,7 +25,7 @@
     img { display: block; width: 100%; height: auto; object-fit: cover; }
     ul { list-style: none; }
 
-    /* 页面容器 (用于上滑) */
+    /* --- 2. 页面容器 --- */
     .page-container {
       background: #fff; position: relative; z-index: 10; min-height: 100vh;
       transition: transform 0.6s var(--ease-out-expo), filter 0.6s;
@@ -36,6 +36,7 @@
       filter: brightness(0.8); border-radius: 0 0 20px 20px; overflow: hidden; height: 100vh;
     }
 
+    /* Logo */
     .logo-fixed {
       position: fixed; top: 2rem; left: 3rem; font-size: 1.5rem; font-weight: 800;
       letter-spacing: 2px; text-transform: uppercase; z-index: 800; color: #000;
@@ -43,52 +44,64 @@
     }
     body.menu-open .logo-fixed { transform: translateY(calc(var(--menu-height) * -1)); color: #fff; mix-blend-mode: difference;}
 
-    /* --- 关于页面布局 --- */
+    /* --- 3. 关于页面布局 --- */
     .about-split {
-      display: flex; max-width: 1400px; margin: 0 auto; padding: 0 3rem; gap: 4rem;
+      display: flex; max-width: 1400px; margin: 0 auto; padding: 0 3rem; gap: 5rem;
     }
     
     /* 左侧：个人照 */
     .about-visual {
-      width: 40%; position: sticky; top: 120px; height: fit-content;
+      width: 35%; position: sticky; top: 120px; height: fit-content;
     }
-    .profile-img { width: 100%; aspect-ratio: 3/4; background: #eee; border-radius: 8px; overflow: hidden; }
+    .profile-img { width: 100%; aspect-ratio: 3/4; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
     .profile-img img { width: 100%; height: 100%; object-fit: cover; }
     .about-intro { margin-top: 2rem; }
-    .about-intro h2 { font-size: 2.5rem; line-height: 1.1; margin-bottom: 1rem; }
+    .about-intro h2 { font-size: 2.5rem; line-height: 1.1; margin-bottom: 1rem; font-weight: 900;}
     .about-intro p { color: var(--text-sub); line-height: 1.6; font-size: 1rem; text-align: justify;}
 
     /* 右侧：简历 Tabs */
-    .about-content { width: 60%; }
+    .about-content { width: 65%; }
     
     .tab-header {
-      display: flex; gap: 2rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; margin-bottom: 3rem;
+      display: flex; gap: 2.5rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; margin-bottom: 3rem;
+      overflow-x: auto; /* 防止移动端换行溢出 */
     }
     .tab-btn {
-      background: none; border: none; font-size: 1.5rem; font-weight: 700; color: #ddd; cursor: pointer;
-      transition: color 0.3s; padding: 0; text-align: left;
+      background: none; border: none; font-size: 1.4rem; font-weight: 700; color: #ddd; cursor: pointer;
+      transition: color 0.3s; padding: 0; text-align: left; flex-shrink: 0;
     }
-    .tab-btn span { display: block; font-size: 0.8rem; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+    .tab-btn span { display: block; font-size: 0.7rem; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
     .tab-btn.active { color: #000; }
     
     .tab-pane { display: none; opacity: 0; animation: fadeIn 0.5s forwards; }
     .tab-pane.active { display: block; }
     @keyframes fadeIn { to { opacity: 1; } }
 
-    /* 简历列表项 */
-    .resume-item { display: grid; grid-template-columns: 160px 1fr; margin-bottom: 2.5rem; border-bottom: 1px solid #f9f9f9; padding-bottom: 2rem; }
+    /* 简历列表项样式 */
+    .resume-item { display: grid; grid-template-columns: 180px 1fr; margin-bottom: 2.5rem; border-bottom: 1px solid #f9f9f9; padding-bottom: 2rem; }
     .resume-item:last-child { border-bottom: none; }
-    .resume-year { font-weight: 700; color: #000; font-size: 1.1rem; }
-    .resume-detail h4 { font-size: 1.3rem; margin-bottom: 0.3rem; font-weight: 700; }
-    .resume-detail p { color: var(--text-sub); margin-bottom: 0.5rem; }
-    .resume-desc { font-size: 0.95rem; color: #666; line-height: 1.7; margin-top: 0.8rem; }
-    .resume-desc li { margin-bottom: 5px; list-style: disc; margin-left: 20px;}
+    
+    .resume-year { font-weight: 700; color: #000; font-size: 1rem; line-height: 1.4; }
+    
+    .resume-detail h4 { font-size: 1.25rem; margin-bottom: 0.3rem; font-weight: 700; color: #000; }
+    .resume-detail .org-name { font-size: 0.95rem; color: #555; margin-bottom: 0.8rem; font-weight: 500; display: block;}
+    
+    /* 英文辅助文字 */
+    .en-txt { font-size: 0.85em; color: #999; font-weight: 400; margin-left: 5px; }
+    
+    .resume-desc { font-size: 0.95rem; color: #666; line-height: 1.7; }
+    .resume-desc li { margin-bottom: 6px; position: relative; padding-left: 15px; }
+    .resume-desc li::before { content: "•"; position: absolute; left: 0; color: #ccc; }
+    
+    /* 教育详情里的段落 */
+    .edu-info p { margin-bottom: 0.8rem; font-size: 0.95rem; line-height: 1.6; color: #666; }
+    .edu-info strong { color: #333; font-weight: 600; }
 
-    /* 菜单样式 (复制 Index) */
+    /* --- 菜单样式 (保持一致) --- */
     .menu-overlay { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--menu-height); background: var(--menu-bg); z-index: 900; transform: translateY(100%); transition: transform 0.6s var(--ease-out-expo); padding: 3rem; color: #fff; display: flex; flex-direction: column; border-top: 1px solid rgba(255,255,255,0.1); }
     body.menu-open .menu-overlay { transform: translateY(0); }
     .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; height: 100%; max-width: 1600px; margin: 0 auto; width: 100%; }
-    .menu-column { display: flex; flex-direction: column; opacity: 0; transform: translateY(30px); transition: all 0.5s ease; height: 100%; }
+    .menu-column { display: flex; flex-direction: column; opacity: 0; transform: translateY(30px); transition: all 0.5s ease; height: 100%; position: relative;}
     .col-dot { display: inline-block; width: 8px; height: 8px; background-color: var(--accent); border-radius: 50%; margin-right: 8px; }
     body.menu-open .menu-column:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
     body.menu-open .menu-column:nth-child(2) { transition-delay: 0.15s; opacity: 1; transform: translateY(0); }
@@ -97,9 +110,11 @@
     .menu-link-large { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; display: block; color: #fff; }
     .menu-link-large:hover { color: var(--accent); }
     .menu-col-title { font-size: 0.75rem; text-transform: uppercase; color: #999; margin-bottom: 0.8rem; font-weight: 700; display: flex; align-items: center; }
+    .menu-desc { font-size: 0.85rem; color: #666; margin-bottom: 1rem; }
     .menu-image { width: 100%; flex: 1; background: #222; border-radius: 4px; overflow: hidden; margin-top: auto; min-height: 120px; }
     .menu-image img { opacity: 0.8; height: 100%; object-fit: cover; }
     
+    /* 胶囊按钮 */
     .menu-trigger-container { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000; cursor: pointer; }
     .menu-btn { width: 75px; height: 75px; background-color: var(--accent); border-radius: 50px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(68, 82, 254, 0.4); transition: width 0.5s var(--ease-out-expo), box-shadow 0.3s, background-color 0.3s; overflow: hidden; position: relative; }
     body.menu-open .menu-btn { background-color: #fff; box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2); }
@@ -113,6 +128,17 @@
     body.menu-open .menu-icon-line:last-child { bottom: 50%; transform: translateY(50%) rotate(-45deg); }
     .menu-label { position: absolute; left: 50%; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #fff; white-space: nowrap; opacity: 0; transform: translateX(10px); transition: all 0.4s ease 0.1s; pointer-events: none; }
     .menu-btn:hover .menu-label { opacity: 1; transform: translateX(15px); }
+    
+    /* 复制功能样式 */
+    .contact-list { margin-top: 1.5rem; }
+    .contact-item { display: flex; align-items: center; margin-bottom: 0.5rem; cursor: pointer; padding: 10px; border-radius: 6px; transition: background 0.2s; position: relative; }
+    .contact-item:hover { background: rgba(255,255,255,0.1); }
+    .contact-icon { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: #333; border-radius: 50%; margin-right: 12px; color: #fff; font-size: 0.8em; }
+    .contact-item:hover .contact-icon { background: var(--accent); }
+    .contact-info { display: flex; flex-direction: column; }
+    .contact-value { font-size: 0.95rem; color: #ddd; font-weight: 500;}
+    .copy-feedback { font-size: 0.7rem; color: var(--accent); margin-left: auto; opacity: 0; transform: translateX(-5px); transition: all 0.3s; font-weight: 700; text-transform: uppercase; }
+    .contact-item:hover .copy-feedback { opacity: 1; transform: translateX(0); }
 
     /* 移动端 */
     @media (max-width: 768px) {
@@ -127,6 +153,7 @@
 </head>
 <body>
 
+  <!-- Logo -->
   <a href="index.html" class="logo-fixed">SALLY.</a>
 
   <div class="page-container">
@@ -135,13 +162,13 @@
       <!-- 左侧：个人信息 -->
       <div class="about-visual">
         <div class="profile-img">
-          <!-- 替换为你的个人照 -->
+          <!-- 这里替换成你的照片 -->
           <img src="images/banner-2.jpg" alt="Sally Profile">
         </div>
         <div class="about-intro">
           <h2>Hi, I'm Sally.</h2>
           <p>
-            一名专注于电商体验与品牌视觉的设计师。我热衷于通过视觉语言解决商业问题，擅长将创意与数据结合，打造高转化率的电商设计方案。
+            一名专注于电商体验与品牌视觉的设计师。具备电商全链路设计能力，擅长将创意与商业目标结合，打造高转化率的视觉方案。
           </p>
         </div>
       </div>
@@ -150,75 +177,138 @@
       <div class="about-content">
         <!-- Tabs -->
         <div class="tab-header">
-          <button class="tab-btn active" onclick="switchTab('jobs', this)">
-            工作经历 <span>Experience</span>
-          </button>
-          <button class="tab-btn" onclick="switchTab('education', this)">
+          <!-- 默认 Education 激活 -->
+          <button class="tab-btn active" onclick="switchTab('education', this)">
             教育背景 <span>Education</span>
           </button>
-          <button class="tab-btn" onclick="switchTab('skills', this)">
-            技能栈 <span>Skills</span>
+          <button class="tab-btn" onclick="switchTab('jobs', this)">
+            工作经历 <span>Experience</span>
+          </button>
+          <button class="tab-btn" onclick="switchTab('campus', this)">
+            校园实践 <span>Campus</span>
           </button>
         </div>
 
-        <!-- Tab 1: 工作经历 -->
-        <div id="jobs" class="tab-pane active">
+        <!-- Tab 1: 教育背景 (默认显示) -->
+        <div id="education" class="tab-pane active">
+          <div class="resume-item">
+            <div class="resume-year">2017.09 - 2021.06</div>
+            <div class="resume-detail">
+              <h4>湖南农业大学 <span class="en-txt">/ Hunan Agricultural University</span></h4>
+              <span class="org-name">视觉传达设计专业 (本科) / Bachelor of Arts</span>
+              
+              <div class="edu-info">
+                <p><strong>主修课程 (Core Courses):</strong><br>
+                交互设计、插画设计、版式设计、动画设计、字体设计、展示设计、设计思维、包装设计、招贴设计、书籍设计</p>
+                
+                <p><strong>选修课程:</strong><br>
+                药膳学、艺术哲学、欧洲文明的现代历程</p>
+
+                <p><strong>证书 (Certificates):</strong><br>
+                普通话二级甲等、大学生英语四级 (CET-4)、教师资格证 (高级中学美术)</p>
+
+                <p><strong>荣誉 (Honors):</strong><br>
+                2019届“优秀助班”奖</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: 工作经历 -->
+        <div id="jobs" class="tab-pane">
+          <!-- Job 1 -->
           <div class="resume-item">
             <div class="resume-year">2022.10 - Present</div>
             <div class="resume-detail">
-              <h4>电商网页设计师</h4>
-              <p>安徽美瑞邦达跨境电商有限公司</p>
+              <h4>电商网页设计师 <span class="en-txt">/ Web Designer</span></h4>
+              <span class="org-name">@安徽美瑞邦达跨境电商有限公司</span>
               <ul class="resume-desc">
-                <li>主导海外独立站的视觉改版，优化用户购买路径，提升转化率。</li>
-                <li>负责亚马逊 A+ 页面设计与店铺装修，统一品牌视觉规范。</li>
-                <li>策划并执行节日营销活动海报与 EDM 邮件设计。</li>
+                <li>海外独立站设计、改版及产品图精修</li>
+                <li>跨境电商 A+ 页面设计与店铺装修</li>
+                <li>品牌 VI、Logo 升级优化及包装物料设计</li>
+                <li>节日活动海报、EDM 邮件设计及摄影策划方案输出</li>
               </ul>
             </div>
           </div>
+
+          <!-- Job 2 -->
           <div class="resume-item">
             <div class="resume-year">2022.07 - 2022.08</div>
             <div class="resume-detail">
-              <h4>设计师助理</h4>
-              <p>赛飞广告传播有限公司</p>
+              <h4>设计师助理 <span class="en-txt">/ Designer Assistant</span></h4>
+              <span class="org-name">@赛飞广告传播有限公司</span>
               <ul class="resume-desc">
-                <li>协助完成画册、折页及大型活动海报的创意设计。</li>
-                <li>参与品牌导视系统的现场勘测与深化设计。</li>
+                <li>参与设计部的创意设计工作（画册、折页、海报等）</li>
+                <li>品牌工法墙标识导视系统设计</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Job 3 -->
+          <div class="resume-item">
+            <div class="resume-year">2022.02 - 2022.05</div>
+            <div class="resume-detail">
+              <h4>美术教师 <span class="en-txt">/ Art Teacher</span></h4>
+              <span class="org-name">@安徽朗声教育咨询有限公司</span>
+              <ul class="resume-desc">
+                <li>创意美术：定制教学计划，因材施教，增进家长沟通</li>
+                <li>素描教学：几何石膏、静物、人物头像教学</li>
               </ul>
             </div>
           </div>
         </div>
 
-        <!-- Tab 2: 教育背景 -->
-        <div id="education" class="tab-pane">
+        <!-- Tab 3: 校园实践 (新增) -->
+        <div id="campus" class="tab-pane">
+          <!-- Item 1 -->
           <div class="resume-item">
-            <div class="resume-year">2017 - 2021</div>
+            <div class="resume-year">2019.09 - 2019.10</div>
             <div class="resume-detail">
-              <h4>湖南农业大学</h4>
-              <p>视觉传达设计 (本科)</p>
+              <h4>新生助理班主任 <span class="en-txt">/ Assistant Class Teacher</span></h4>
+              <span class="org-name">@ 2019级视觉传达设计一班</span>
               <ul class="resume-desc">
-                <li>主修课程：交互设计、品牌形象设计、字体设计、包装设计。</li>
-                <li>荣誉：2019届“优秀助班”奖。</li>
-                <li>证书：英语四级 (CET-4)、高级中学美术教师资格证。</li>
+                <li>管理并组织班级同学参加军训以及各种活动</li>
+                <li>协助辅导员处理新生入学适宜及班级建设</li>
               </ul>
             </div>
           </div>
-        </div>
 
-        <!-- Tab 3: 技能 -->
-        <div id="skills" class="tab-pane">
+          <!-- Item 2 -->
           <div class="resume-item">
-            <div class="resume-year">Software</div>
+            <div class="resume-year">2018.09 - 2019.09</div>
             <div class="resume-detail">
-              <h4>设计软件</h4>
-              <p>精通：Photoshop, Illustrator, Figma, Adobe XD</p>
-              <p>熟悉：After Effects, Premiere, C4D + Octane</p>
+              <h4>科幻俱乐部团长 <span class="en-txt">/ President of Sci-Fi Club</span></h4>
+              <span class="org-name">@ 湖南农业大学科幻俱乐部</span>
+              <ul class="resume-desc">
+                <li>负责社团日常运营、活动策划与执行</li>
+                <li>组织30余名成员参与校园社团文化艺术节及音响演出</li>
+              </ul>
             </div>
           </div>
+
+          <!-- Item 3 -->
           <div class="resume-item">
-            <div class="resume-year">Professional</div>
+            <div class="resume-year">2017.09 - 2018.09</div>
             <div class="resume-detail">
-              <h4>专业技能</h4>
-              <p>UI/UX 设计、跨境电商视觉营销、品牌全案设计、3D 渲染、商业摄影策划。</p>
+              <h4>广播播音员 & 宣传组负责人 <span class="en-txt">/ Broadcaster</span></h4>
+              <span class="org-name">@ 湖南农业大学广播电视台</span>
+              <ul class="resume-desc">
+                <li>负责宣传海报、喷绘、易拉宝等平面物料设计</li>
+                <li>负责校园广播播音，脚本编辑、录制及后期剪辑</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="resume-item">
+            <div class="resume-year">2017.09 - 2021.09</div>
+            <div class="resume-detail">
+              <h4>班级宣传员 <span class="en-txt">/ Publicity Committee</span></h4>
+              <span class="org-name">@ 2017级视传一班</span>
+              <ul class="resume-desc">
+                <li>负责班级形象建设与活动宣传</li>
+                <li>运营与管理班级官方微信公众号</li>
+              </ul>
             </div>
           </div>
         </div>
@@ -227,7 +317,7 @@
     </div>
   </div>
 
-  <!-- 菜单 -->
+  <!-- 菜单 Overlay -->
   <div class="menu-overlay">
     <div class="menu-grid">
       <div class="menu-column">
@@ -251,11 +341,28 @@
       <div class="menu-column">
         <h3 class="menu-col-title"><span class="col-dot"></span>04</h3>
         <a href="contact.html" class="menu-link-large">CONTACT</a>
-        <div class="contact-list" style="margin-top:1.5rem">
-           <p style="color:#666; font-size:0.9rem">
-             <i class="fa-solid fa-envelope"></i> sally00kk@gmail.com<br>
-             <i class="fa-solid fa-phone"></i> 178-9100-3233
-           </p>
+        <div class="contact-list">
+          <div class="contact-item" onclick="copyToClipboard('sally00kk@gmail.com', this)">
+            <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
+            <div class="contact-info">
+              <span class="contact-value">sally00kk@gmail.com</span>
+            </div>
+            <span class="copy-feedback">Copy</span>
+          </div>
+          <div class="contact-item" onclick="copyToClipboard('1355652997@qq.com', this)">
+            <div class="contact-icon"><i class="fa-brands fa-qq"></i></div>
+            <div class="contact-info">
+              <span class="contact-value">1355652997@qq.com</span>
+            </div>
+            <span class="copy-feedback">Copy</span>
+          </div>
+          <div class="contact-item" onclick="copyToClipboard('178-9100-3233', this)">
+            <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
+            <div class="contact-info">
+              <span class="contact-value">178-9100-3233</span>
+            </div>
+            <span class="copy-feedback">Copy</span>
+          </div>
         </div>
       </div>
     </div>
@@ -280,12 +387,22 @@
       menuText.textContent = body.classList.contains('menu-open') ? "Close" : "Menu";
     }
 
-    // Tab 切换
+    // Tab 切换逻辑
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       btn.classList.add('active');
+    }
+
+    // 复制功能
+    async function copyToClipboard(text, element) {
+      try {
+        await navigator.clipboard.writeText(text);
+        const feedback = element.querySelector('.copy-feedback');
+        feedback.textContent = "Copied!"; feedback.style.color = "#44ff99";
+        setTimeout(() => { feedback.textContent = "Copy"; feedback.style.color = "var(--accent)"; }, 2000);
+      } catch (err) { console.error('Failed to copy: ', err); }
     }
   </script>
 </body>
