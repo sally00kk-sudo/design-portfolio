@@ -37,15 +37,14 @@
     /* --- 2. 页面容器 --- */
     .page-container {
       background: #fff; position: relative; z-index: 10; min-height: 100vh;
-      /* 注意：这里移除了 view-transition 相关的干扰属性 */
-      padding-top: 120px; padding-bottom: 120px;
+      transition: transform 0.6s var(--ease-out-expo), filter 0.6s;
+      padding-top: 120px; padding-bottom: 120px; will-change: transform;
     }
     
     /* 桌面端：菜单打开时内容上移 */
     body.menu-open .page-container {
       transform: translateY(calc(var(--menu-height) * -1));
       filter: brightness(0.8); border-radius: 0 0 20px 20px; overflow: hidden; height: 100vh; 
-      transition: transform 0.6s var(--ease-out-expo), filter 0.6s;
     }
 
     /* --- 3. 头部区域 (Logo + Toggle) --- */
@@ -58,7 +57,8 @@
     }
 
     .toc-btn {
-      display: none; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #000; padding: 5px;
+      display: none; /* 桌面端隐藏三道杠 */
+      background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #000; padding: 5px;
     }
 
     .logo-sally {
@@ -74,14 +74,15 @@
       color: #fff; mix-blend-mode: difference;
     }
 
-    /* --- 4. 侧边栏目录 --- */
+    /* --- 4. 侧边栏目录 (桌面端) --- */
     .sidebar-toc {
       position: fixed; top: 100px; left: 3rem; width: 200px; height: calc(100vh - 100px); 
       overflow-y: auto; z-index: 100; padding-right: 15px; padding-top: 1rem;
       background: transparent; border-right: 1px solid rgba(0,0,0,0.05); 
-      transition: transform 0.6s var(--ease-out-expo), left 0.3s ease;
+      transition: transform 0.6s var(--ease-out-expo), left 0.3s ease, opacity 0.3s;
     }
     
+    /* 右侧投影 */
     .sidebar-toc::after {
       content: ''; position: fixed; top: 100px; left: calc(3rem + 200px); width: 10px; height: calc(100vh - 100px);
       box-shadow: -5px 0 15px -5px rgba(0,0,0,0.08); pointer-events: none; z-index: 101;
@@ -104,7 +105,7 @@
     .toc-link:hover { color: var(--accent); transform: translateX(3px); font-weight: 500;}
     .toc-link span { margin-right: 5px; font-weight: 600; font-size: 0.7rem; color: #ddd; }
 
-    /* 遮罩层 */
+    /* 移动端遮罩层 */
     .toc-overlay-backdrop {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.5); z-index: 99; opacity: 0; visibility: hidden;
@@ -128,6 +129,10 @@
     .section-title-cn { font-size: 2rem; font-weight: 800; color: #000; line-height: 1.2; }
     .section-title-en { font-size: 1rem; font-weight: 400; color: #999; text-transform: uppercase; letter-spacing: 1px; font-family: "Helvetica Neue", Arial, sans-serif;}
 
+    /* 
+       Grid 布局核心：
+       固定高度 (500px) 确保绝对对齐
+    */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -138,7 +143,7 @@
 
     .work-card {
       position: relative; display: block; overflow: hidden; border-radius: 0; background: #f4f4f4;
-      width: 100%; height: 100%; scroll-margin-top: 150px; 
+      width: 100%; height: 100%; scroll-margin-top: 150px; cursor: pointer;
     }
     
     .span-2 { grid-column: span 2; }
@@ -150,6 +155,7 @@
     }
     .work-card:hover img { transform: scale(1.05); filter: brightness(0.9); }
 
+    /* 标签 (毛玻璃胶囊) */
     .work-tag {
       position: absolute; top: 15px; right: 15px;
       background: rgba(0, 0, 0, 0.3); 
@@ -589,6 +595,45 @@
   <script>
     const body = document.body;
     const menuText = document.getElementById('menuText');
+    
+    // Auto Scroll Logic
+    const scrollSpeed = 0.5; // pixels per frame (slower)
+    let isScrolling = true;
+    let accumulatedScroll = 0;
+
+    function autoScroll() {
+        if (!isScrolling) return;
+        // Don't scroll if menu is open
+        if (body.classList.contains('menu-open') || body.classList.contains('toc-open')) return;
+
+        // Check if reached bottom
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+            isScrolling = false;
+            return;
+        }
+
+        accumulatedScroll += scrollSpeed;
+        const pixelsToScroll = Math.floor(accumulatedScroll);
+
+        if (pixelsToScroll > 0) {
+            window.scrollBy(0, pixelsToScroll);
+            accumulatedScroll -= pixelsToScroll;
+        }
+
+        requestAnimationFrame(autoScroll);
+    }
+
+    // Stop on interaction
+    const stopEvents = ['mousedown', 'wheel', 'touchmove', 'keydown', 'click'];
+    stopEvents.forEach(event => {
+        window.addEventListener(event, () => {
+            isScrolling = false;
+        }, { passive: true });
+    });
+
+    // Start after a short delay
+    setTimeout(autoScroll, 1500);
+
     function toggleMenu() {
       body.classList.toggle('menu-open');
       menuText.textContent = body.classList.contains('menu-open') ? "Close" : "Menu";
