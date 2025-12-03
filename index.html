@@ -13,8 +13,9 @@
     :root {
       --text-main: #000000;
       --text-sub: #555555;
-      --accent: #4452FE; /* 核心蓝色 */
-      --menu-bg: #0c0c0c; /* 深色菜单背景 */
+      --accent: #4452FE; 
+      --menu-bg: #000000;
+      --menu-height: 48vh; /* 设定菜单高度为屏幕的 48% */
       --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
     }
 
@@ -31,7 +32,10 @@
     a { text-decoration: none; color: inherit; transition: opacity 0.3s; }
     img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
-    /* --- 2. LOGO (左上角固定) --- */
+    /* --- 2. 页面容器 (用于整体移动) --- */
+    /* 我们把 Logo 和 Hero 都放在这个容器逻辑里，或者分别控制 */
+    
+    /* LOGO */
     .logo-fixed {
       position: fixed;
       top: 2rem;
@@ -43,9 +47,14 @@
       z-index: 800;
       color: #fff;
       mix-blend-mode: difference; 
-      transition: opacity 0.3s;
+      transition: transform 0.6s var(--ease-out-expo);
     }
-    .logo-fixed:hover { opacity: 0.7; }
+    
+    /* 菜单打开时，Logo 也稍微上移，保持与内容的相对位置，或者保持不动也可以。
+       参考图通常是 Header 也被顶上去。 */
+    body.menu-open .logo-fixed {
+      transform: translateY(calc(var(--menu-height) * -1));
+    }
 
     /* --- 3. Split Hero (主视觉) --- */
     .hero-split {
@@ -53,13 +62,17 @@
       height: 100vh;
       width: 100%;
       position: relative;
+      /* 关键：添加变换过渡 */
       transition: transform 0.6s var(--ease-out-expo), filter 0.6s;
+      will-change: transform;
     }
 
+    /* 【核心修改】菜单打开时，主内容整体上移 */
     body.menu-open .hero-split {
-      transform: scale(0.95);
-      filter: brightness(0.4);
-      pointer-events: none;
+      transform: translateY(calc(var(--menu-height) * -1)); /* 向上移动菜单的高度 */
+      filter: brightness(0.8); /*稍微变暗一点点即可，不需要太黑，因为是分屏 */
+      border-radius: 0 0 20px 20px; /* 可选：给底部加一点圆角，增加层次感 */
+      overflow: hidden; /* 配合圆角 */
     }
 
     .hero-visual {
@@ -78,7 +91,6 @@
       opacity: 0;
       transition: opacity 1.5s ease-in-out, transform 8s ease;
       transform: scale(1.1);
-      will-change: opacity, transform; 
     }
     .hero-slide.active { opacity: 1; transform: scale(1); }
 
@@ -98,8 +110,8 @@
       line-height: 1;
       margin-bottom: 0.5rem;
       letter-spacing: -2px;
-      opacity: 0; transform: translateY(30px);
       animation: fadeInUp 1s var(--ease-out-expo) 0.2s forwards;
+      opacity: 0; transform: translateY(30px);
     }
     
     .hero-subtitle {
@@ -107,37 +119,23 @@
       color: var(--text-sub);
       margin-bottom: 2.5rem;
       letter-spacing: 1px;
-      opacity: 0; transform: translateY(30px);
       animation: fadeInUp 1s var(--ease-out-expo) 0.4s forwards;
+      opacity: 0; transform: translateY(30px);
     }
 
     .en-sub { 
-      display: block; 
-      font-size: 0.6em; 
-      text-transform: uppercase; 
-      letter-spacing: 2px; 
-      margin-top: 5px; 
-      color: #999;
+      display: block; font-size: 0.6em; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; color: #999;
     }
 
     .btn-group {
-      display: flex;
-      gap: 1.5rem;
-      opacity: 0; transform: translateY(30px);
+      display: flex; gap: 1.5rem;
       animation: fadeInUp 1s var(--ease-out-expo) 0.6s forwards;
+      opacity: 0; transform: translateY(30px);
     }
 
     .btn {
-      padding: 16px 40px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      cursor: pointer;
-      position: relative;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
+      padding: 16px 40px; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+      cursor: pointer; position: relative; transition: all 0.3s ease; display: inline-flex; align-items: center;
     }
     .btn i { margin-left: 10px; transition: transform 0.3s; }
     .btn:hover i { transform: translateX(5px); }
@@ -149,120 +147,24 @@
 
     @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-    /* --- 4. [更新] 底部胶囊菜单按钮 --- */
-    .menu-trigger-container {
-      position: fixed;
-      bottom: 40px; /* 稍微抬高一点 */
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      cursor: pointer;
-      /* 移除之前的 flex column 布局 */
-    }
-
-    .menu-btn {
-      /* 初始状态：大圆形 */
-      width: 75px; 
-      height: 75px;
-      background-color: var(--accent);
-      border-radius: 50px; /* 只要大于高度的一半就是圆 */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 10px 30px rgba(68, 82, 254, 0.4);
-      transition: width 0.5s var(--ease-out-expo), box-shadow 0.3s;
-      overflow: hidden; /* 隐藏溢出的文字 */
-      padding: 0;
-      position: relative;
-    }
-
-    /* 悬浮状态：变宽成为胶囊 */
-    .menu-btn:hover {
-      width: 170px; /* 伸展宽度 */
-      box-shadow: 0 15px 40px rgba(68, 82, 254, 0.6);
-    }
-
-    /* 图标容器：为了在伸展时移动位置 */
-    .icon-wrapper {
-      width: 24px;
-      height: 24px;
-      position: relative;
-      flex-shrink: 0; /* 防止被压缩 */
-      transition: transform 0.5s var(--ease-out-expo);
-      /* 初始在中间 */
-      transform: translateX(0); 
-    }
-
-    /* 悬浮时，图标稍微往左移，给文字腾位置 */
-    .menu-btn:hover .icon-wrapper {
-      transform: translateX(-35px);
-    }
-
-    .menu-icon-line {
-      width: 24px;
-      height: 2px;
-      background: #fff;
-      position: absolute;
-      left: 0;
-      transition: transform 0.3s ease;
-    }
-    .menu-icon-line:first-child { top: 8px; }
-    .menu-icon-line:last-child { bottom: 8px; }
-
-    /* 打开菜单变成 X */
-    body.menu-open .menu-icon-line:first-child { top: 50%; transform: translateY(-50%) rotate(45deg); }
-    body.menu-open .menu-icon-line:last-child { bottom: 50%; transform: translateY(50%) rotate(-45deg); }
-
-    /* 文字样式 */
-    .menu-label {
-      position: absolute;
-      left: 50%; /* 初始在中间，但被 overflow:hidden 盖住 */
-      font-size: 0.9rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: #fff;
-      white-space: nowrap;
-      opacity: 0;
-      transform: translateX(10px); /* 初始位移 */
-      transition: all 0.4s ease 0.1s; /* 稍微延迟一点出现 */
-      pointer-events: none;
-    }
-
-    /* 悬浮时显示文字 */
-    .menu-btn:hover .menu-label {
-      opacity: 1;
-      transform: translateX(10px); /* 最终位置 */
-    }
-    
-    /* 修正：因为图标左移了，文字的位置实际上是相对于容器中心的 */
-    /* 更好的定位方式：Flex gap 或者 Padding */
-    /* 下面是重写的内部布局逻辑，确保丝滑 */
-    .menu-btn {
-      justify-content: center; /* 默认居中 */
-    }
-    
-    /* 悬浮时的文字显示逻辑 */
-    .menu-btn:hover .menu-label {
-      opacity: 1;
-      transform: translateX(15px); /* 文字出现在右侧 */
-    }
-
-    /* --- 5. 黑色抽屉菜单 --- */
+    /* --- 4. 黑色菜单区域 (比例调整) --- */
     .menu-overlay {
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 85vh;
+      /* 【核心修改】高度设为变量 */
+      height: var(--menu-height); 
       background: var(--menu-bg);
       z-index: 900;
       transform: translateY(100%);
       transition: transform 0.6s var(--ease-out-expo);
-      padding: 4rem 3rem 8rem 3rem; 
+      /* 减少 Padding 以适应较小的高度 */
+      padding: 3rem 3rem 2rem 3rem; 
       color: #fff;
       display: flex;
       flex-direction: column;
+      border-top: 1px solid rgba(255,255,255,0.1);
     }
 
     body.menu-open .menu-overlay { transform: translateY(0); }
@@ -272,7 +174,7 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 2rem;
       height: 100%;
-      max-width: 1400px;
+      max-width: 1600px;
       margin: 0 auto;
       width: 100%;
     }
@@ -280,96 +182,181 @@
     .menu-column {
       display: flex;
       flex-direction: column;
-      border-right: 1px solid rgba(255,255,255,0.1);
-      padding-right: 2rem;
+      /* 去掉右边框，参考图通常更干净 */
+      border-right: none; 
+      padding-right: 1rem;
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(30px);
       transition: all 0.5s ease;
+      height: 100%; /* 充满高度 */
+      position: relative;
     }
-    .menu-column:last-child { border-right: none; }
 
-    /* 菜单延迟动画 */
+    /* 装饰用的小圆点 (参考图风格) */
+    .col-dot {
+      display: inline-block; width: 8px; height: 8px; 
+      background-color: var(--accent); border-radius: 50%; margin-right: 8px;
+    }
+
     body.menu-open .menu-column:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
-    body.menu-open .menu-column:nth-child(2) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
-    body.menu-open .menu-column:nth-child(3) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
-    body.menu-open .menu-column:nth-child(4) { transition-delay: 0.4s; opacity: 1; transform: translateY(0); }
+    body.menu-open .menu-column:nth-child(2) { transition-delay: 0.15s; opacity: 1; transform: translateY(0); }
+    body.menu-open .menu-column:nth-child(3) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
+    body.menu-open .menu-column:nth-child(4) { transition-delay: 0.25s; opacity: 1; transform: translateY(0); }
 
     .menu-col-title {
-      font-size: 0.9rem;
+      font-size: 0.75rem; /* 字体改小 */
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: #666;
-      margin-bottom: 1.5rem;
+      color: #999;
+      margin-bottom: 0.8rem;
       font-weight: 700;
+      display: flex; align-items: center;
     }
 
+    /* 链接文字大小调整，适应高度 */
     .menu-link-large {
-      font-size: 2.5rem;
-      font-weight: 800;
+      font-size: 1.8rem; 
+      font-weight: 700;
       line-height: 1.1;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       display: block;
       color: #fff;
       transition: color 0.3s;
     }
     .menu-link-large:hover { color: var(--accent); }
 
-    .menu-desc { font-size: 0.9rem; color: #aaa; margin-bottom: 2rem; line-height: 1.5; }
+    .menu-desc {
+      font-size: 0.85rem; color: #666; margin-bottom: 1rem; line-height: 1.4;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; /* 限制行数 */
+    }
 
+    /* 图片预览：填满剩余空间 */
     .menu-image {
       width: 100%;
-      aspect-ratio: 16/10;
+      flex: 1; /* 自动占据剩余高度 */
       background: #222;
       border-radius: 4px;
       overflow: hidden;
-      margin-top: auto;
+      margin-top: auto; /* 推到底部 */
+      min-height: 120px; /* 保证最小高度 */
     }
-    .menu-image img { opacity: 0.7; transition: transform 0.5s, opacity 0.5s; }
+    .menu-image img { opacity: 0.8; transition: transform 0.6s, opacity 0.6s; height: 100%; width: 100%; object-fit: cover; }
     .menu-column:hover .menu-image img { transform: scale(1.05); opacity: 1; }
 
-    /* 复制功能样式 */
+    /* Contact List 调整 */
+    .contact-list { margin-top: auto; }
     .contact-item {
-      display: flex; align-items: center; margin-bottom: 1.2rem; cursor: pointer; padding: 10px;
-      border-radius: 8px; transition: background 0.2s; position: relative;
+      display: flex; align-items: center; margin-bottom: 0.8rem; cursor: pointer; padding: 8px;
+      border-radius: 6px; transition: background 0.2s; position: relative;
     }
-    .contact-item:hover { background: rgba(255,255,255,0.05); }
-    .contact-item:active { transform: scale(0.98); }
+    .contact-item:hover { background: rgba(255,255,255,0.1); }
     
     .contact-icon {
-      width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-      background: #222; border-radius: 50%; margin-right: 15px; color: var(--accent);
+      width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+      background: #333; border-radius: 50%; margin-right: 12px; color: #fff; font-size: 0.7em;
     }
+    .contact-item:hover .contact-icon { background: var(--accent); }
     
     .contact-info { display: flex; flex-direction: column; }
-    .contact-label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;}
-    .contact-value { font-size: 1.1rem; color: #fff; font-weight: 500;}
+    .contact-value { font-size: 0.95rem; color: #ddd; font-weight: 500;}
 
     .copy-feedback {
-      font-size: 0.75rem; color: var(--accent); margin-left: auto; opacity: 0;
-      transform: translateX(-10px); transition: all 0.3s; font-weight: 600; text-transform: uppercase;
+      font-size: 0.7rem; color: var(--accent); margin-left: auto; opacity: 0;
+      transform: translateX(-5px); transition: all 0.3s; font-weight: 700; text-transform: uppercase;
     }
     .contact-item:hover .copy-feedback { opacity: 1; transform: translateX(0); }
 
+    /* --- 5. 底部胶囊按钮 --- */
+    .menu-trigger-container {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      cursor: pointer;
+    }
+    /* 胶囊按钮打开时也要随之上移，或者保持在原位。
+       为了不遮挡菜单内容，通常建议保持在原位，但因为菜单只有一半高，按钮会浮在菜单上。
+       我们可以让按钮稍微变个颜色或者位置。 
+       
+       *方案A*: 按钮保持在底部，浮在菜单之上 (类似 App Dock)。
+    */
+    .menu-btn {
+      width: 75px; 
+      height: 75px;
+      background-color: var(--accent);
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(68, 82, 254, 0.4);
+      transition: width 0.5s var(--ease-out-expo), box-shadow 0.3s, background-color 0.3s;
+      overflow: hidden;
+      position: relative;
+      border: 2px solid transparent;
+    }
+
+    /* 菜单打开时，按钮样式微调 */
+    body.menu-open .menu-btn {
+      background-color: #fff; /* 变成白色，适应黑色背景 */
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+    }
+    body.menu-open .menu-icon-line { background: #000; } /* 线条变黑 */
+    body.menu-open .menu-label { color: #000; } /* 文字变黑 */
+
+    .menu-btn:hover { width: 170px; box-shadow: 0 15px 40px rgba(68, 82, 254, 0.6); }
+    body.menu-open .menu-btn:hover { box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3); }
+
+    .icon-wrapper {
+      width: 24px; height: 24px; position: relative; flex-shrink: 0;
+      transition: transform 0.5s var(--ease-out-expo);
+      transform: translateX(0); 
+    }
+    .menu-btn:hover .icon-wrapper { transform: translateX(-35px); }
+
+    .menu-icon-line {
+      width: 24px; height: 2px; background: #fff; position: absolute; left: 0; transition: all 0.3s ease;
+    }
+    .menu-icon-line:first-child { top: 8px; }
+    .menu-icon-line:last-child { bottom: 8px; }
+
+    body.menu-open .menu-icon-line:first-child { top: 50%; transform: translateY(-50%) rotate(45deg); }
+    body.menu-open .menu-icon-line:last-child { bottom: 50%; transform: translateY(50%) rotate(-45deg); }
+
+    .menu-label {
+      position: absolute; left: 50%; font-size: 0.9rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 2px; color: #fff; white-space: nowrap; opacity: 0;
+      transform: translateX(10px); transition: all 0.4s ease 0.1s; pointer-events: none;
+    }
+    .menu-btn:hover .menu-label { opacity: 1; transform: translateX(15px); }
+
+
     /* --- Mobile Responsive --- */
     @media (max-width: 768px) {
+      /* 手机端逻辑不同：手机屏幕太小，分屏效果不好，所以手机端维持全屏菜单 */
+      :root { --menu-height: 100vh; } 
+      
       .logo-fixed { left: 1.5rem; top: 1.5rem; font-size: 1.2rem; }
+      body.menu-open .logo-fixed { transform: translateY(0); mix-blend-mode: normal; color: #fff; } /* 手机端不需要上移 */
+
       .hero-split { flex-direction: column; }
+      body.menu-open .hero-split { transform: translateY(0); opacity: 0; } /* 手机端直接隐藏主内容 */
+
       .hero-visual, .hero-content { width: 100%; height: 50%; }
       .hero-content { padding: 2rem; align-items: center; text-align: center; }
       .hero-title { font-size: 3rem; }
       .btn-group { justify-content: center; width: 100%; }
       .btn { padding: 12px 25px; font-size: 0.8rem; }
       
-      .menu-overlay { height: 100vh; padding: 2rem 1.5rem 8rem 1.5rem; overflow-y: auto; }
-      .menu-grid { grid-template-columns: 1fr; gap: 3rem; }
-      .menu-column { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2rem; padding-right: 0;}
-      .menu-image { display: none; }
+      .menu-overlay { padding: 4rem 1.5rem 8rem 1.5rem; overflow-y: auto; }
+      .menu-grid { grid-template-columns: 1fr; gap: 2.5rem; display: block; }
+      .menu-column { margin-bottom: 2rem; border-bottom: 1px solid #222; padding-bottom: 1.5rem; height: auto;}
+      .menu-image { display: none; } /* 手机端隐藏图片 */
       
-      /* 手机端保持圆形，或者根据需要调整 */
       .menu-trigger-container { bottom: 20px; }
       .menu-btn { width: 60px; height: 60px; }
-      .menu-btn:hover { width: 60px; /* 手机上通常不显示 Hover 效果，保持圆形即可 */ }
-      .menu-label { display: none; /* 手机上不显示滑出文字 */ }
+      .menu-btn:hover { width: 60px; }
+      .menu-label { display: none; }
       .menu-btn:hover .icon-wrapper { transform: translateX(0); }
     }
   </style>
@@ -403,35 +390,39 @@
     </div>
   </section>
 
-  <!-- 菜单内容 -->
+  <!-- 菜单内容 (高度约为 48vh) -->
   <div class="menu-overlay">
     <div class="menu-grid">
+      <!-- 01 -->
       <div class="menu-column">
-        <h3 class="menu-col-title">01</h3>
+        <h3 class="menu-col-title"><span class="col-dot"></span>01</h3>
         <a href="#" class="menu-link-large" onclick="toggleMenu()">HOME</a>
         <p class="menu-desc">Return to the visual showcase start.</p>
         <div class="menu-image"><img src="images/banner-1.jpg" alt="Home"></div>
       </div>
+      <!-- 02 -->
       <div class="menu-column">
-        <h3 class="menu-col-title">02</h3>
+        <h3 class="menu-col-title"><span class="col-dot"></span>02</h3>
         <a href="work.html" class="menu-link-large">WORK</a>
         <p class="menu-desc">Selected projects involving UI/UX, Branding.</p>
         <div class="menu-image"><img src="images/p1-ecommerce.jpg" alt="Work"></div>
       </div>
+      <!-- 03 -->
       <div class="menu-column">
-        <h3 class="menu-col-title">03</h3>
+        <h3 class="menu-col-title"><span class="col-dot"></span>03</h3>
         <a href="about.html" class="menu-link-large">ABOUT ME</a>
         <p class="menu-desc">My resume, journey, education, and design philosophy.</p>
         <div class="menu-image"><img src="images/banner-2.jpg" alt="About"></div>
       </div>
+      <!-- 04 -->
       <div class="menu-column">
-        <h3 class="menu-col-title">04</h3>
+        <h3 class="menu-col-title"><span class="col-dot"></span>04</h3>
         <a href="contact.html" class="menu-link-large">CONTACT</a>
         <div class="contact-list">
           <div class="contact-item" onclick="copyToClipboard('sally00kk@gmail.com', this)">
             <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
             <div class="contact-info">
-              <span class="contact-label">Email</span>
+              <!-- <span class="contact-label">Email</span> 简化布局 -->
               <span class="contact-value">sally00kk@gmail.com</span>
             </div>
             <span class="copy-feedback">Copy</span>
@@ -439,7 +430,6 @@
           <div class="contact-item" onclick="copyToClipboard('178-9100-3233', this)">
             <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
             <div class="contact-info">
-              <span class="contact-label">Phone</span>
               <span class="contact-value">178-9100-3233</span>
             </div>
             <span class="copy-feedback">Copy</span>
@@ -449,15 +439,13 @@
     </div>
   </div>
 
-  <!-- 4. [更新] 底部胶囊按钮 (Capsule Button) -->
+  <!-- 胶囊按钮 -->
   <div class="menu-trigger-container" onclick="toggleMenu()">
     <div class="menu-btn">
-      <!-- 图标包装层 (用于移动) -->
       <div class="icon-wrapper">
         <span class="menu-icon-line"></span>
         <span class="menu-icon-line"></span>
       </div>
-      <!-- 文字层 (初始隐藏) -->
       <span class="menu-label" id="menuText">Menu</span>
     </div>
   </div>
