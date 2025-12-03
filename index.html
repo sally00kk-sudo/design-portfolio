@@ -15,7 +15,7 @@
       --text-sub: #555555;
       --accent: #4452FE; 
       --menu-bg: #000000;
-      --menu-height: 48vh; /* 设定菜单高度为屏幕的 48% */
+      --menu-height: 48vh; /* 菜单高度 */
       --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
     }
 
@@ -33,8 +33,6 @@
     img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
     /* --- 2. 页面容器 (用于整体移动) --- */
-    /* 我们把 Logo 和 Hero 都放在这个容器逻辑里，或者分别控制 */
-    
     /* LOGO */
     .logo-fixed {
       position: fixed;
@@ -50,8 +48,6 @@
       transition: transform 0.6s var(--ease-out-expo);
     }
     
-    /* 菜单打开时，Logo 也稍微上移，保持与内容的相对位置，或者保持不动也可以。
-       参考图通常是 Header 也被顶上去。 */
     body.menu-open .logo-fixed {
       transform: translateY(calc(var(--menu-height) * -1));
     }
@@ -62,17 +58,16 @@
       height: 100vh;
       width: 100%;
       position: relative;
-      /* 关键：添加变换过渡 */
       transition: transform 0.6s var(--ease-out-expo), filter 0.6s;
       will-change: transform;
     }
 
-    /* 【核心修改】菜单打开时，主内容整体上移 */
+    /* 菜单打开时，主内容整体上移 */
     body.menu-open .hero-split {
-      transform: translateY(calc(var(--menu-height) * -1)); /* 向上移动菜单的高度 */
-      filter: brightness(0.8); /*稍微变暗一点点即可，不需要太黑，因为是分屏 */
-      border-radius: 0 0 20px 20px; /* 可选：给底部加一点圆角，增加层次感 */
-      overflow: hidden; /* 配合圆角 */
+      transform: translateY(calc(var(--menu-height) * -1)); 
+      filter: brightness(0.8); 
+      border-radius: 0 0 20px 20px;
+      overflow: hidden; 
     }
 
     .hero-visual {
@@ -147,19 +142,17 @@
 
     @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-    /* --- 4. 黑色菜单区域 (比例调整) --- */
+    /* --- 4. 黑色菜单区域 --- */
     .menu-overlay {
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      /* 【核心修改】高度设为变量 */
       height: var(--menu-height); 
       background: var(--menu-bg);
       z-index: 900;
       transform: translateY(100%);
       transition: transform 0.6s var(--ease-out-expo);
-      /* 减少 Padding 以适应较小的高度 */
       padding: 3rem 3rem 2rem 3rem; 
       color: #fff;
       display: flex;
@@ -182,17 +175,15 @@
     .menu-column {
       display: flex;
       flex-direction: column;
-      /* 去掉右边框，参考图通常更干净 */
       border-right: none; 
       padding-right: 1rem;
       opacity: 0;
       transform: translateY(30px);
       transition: all 0.5s ease;
-      height: 100%; /* 充满高度 */
+      height: 100%;
       position: relative;
     }
 
-    /* 装饰用的小圆点 (参考图风格) */
     .col-dot {
       display: inline-block; width: 8px; height: 8px; 
       background-color: var(--accent); border-radius: 50%; margin-right: 8px;
@@ -204,7 +195,7 @@
     body.menu-open .menu-column:nth-child(4) { transition-delay: 0.25s; opacity: 1; transform: translateY(0); }
 
     .menu-col-title {
-      font-size: 0.75rem; /* 字体改小 */
+      font-size: 0.75rem; 
       text-transform: uppercase;
       letter-spacing: 1px;
       color: #999;
@@ -213,7 +204,6 @@
       display: flex; align-items: center;
     }
 
-    /* 链接文字大小调整，适应高度 */
     .menu-link-large {
       font-size: 1.8rem; 
       font-weight: 700;
@@ -227,33 +217,36 @@
 
     .menu-desc {
       font-size: 0.85rem; color: #666; margin-bottom: 1rem; line-height: 1.4;
-      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; /* 限制行数 */
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
 
-    /* 图片预览：填满剩余空间 */
     .menu-image {
       width: 100%;
-      flex: 1; /* 自动占据剩余高度 */
+      flex: 1; 
       background: #222;
       border-radius: 4px;
       overflow: hidden;
-      margin-top: auto; /* 推到底部 */
-      min-height: 120px; /* 保证最小高度 */
+      margin-top: auto; 
+      min-height: 120px; 
     }
     .menu-image img { opacity: 0.8; transition: transform 0.6s, opacity 0.6s; height: 100%; width: 100%; object-fit: cover; }
     .menu-column:hover .menu-image img { transform: scale(1.05); opacity: 1; }
 
-    /* Contact List 调整 */
-    .contact-list { margin-top: auto; }
+    /* --- Contact List 调整 (核心修改) --- */
+    .contact-list { 
+      /* 删除了 margin-top: auto; 改为固定间距，使其紧跟标题 */
+      margin-top: 1.5rem; 
+    }
+    
     .contact-item {
-      display: flex; align-items: center; margin-bottom: 0.8rem; cursor: pointer; padding: 8px;
+      display: flex; align-items: center; margin-bottom: 0.5rem; cursor: pointer; padding: 10px;
       border-radius: 6px; transition: background 0.2s; position: relative;
     }
     .contact-item:hover { background: rgba(255,255,255,0.1); }
     
     .contact-icon {
-      width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
-      background: #333; border-radius: 50%; margin-right: 12px; color: #fff; font-size: 0.7em;
+      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+      background: #333; border-radius: 50%; margin-right: 12px; color: #fff; font-size: 0.8em;
     }
     .contact-item:hover .contact-icon { background: var(--accent); }
     
@@ -275,12 +268,7 @@
       z-index: 1000;
       cursor: pointer;
     }
-    /* 胶囊按钮打开时也要随之上移，或者保持在原位。
-       为了不遮挡菜单内容，通常建议保持在原位，但因为菜单只有一半高，按钮会浮在菜单上。
-       我们可以让按钮稍微变个颜色或者位置。 
-       
-       *方案A*: 按钮保持在底部，浮在菜单之上 (类似 App Dock)。
-    */
+    
     .menu-btn {
       width: 75px; 
       height: 75px;
@@ -296,13 +284,12 @@
       border: 2px solid transparent;
     }
 
-    /* 菜单打开时，按钮样式微调 */
     body.menu-open .menu-btn {
-      background-color: #fff; /* 变成白色，适应黑色背景 */
+      background-color: #fff; 
       box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
     }
-    body.menu-open .menu-icon-line { background: #000; } /* 线条变黑 */
-    body.menu-open .menu-label { color: #000; } /* 文字变黑 */
+    body.menu-open .menu-icon-line { background: #000; } 
+    body.menu-open .menu-label { color: #000; }
 
     .menu-btn:hover { width: 170px; box-shadow: 0 15px 40px rgba(68, 82, 254, 0.6); }
     body.menu-open .menu-btn:hover { box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3); }
@@ -333,14 +320,13 @@
 
     /* --- Mobile Responsive --- */
     @media (max-width: 768px) {
-      /* 手机端逻辑不同：手机屏幕太小，分屏效果不好，所以手机端维持全屏菜单 */
       :root { --menu-height: 100vh; } 
       
       .logo-fixed { left: 1.5rem; top: 1.5rem; font-size: 1.2rem; }
-      body.menu-open .logo-fixed { transform: translateY(0); mix-blend-mode: normal; color: #fff; } /* 手机端不需要上移 */
+      body.menu-open .logo-fixed { transform: translateY(0); mix-blend-mode: normal; color: #fff; } 
 
       .hero-split { flex-direction: column; }
-      body.menu-open .hero-split { transform: translateY(0); opacity: 0; } /* 手机端直接隐藏主内容 */
+      body.menu-open .hero-split { transform: translateY(0); opacity: 0; } 
 
       .hero-visual, .hero-content { width: 100%; height: 50%; }
       .hero-content { padding: 2rem; align-items: center; text-align: center; }
@@ -351,7 +337,7 @@
       .menu-overlay { padding: 4rem 1.5rem 8rem 1.5rem; overflow-y: auto; }
       .menu-grid { grid-template-columns: 1fr; gap: 2.5rem; display: block; }
       .menu-column { margin-bottom: 2rem; border-bottom: 1px solid #222; padding-bottom: 1.5rem; height: auto;}
-      .menu-image { display: none; } /* 手机端隐藏图片 */
+      .menu-image { display: none; }
       
       .menu-trigger-container { bottom: 20px; }
       .menu-btn { width: 60px; height: 60px; }
@@ -414,19 +400,33 @@
         <p class="menu-desc">My resume, journey, education, and design philosophy.</p>
         <div class="menu-image"><img src="images/banner-2.jpg" alt="About"></div>
       </div>
-      <!-- 04 -->
+      
+      <!-- 04: Contact (Updated) -->
       <div class="menu-column">
         <h3 class="menu-col-title"><span class="col-dot"></span>04</h3>
         <a href="contact.html" class="menu-link-large">CONTACT</a>
+        
         <div class="contact-list">
+          
+          <!-- Gmail -->
           <div class="contact-item" onclick="copyToClipboard('sally00kk@gmail.com', this)">
             <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
             <div class="contact-info">
-              <!-- <span class="contact-label">Email</span> 简化布局 -->
               <span class="contact-value">sally00kk@gmail.com</span>
             </div>
             <span class="copy-feedback">Copy</span>
           </div>
+          
+          <!-- QQ (新增) -->
+          <div class="contact-item" onclick="copyToClipboard('1355652997@qq.com', this)">
+            <div class="contact-icon"><i class="fa-brands fa-qq"></i></div>
+            <div class="contact-info">
+              <span class="contact-value">1355652997@qq.com</span>
+            </div>
+            <span class="copy-feedback">Copy</span>
+          </div>
+
+          <!-- Phone -->
           <div class="contact-item" onclick="copyToClipboard('178-9100-3233', this)">
             <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
             <div class="contact-info">
@@ -434,6 +434,7 @@
             </div>
             <span class="copy-feedback">Copy</span>
           </div>
+
         </div>
       </div>
     </div>
