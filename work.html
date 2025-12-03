@@ -19,9 +19,7 @@
       --spacing-grid: 2rem;     
     }
 
-    html {
-      scroll-behavior: smooth; /* 启用平滑滚动 */
-    }
+    html { scroll-behavior: smooth; }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -53,16 +51,24 @@
     }
     body.menu-open .logo-fixed { transform: translateY(calc(var(--menu-height) * -1)); color: #fff; mix-blend-mode: difference;}
 
-    /* --- 3. 侧边栏目录 (新增) --- */
+    /* --- 3. 侧边栏目录 (卡片化 + 投影 + 缩小间距) --- */
     .sidebar-toc {
       position: fixed;
-      top: 100px; /* Logo 下方 */
-      left: 3rem;
-      width: 240px;
-      height: calc(100vh - 150px);
+      top: 110px; /* 距离顶部位置 */
+      left: 3rem; /* 保持左对齐 */
+      width: 220px; /* 稍微调窄一点 */
+      max-height: calc(100vh - 160px); /* 限制最大高度 */
       overflow-y: auto;
       z-index: 100;
-      padding-right: 20px;
+      padding: 1.5rem; /* 增加内边距，让内容居中于卡片 */
+      
+      /* 卡片样式核心 */
+      background: rgba(255, 255, 255, 0.95); /* 白色背景 */
+      backdrop-filter: blur(10px); /* 毛玻璃效果 */
+      border-radius: 12px; /* 圆角 */
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08); /* 高级投影 */
+      border: 1px solid rgba(0,0,0,0.02); /* 极细描边增加质感 */
+
       /* 隐藏滚动条 */
       scrollbar-width: none; 
       -ms-overflow-style: none;
@@ -70,30 +76,35 @@
     .sidebar-toc::-webkit-scrollbar { display: none; }
 
     .toc-list { list-style: none; }
-    .toc-item { margin-bottom: 1.5rem; }
+    .toc-item { margin-bottom: 1.2rem; } /* 稍微缩减项间距 */
     
     .toc-title {
-      font-size: 0.85rem; font-weight: 700; color: #000; margin-bottom: 0.5rem;
+      font-size: 0.85rem; font-weight: 700; color: #000; margin-bottom: 0.4rem;
       display: block; line-height: 1.4;
     }
-    .toc-title span { display: block; font-size: 0.7rem; color: #999; font-weight: 400; text-transform: uppercase; margin-top: 2px;}
+    .toc-title span { display: block; font-size: 0.65rem; color: #999; font-weight: 400; text-transform: uppercase; margin-top: 2px;}
 
-    .toc-sub-list { list-style: none; margin-left: 0; border-left: 1px solid #eee; padding-left: 15px; }
-    .toc-sub-item { margin-bottom: 0.6rem; }
+    .toc-sub-list { list-style: none; margin-left: 0; border-left: 2px solid #f0f0f0; padding-left: 12px; }
+    .toc-sub-item { margin-bottom: 0.5rem; }
     
     .toc-link {
-      font-size: 0.8rem; color: #666; display: block; transition: all 0.2s; line-height: 1.4;
+      font-size: 0.75rem; color: #666; display: block; transition: all 0.2s; line-height: 1.4;
     }
-    .toc-link:hover { color: var(--accent); transform: translateX(3px); }
-    .toc-link span { margin-right: 5px; font-weight: 600; font-size: 0.75rem; color: #ccc; }
+    .toc-link:hover { color: var(--accent); transform: translateX(3px); font-weight: 500;}
+    .toc-link span { margin-right: 5px; font-weight: 600; font-size: 0.7rem; color: #ccc; }
 
 
-    /* --- 4. 主内容布局调整 (适配侧边栏) --- */
-    /* 增加左侧 Padding 给目录留位置 */
+    /* --- 4. 主内容布局调整 (收紧左侧间距) --- */
     .container { 
       max-width: 1600px; 
       margin: 0 auto; 
-      padding: 0 3rem 0 20rem; /* 左侧留出 20rem 的空间 */
+      /* 
+         计算逻辑：
+         Sidebar Width (220px) + Left (3rem ≈ 48px) + Gap (约 2rem)
+         220 + 48 + 32 = 300px ≈ 18.75rem
+         这里设置为 19rem，比之前的 20rem 更紧凑
+      */
+      padding: 0 3rem 0 19rem; 
     }
 
     .page-header { margin-bottom: 5rem; border-bottom: 1px solid #000; padding-bottom: 2rem; }
@@ -103,30 +114,31 @@
     .work-section { 
       margin-bottom: var(--spacing-section); 
       position: relative;
-      scroll-margin-top: 100px; /* 锚点定位偏移 */
+      scroll-margin-top: 120px; /* 锚点定位偏移 */
     }
     
     .section-header { margin-bottom: 2rem; display: flex; align-items: baseline; gap: 1rem; }
     .section-title-cn { font-size: 2rem; font-weight: 800; color: #000; line-height: 1.2; }
     .section-title-en { font-size: 1rem; font-weight: 400; color: #999; text-transform: uppercase; letter-spacing: 1px; font-family: "Helvetica Neue", Arial, sans-serif;}
 
-    /* Grid & Card Styles (保持不变) */
+    /* Grid & Card Styles */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      grid-auto-rows: var(--card-height);
       gap: var(--spacing-grid);
       grid-auto-flow: dense;
+      /* 移除固定行高，使用宽高比控制 */
     }
 
     .work-card {
       position: relative; display: block; overflow: hidden; border-radius: 4px; background: #f4f4f4;
-      height: 100%; width: 100%;
-      scroll-margin-top: 150px; /* 点击子项时的偏移量 */
+      width: 100%;
+      scroll-margin-top: 150px; 
+      aspect-ratio: 4/3; /* 默认比例 */
     }
     
-    .span-2 { grid-column: span 2; }
-    .span-full { grid-column: 1 / -1; }
+    .span-2 { grid-column: span 2; aspect-ratio: 16/10; }
+    .span-full { grid-column: 1 / -1; aspect-ratio: 21/9; }
 
     .work-card img {
       width: 100%; height: 100%; object-fit: cover;
@@ -198,7 +210,7 @@
     @media (max-width: 1200px) {
       /* 屏幕较窄时，隐藏侧边目录，恢复全宽 */
       .sidebar-toc { display: none; }
-      .container { padding: 0 3rem; } /* 恢复正常 Padding */
+      .container { padding: 0 3rem; } 
     }
 
     @media (max-width: 768px) {
@@ -206,8 +218,8 @@
       .page-header { margin-bottom: 3rem; }
       .page-title { font-size: 2.5rem; }
       
-      .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 280px; gap: 1rem;}
-      .span-2, .span-full { grid-column: span 1; }
+      .gallery-grid { grid-template-columns: 1fr; gap: 1rem;}
+      .work-card, .span-2, .span-full { grid-column: span 1; aspect-ratio: 4/3; }
       
       .work-section { margin-bottom: 5rem; }
       .section-header { flex-direction: column; gap: 0.2rem; align-items: flex-start; }
@@ -224,7 +236,7 @@
   <!-- Logo -->
   <a href="index.html" class="logo-fixed">SALLY.</a>
 
-  <!-- 新增：侧边栏目录 (大屏显示) -->
+  <!-- 侧边栏目录 (卡片式) -->
   <nav class="sidebar-toc">
     <ul class="toc-list">
       <!-- 1 -->
