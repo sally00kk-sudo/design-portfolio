@@ -51,32 +51,39 @@
     }
     body.menu-open .logo-fixed { transform: translateY(calc(var(--menu-height) * -1)); color: #fff; mix-blend-mode: difference;}
 
-    /* --- 3. 侧边栏目录 (卡片化 + 投影 + 缩小间距) --- */
+    /* --- 3. 侧边栏目录 (修复动画同步) --- */
     .sidebar-toc {
       position: fixed;
-      top: 110px; /* 距离顶部位置 */
-      left: 3rem; /* 保持左对齐 */
-      width: 220px; /* 稍微调窄一点 */
-      max-height: calc(100vh - 160px); /* 限制最大高度 */
+      top: 110px; 
+      left: 3rem; 
+      width: 220px; 
+      max-height: calc(100vh - 160px); 
       overflow-y: auto;
       z-index: 100;
-      padding: 1.5rem; /* 增加内边距，让内容居中于卡片 */
+      padding: 1.5rem; 
       
-      /* 卡片样式核心 */
-      background: rgba(255, 255, 255, 0.95); /* 白色背景 */
-      backdrop-filter: blur(10px); /* 毛玻璃效果 */
-      border-radius: 12px; /* 圆角 */
-      box-shadow: 0 10px 40px rgba(0,0,0,0.08); /* 高级投影 */
-      border: 1px solid rgba(0,0,0,0.02); /* 极细描边增加质感 */
+      background: rgba(255, 255, 255, 0.95); 
+      backdrop-filter: blur(10px); 
+      border-radius: 12px; 
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08); 
+      border: 1px solid rgba(0,0,0,0.02); 
 
-      /* 隐藏滚动条 */
       scrollbar-width: none; 
       -ms-overflow-style: none;
+
+      /* 【关键修复】添加过渡动画，使其能随页面平滑移动 */
+      transition: transform 0.6s var(--ease-out-expo);
     }
+    
+    /* 【关键修复】当菜单打开时，侧边栏也要上移 */
+    body.menu-open .sidebar-toc {
+      transform: translateY(calc(var(--menu-height) * -1));
+    }
+
     .sidebar-toc::-webkit-scrollbar { display: none; }
 
     .toc-list { list-style: none; }
-    .toc-item { margin-bottom: 1.2rem; } /* 稍微缩减项间距 */
+    .toc-item { margin-bottom: 1.2rem; } 
     
     .toc-title {
       font-size: 0.85rem; font-weight: 700; color: #000; margin-bottom: 0.4rem;
@@ -94,16 +101,10 @@
     .toc-link span { margin-right: 5px; font-weight: 600; font-size: 0.7rem; color: #ccc; }
 
 
-    /* --- 4. 主内容布局调整 (收紧左侧间距) --- */
+    /* --- 4. 主内容布局 --- */
     .container { 
       max-width: 1600px; 
       margin: 0 auto; 
-      /* 
-         计算逻辑：
-         Sidebar Width (220px) + Left (3rem ≈ 48px) + Gap (约 2rem)
-         220 + 48 + 32 = 300px ≈ 18.75rem
-         这里设置为 19rem，比之前的 20rem 更紧凑
-      */
       padding: 0 3rem 0 19rem; 
     }
 
@@ -114,7 +115,7 @@
     .work-section { 
       margin-bottom: var(--spacing-section); 
       position: relative;
-      scroll-margin-top: 120px; /* 锚点定位偏移 */
+      scroll-margin-top: 120px; 
     }
     
     .section-header { margin-bottom: 2rem; display: flex; align-items: baseline; gap: 1rem; }
@@ -127,14 +128,13 @@
       grid-template-columns: repeat(3, 1fr);
       gap: var(--spacing-grid);
       grid-auto-flow: dense;
-      /* 移除固定行高，使用宽高比控制 */
     }
 
     .work-card {
       position: relative; display: block; overflow: hidden; border-radius: 4px; background: #f4f4f4;
       width: 100%;
       scroll-margin-top: 150px; 
-      aspect-ratio: 4/3; /* 默认比例 */
+      aspect-ratio: 4/3; 
     }
     
     .span-2 { grid-column: span 2; aspect-ratio: 16/10; }
@@ -208,7 +208,6 @@
 
     /* --- Mobile Responsive --- */
     @media (max-width: 1200px) {
-      /* 屏幕较窄时，隐藏侧边目录，恢复全宽 */
       .sidebar-toc { display: none; }
       .container { padding: 0 3rem; } 
     }
@@ -236,7 +235,7 @@
   <!-- Logo -->
   <a href="index.html" class="logo-fixed">SALLY.</a>
 
-  <!-- 侧边栏目录 (卡片式) -->
+  <!-- 侧边栏目录 -->
   <nav class="sidebar-toc">
     <ul class="toc-list">
       <!-- 1 -->
