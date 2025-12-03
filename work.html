@@ -15,10 +15,12 @@
       --menu-bg: #000000;
       --menu-height: 48vh; 
       --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
-      /* 布局间距 */
-      --spacing-section: 8rem; /* 版块间距 */
-      --spacing-grid: 1.5rem;  /* 图片间距 (稍微紧凑一点，更有张力) */
-      --card-height: 460px;    /* 【核心】统一卡片高度，保证对齐 */
+      --spacing-section: 10rem; 
+      --spacing-grid: 2rem;     
+    }
+
+    html {
+      scroll-behavior: smooth; /* 启用平滑滚动 */
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -51,8 +53,48 @@
     }
     body.menu-open .logo-fixed { transform: translateY(calc(var(--menu-height) * -1)); color: #fff; mix-blend-mode: difference;}
 
-    /* --- 3. 作品集排版 (核心优化) --- */
-    .container { max-width: 1600px; margin: 0 auto; padding: 0 3rem; }
+    /* --- 3. 侧边栏目录 (新增) --- */
+    .sidebar-toc {
+      position: fixed;
+      top: 100px; /* Logo 下方 */
+      left: 3rem;
+      width: 240px;
+      height: calc(100vh - 150px);
+      overflow-y: auto;
+      z-index: 100;
+      padding-right: 20px;
+      /* 隐藏滚动条 */
+      scrollbar-width: none; 
+      -ms-overflow-style: none;
+    }
+    .sidebar-toc::-webkit-scrollbar { display: none; }
+
+    .toc-list { list-style: none; }
+    .toc-item { margin-bottom: 1.5rem; }
+    
+    .toc-title {
+      font-size: 0.85rem; font-weight: 700; color: #000; margin-bottom: 0.5rem;
+      display: block; line-height: 1.4;
+    }
+    .toc-title span { display: block; font-size: 0.7rem; color: #999; font-weight: 400; text-transform: uppercase; margin-top: 2px;}
+
+    .toc-sub-list { list-style: none; margin-left: 0; border-left: 1px solid #eee; padding-left: 15px; }
+    .toc-sub-item { margin-bottom: 0.6rem; }
+    
+    .toc-link {
+      font-size: 0.8rem; color: #666; display: block; transition: all 0.2s; line-height: 1.4;
+    }
+    .toc-link:hover { color: var(--accent); transform: translateX(3px); }
+    .toc-link span { margin-right: 5px; font-weight: 600; font-size: 0.75rem; color: #ccc; }
+
+
+    /* --- 4. 主内容布局调整 (适配侧边栏) --- */
+    /* 增加左侧 Padding 给目录留位置 */
+    .container { 
+      max-width: 1600px; 
+      margin: 0 auto; 
+      padding: 0 3rem 0 20rem; /* 左侧留出 20rem 的空间 */
+    }
 
     .page-header { margin-bottom: 5rem; border-bottom: 1px solid #000; padding-bottom: 2rem; }
     .page-title { font-size: 4rem; font-weight: 900; letter-spacing: -1px; margin-bottom: 0.5rem;}
@@ -61,50 +103,37 @@
     .work-section { 
       margin-bottom: var(--spacing-section); 
       position: relative;
+      scroll-margin-top: 100px; /* 锚点定位偏移 */
     }
     
     .section-header { margin-bottom: 2rem; display: flex; align-items: baseline; gap: 1rem; }
     .section-title-cn { font-size: 2rem; font-weight: 800; color: #000; line-height: 1.2; }
     .section-title-en { font-size: 1rem; font-weight: 400; color: #999; text-transform: uppercase; letter-spacing: 1px; font-family: "Helvetica Neue", Arial, sans-serif;}
 
-    /* 
-       【Grid 核心修复】 
-       1. 使用 auto-rows 固定高度，确保同行图片绝对对齐。
-       2. dense 属性帮助自动填充空白。
-    */
+    /* Grid & Card Styles (保持不变) */
     .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr); /* 3列网格 */
-      grid-auto-rows: var(--card-height);    /* 统一高度，防止参差不齐 */
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: var(--card-height);
       gap: var(--spacing-grid);
-      grid-auto-flow: dense; /* 智能填补空隙 */
+      grid-auto-flow: dense;
     }
 
-    /* 卡片通用样式 */
     .work-card {
-      position: relative; 
-      display: block; 
-      overflow: hidden; 
-      border-radius: 4px; 
-      background: #f4f4f4;
-      height: 100%; /* 强制填满 Grid 单元格的高度 */
-      width: 100%;
+      position: relative; display: block; overflow: hidden; border-radius: 4px; background: #f4f4f4;
+      height: 100%; width: 100%;
+      scroll-margin-top: 150px; /* 点击子项时的偏移量 */
     }
     
-    /* 跨列控制 */
-    .span-2 { grid-column: span 2; }       /* 占2列 (宽图) */
-    .span-full { grid-column: 1 / -1; }    /* 占全宽 (特大图) */
+    .span-2 { grid-column: span 2; }
+    .span-full { grid-column: 1 / -1; }
 
-    /* 图片样式：强制填充 Cover */
     .work-card img {
-      width: 100%; 
-      height: 100%; 
-      object-fit: cover; /* 关键：裁剪多余部分，保证不留白且不变形 */
+      width: 100%; height: 100%; object-fit: cover;
       transition: transform 0.8s var(--ease-out-expo), filter 0.5s ease;
     }
     .work-card:hover img { transform: scale(1.05); filter: brightness(0.9); }
 
-    /* 标签 */
     .work-tag {
       position: absolute; top: 20px; right: 20px;
       background: rgba(0,0,0,0.6); color: #fff;
@@ -113,7 +142,6 @@
       z-index: 2; backdrop-filter: blur(4px);
     }
 
-    /* 底部悬浮文字 */
     .card-info {
       position: absolute; bottom: 0; left: 0; width: 100%; padding: 2rem;
       background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
@@ -125,7 +153,7 @@
     .card-title-cn { font-size: 1.5rem; font-weight: 700; display: block; margin-bottom: 6px; }
     .card-title-en { font-size: 0.9rem; font-weight: 300; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px;}
 
-    /* --- 4. 菜单与公共样式 --- */
+    /* --- 5. 菜单与公共样式 --- */
     .menu-overlay { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--menu-height); background: var(--menu-bg); z-index: 900; transform: translateY(100%); transition: transform 0.6s var(--ease-out-expo); padding: 3rem 3rem 2rem 3rem; color: #fff; display: flex; flex-direction: column; border-top: 1px solid rgba(255,255,255,0.1); }
     body.menu-open .menu-overlay { transform: translateY(0); }
     .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; height: 100%; max-width: 1600px; margin: 0 auto; width: 100%; }
@@ -167,12 +195,17 @@
     .contact-item:hover .copy-feedback { opacity: 1; transform: translateX(0); }
 
     /* --- Mobile Responsive --- */
+    @media (max-width: 1200px) {
+      /* 屏幕较窄时，隐藏侧边目录，恢复全宽 */
+      .sidebar-toc { display: none; }
+      .container { padding: 0 3rem; } /* 恢复正常 Padding */
+    }
+
     @media (max-width: 768px) {
       .container { padding: 0 1.5rem; }
       .page-header { margin-bottom: 3rem; }
       .page-title { font-size: 2.5rem; }
       
-      /* 手机端：全改为单列，高度稍微调小 */
       .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 280px; gap: 1rem;}
       .span-2, .span-full { grid-column: span 1; }
       
@@ -191,6 +224,79 @@
   <!-- Logo -->
   <a href="index.html" class="logo-fixed">SALLY.</a>
 
+  <!-- 新增：侧边栏目录 (大屏显示) -->
+  <nav class="sidebar-toc">
+    <ul class="toc-list">
+      <!-- 1 -->
+      <li class="toc-item">
+        <a href="#section-1" class="toc-title">
+          1. 全球化电商营销体验
+          <span>Global E-commerce Marketing</span>
+        </a>
+        <ul class="toc-sub-list">
+          <li class="toc-sub-item"><a href="#item-1-1" class="toc-link"><span>1.1</span> 独立站网页设计</a></li>
+          <li class="toc-sub-item"><a href="#item-1-2" class="toc-link"><span>1.2</span> 亚马逊店铺装修</a></li>
+          <li class="toc-sub-item"><a href="#item-1-3" class="toc-link"><span>1.3</span> TikTok Shop 界面设计</a></li>
+        </ul>
+      </li>
+      <!-- 2 -->
+      <li class="toc-item">
+        <a href="#section-2" class="toc-title">
+          2. 高级A+页面与广告设计
+          <span>Premium A+ Content & Ads</span>
+        </a>
+        <ul class="toc-sub-list">
+          <li class="toc-sub-item"><a href="#item-2-1" class="toc-link"><span>2.1</span> 社交媒体广告创意</a></li>
+          <li class="toc-sub-item"><a href="#item-2-2" class="toc-link"><span>2.2</span> 独立站详情页面设计</a></li>
+          <li class="toc-sub-item"><a href="#item-2-3" class="toc-link"><span>2.3</span> 亚马逊高级A+页面</a></li>
+          <li class="toc-sub-item"><a href="#item-2-4" class="toc-link"><span>2.4</span> TikTok A+页面设计</a></li>
+        </ul>
+      </li>
+      <!-- 3 -->
+      <li class="toc-item">
+        <a href="#section-3" class="toc-title">
+          3. 品牌视觉与全案设计
+          <span>Brand Identity & Design</span>
+        </a>
+        <ul class="toc-sub-list">
+          <li class="toc-sub-item"><a href="#item-3-1" class="toc-link"><span>3.1</span> 包装设计与物料延展</a></li>
+          <li class="toc-sub-item"><a href="#item-3-2" class="toc-link"><span>3.2</span> 巴西酸奶品牌全案</a></li>
+          <li class="toc-sub-item"><a href="#item-3-3" class="toc-link"><span>3.3</span> Redtop 西部牛仔靴全案</a></li>
+        </ul>
+      </li>
+      <!-- 4 -->
+      <li class="toc-item">
+        <a href="#section-4" class="toc-title">
+          4. 空间视觉与导视系统
+          <span>Spatial Visuals</span>
+        </a>
+        <ul class="toc-sub-list">
+          <li class="toc-sub-item"><a href="#item-4-1" class="toc-link"><span>4.1</span> 工法馆与展示厅设计</a></li>
+        </ul>
+      </li>
+      <!-- 5 -->
+      <li class="toc-item">
+        <a href="#section-5" class="toc-title">
+          5. 产品设计与模特摄影
+          <span>Product Design & Photo</span>
+        </a>
+        <ul class="toc-sub-list">
+          <li class="toc-sub-item"><a href="#item-5-1" class="toc-link"><span>5.1</span> 策划以及现场调度</a></li>
+        </ul>
+      </li>
+      <!-- 6 -->
+      <li class="toc-item">
+        <a href="#section-6" class="toc-title">
+          6. 三维建模与渲染
+          <span>3D Modeling & Rendering</span>
+        </a>
+        <ul class="toc-sub-list">
+          <li class="toc-sub-item"><a href="#item-6-1" class="toc-link"><span>6.1</span> 3D 建模与渲染练习</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
   <!-- 页面主体容器 -->
   <div class="page-container">
     <div class="container">
@@ -202,15 +308,15 @@
       </div>
 
       <!-- 1. 全球化电商营销体验 -->
-      <section class="work-section">
+      <section id="section-1" class="work-section">
         <div class="section-header">
-          <h2 class="section-title-cn">全球化电商营销体验</h2>
+          <h2 class="section-title-cn">1. 全球化电商营销体验</h2>
           <span class="section-title-en">Global E-commerce Marketing Experience</span>
         </div>
         
         <div class="gallery-grid">
-          <!-- Row 1: 1张大图 (Span 2) + 1张小图 -->
-          <a href="#" class="work-card span-2">
+          <!-- Item 1.1 -->
+          <a href="#" id="item-1-1" class="work-card span-2">
             <span class="work-tag">Shopify</span>
             <img src="images/p1-ecommerce.jpg" alt="Independent Site">
             <div class="card-info">
@@ -219,7 +325,8 @@
             </div>
           </a>
           
-          <a href="#" class="work-card">
+          <!-- Item 1.2 -->
+          <a href="#" id="item-1-2" class="work-card">
             <span class="work-tag">Amazon</span>
             <img src="images/banner-1.jpg" alt="Amazon">
             <div class="card-info">
@@ -228,8 +335,8 @@
             </div>
           </a>
 
-          <!-- Row 2: 1张全宽图 (Span Full) -->
-          <a href="#" class="work-card span-full">
+          <!-- Item 1.3 -->
+          <a href="#" id="item-1-3" class="work-card span-full" style="aspect-ratio: 21/9;">
             <span class="work-tag">TikTok</span>
             <img src="images/banner-3.jpg" alt="TikTok">
             <div class="card-info">
@@ -240,17 +347,16 @@
         </div>
       </section>
 
-      <!-- 2. 高级A+页面与广告设计 (4张图布局) -->
-      <section class="work-section">
+      <!-- 2. 高级A+页面与广告设计 -->
+      <section id="section-2" class="work-section">
         <div class="section-header">
-          <h2 class="section-title-cn">高级A+页面与广告设计</h2>
+          <h2 class="section-title-cn">2. 高级A+页面与广告设计</h2>
           <span class="section-title-en">Premium A+ Content & Ad Design</span>
         </div>
         
         <div class="gallery-grid">
-          <!-- Row 1: 小(1) + 大(2) -->
-          <!-- 1. 社交媒体广告 -->
-          <a href="#" class="work-card">
+          <!-- Item 2.1 -->
+          <a href="#" id="item-2-1" class="work-card">
             <span class="work-tag">FB / Google Ads</span>
             <img src="images/p2-marketing.jpg" alt="Social Ads">
             <div class="card-info">
@@ -258,8 +364,9 @@
               <span class="card-title-en">Social Media Ad Creatives</span>
             </div>
           </a>
-          <!-- 2. 独立站详情 -->
-          <a href="#" class="work-card span-2">
+
+          <!-- Item 2.2 -->
+          <a href="#" id="item-2-2" class="work-card span-2">
             <span class="work-tag">DTC / A+</span>
             <img src="images/banner-2.jpg" alt="DTC A+">
             <div class="card-info">
@@ -268,9 +375,8 @@
             </div>
           </a>
 
-          <!-- Row 2: 大(2) + 小(1) -->
-          <!-- 3. 亚马逊A+ -->
-          <a href="#" class="work-card span-2">
+          <!-- Item 2.3 -->
+          <a href="#" id="item-2-3" class="work-card span-2">
             <span class="work-tag">Amazon / A+</span>
             <img src="images/p3-branding.jpg" alt="Amazon A+">
             <div class="card-info">
@@ -278,8 +384,9 @@
               <span class="card-title-en">Amazon Premium A+ Design</span>
             </div>
           </a>
-          <!-- 4. TikTok A+ -->
-          <a href="#" class="work-card">
+
+          <!-- Item 2.4 -->
+          <a href="#" id="item-2-4" class="work-card">
             <span class="work-tag">TK / A+</span>
             <img src="images/p1-ecommerce.jpg" alt="TikTok A+">
             <div class="card-info">
@@ -291,15 +398,15 @@
       </section>
 
       <!-- 3. 品牌视觉与全案设计 -->
-      <section class="work-section">
+      <section id="section-3" class="work-section">
         <div class="section-header">
-          <h2 class="section-title-cn">品牌视觉与全案设计</h2>
+          <h2 class="section-title-cn">3. 品牌视觉与全案设计</h2>
           <span class="section-title-en">Brand Identity & Full-Stack Design</span>
         </div>
         
         <div class="gallery-grid">
-          <!-- Item 1: 包装 -->
-          <a href="#" class="work-card">
+          <!-- Item 3.1 -->
+          <a href="#" id="item-3-1" class="work-card">
             <span class="work-tag">Packaging</span>
             <img src="images/p3-branding.jpg" alt="Packaging">
             <div class="card-info">
@@ -307,8 +414,8 @@
               <span class="card-title-en">Packaging & Collateral Extension</span>
             </div>
           </a>
-          <!-- Item 2: 巴西酸奶 -->
-          <a href="#" class="work-card">
+          <!-- Item 3.2 -->
+          <a href="#" id="item-3-2" class="work-card">
             <span class="work-tag">Branding</span>
             <img src="images/banner-1.jpg" alt="Yogurt Brand">
             <div class="card-info">
@@ -316,12 +423,12 @@
               <span class="card-title-en">Brazilian Yogurt Brand Identity</span>
             </div>
           </a>
-          <!-- Item 3: 牛仔鞋 -->
-          <a href="#" class="work-card">
+          <!-- Item 3.3 -->
+          <a href="#" id="item-3-3" class="work-card">
             <span class="work-tag">Visual Identity</span>
             <img src="images/p5-photography.jpg" alt="Cowboy Boots">
             <div class="card-info">
-              <span class="card-title-cn">Redtop 西部牛仔鞋品牌全案</span>
+              <span class="card-title-cn">Redtop 西部牛仔靴品牌全案</span>
               <span class="card-title-en">Redtop Cowboy Boots Identity</span>
             </div>
           </a>
@@ -329,15 +436,15 @@
       </section>
 
       <!-- 4. 空间视觉与导视系统 -->
-      <section class="work-section">
+      <section id="section-4" class="work-section">
         <div class="section-header">
-          <h2 class="section-title-cn">空间视觉与导视系统</h2>
+          <h2 class="section-title-cn">4. 空间视觉与导视系统</h2>
           <span class="section-title-en">Spatial Visuals & Wayfinding System</span>
         </div>
         
         <div class="gallery-grid">
-          <!-- Item 1: 全宽图 (Span Full) -->
-          <a href="#" class="work-card span-full">
+          <!-- Item 4.1 -->
+          <a href="#" id="item-4-1" class="work-card span-full" style="aspect-ratio: 21/9;">
             <span class="work-tag">Spatial Design</span>
             <img src="images/p4-spatial.jpg" alt="Exhibition">
             <div class="card-info">
@@ -349,15 +456,15 @@
       </section>
 
       <!-- 5. 产品设计与模特摄影 -->
-      <section class="work-section">
+      <section id="section-5" class="work-section">
         <div class="section-header">
-          <h2 class="section-title-cn">产品设计与模特摄影</h2>
+          <h2 class="section-title-cn">5. 产品设计与模特摄影</h2>
           <span class="section-title-en">Product Design & Model Photography</span>
         </div>
         
         <div class="gallery-grid">
-          <!-- Item 1: 全宽图 (Span Full) - 防止大片留白 -->
-          <a href="#" class="work-card span-full">
+          <!-- Item 5.1 -->
+          <a href="#" id="item-5-1" class="work-card span-full">
             <span class="work-tag">Art Direction</span>
             <img src="images/p5-photography.jpg" alt="Photography">
             <div class="card-info">
@@ -369,15 +476,15 @@
       </section>
 
       <!-- 6. 三维建模与渲染 -->
-      <section class="work-section">
+      <section id="section-6" class="work-section">
         <div class="section-header">
-          <h2 class="section-title-cn">三维建模与渲染</h2>
+          <h2 class="section-title-cn">6. 三维建模与渲染</h2>
           <span class="section-title-en">3D Modeling & Rendering</span>
         </div>
         
         <div class="gallery-grid">
-          <!-- Item 1: 全宽图 (Span Full) -->
-          <a href="#" class="work-card span-full">
+          <!-- Item 6.1 -->
+          <a href="#" id="item-6-1" class="work-card span-full">
             <span class="work-tag">C4D / Octane</span>
             <img src="images/p6-3d.jpg" alt="3D">
             <div class="card-info">
