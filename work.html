@@ -51,65 +51,91 @@
     }
     body.menu-open .logo-fixed { transform: translateY(calc(var(--menu-height) * -1)); color: #fff; mix-blend-mode: difference;}
 
-    /* --- 3. 侧边栏目录 (修复动画同步) --- */
+    /* --- 3. 侧边栏目录 (去卡片化 + 右侧单边投影) --- */
     .sidebar-toc {
       position: fixed;
-      top: 110px; 
+      top: 100px; /* 紧贴 Logo 下方 */
       left: 3rem; 
-      width: 220px; 
-      max-height: calc(100vh - 160px); 
+      width: 200px; /* 稍微调窄 */
+      height: calc(100vh - 100px); /* 撑满下方高度 */
       overflow-y: auto;
       z-index: 100;
-      padding: 1.5rem; 
+      padding-right: 15px; 
+      padding-top: 1rem;
       
-      background: rgba(255, 255, 255, 0.95); 
-      backdrop-filter: blur(10px); 
-      border-radius: 12px; 
-      box-shadow: 0 10px 40px rgba(0,0,0,0.08); 
-      border: 1px solid rgba(0,0,0,0.02); 
-
-      scrollbar-width: none; 
-      -ms-overflow-style: none;
-
-      /* 【关键修复】添加过渡动画，使其能随页面平滑移动 */
-      transition: transform 0.6s var(--ease-out-expo);
+      /* 去除卡片背景 */
+      background: transparent; 
+      border-radius: 0;
+      
+      /* 核心修改：右侧分割线 + 投影 */
+      border-right: 1px solid rgba(0,0,0,0.03); 
+      /* 利用伪元素制作右侧单边投影，避免影响透明背景 */
     }
     
-    /* 【关键修复】当菜单打开时，侧边栏也要上移 */
-    body.menu-open .sidebar-toc {
+    /* 使用 box-shadow 模拟右侧阴影 (Shadow on the right) */
+    .sidebar-toc::after {
+      content: '';
+      position: fixed;
+      top: 100px;
+      left: calc(3rem + 200px); /* 定位在侧边栏右边缘 */
+      width: 10px;
+      height: calc(100vh - 100px);
+      /* 只有右侧有淡阴影 */
+      box-shadow: -5px 0 15px -5px rgba(0,0,0,0.08); 
+      pointer-events: none;
+      z-index: 101;
+    }
+
+    /* 动画同步 */
+    body.menu-open .sidebar-toc, 
+    body.menu-open .sidebar-toc::after {
       transform: translateY(calc(var(--menu-height) * -1));
+      transition: transform 0.6s var(--ease-out-expo);
+    }
+    .sidebar-toc, .sidebar-toc::after {
+      transition: transform 0.6s var(--ease-out-expo);
     }
 
     .sidebar-toc::-webkit-scrollbar { display: none; }
 
     .toc-list { list-style: none; }
-    .toc-item { margin-bottom: 1.2rem; } 
+    .toc-item { margin-bottom: 1.5rem; } 
     
     .toc-title {
-      font-size: 0.85rem; font-weight: 700; color: #000; margin-bottom: 0.4rem;
-      display: block; line-height: 1.4;
+      font-size: 0.85rem; font-weight: 700; color: #000; margin-bottom: 0.5rem;
+      display: block; line-height: 1.4; position: relative;
     }
-    .toc-title span { display: block; font-size: 0.65rem; color: #999; font-weight: 400; text-transform: uppercase; margin-top: 2px;}
+    /* 装饰：主标题前加个小方块 */
+    .toc-title::before {
+      content: ''; display: inline-block; width: 4px; height: 4px; background: #000; 
+      vertical-align: middle; margin-right: 8px; margin-bottom: 2px;
+    }
+    .toc-title span { display: block; font-size: 0.65rem; color: #999; font-weight: 400; text-transform: uppercase; margin-top: 2px; margin-left: 12px;}
 
-    .toc-sub-list { list-style: none; margin-left: 0; border-left: 2px solid #f0f0f0; padding-left: 12px; }
-    .toc-sub-item { margin-bottom: 0.5rem; }
+    .toc-sub-list { list-style: none; margin-left: 12px; border-left: 1px solid #eee; padding-left: 15px; }
+    .toc-sub-item { margin-bottom: 0.6rem; }
     
     .toc-link {
       font-size: 0.75rem; color: #666; display: block; transition: all 0.2s; line-height: 1.4;
     }
     .toc-link:hover { color: var(--accent); transform: translateX(3px); font-weight: 500;}
-    .toc-link span { margin-right: 5px; font-weight: 600; font-size: 0.7rem; color: #ccc; }
+    .toc-link span { margin-right: 5px; font-weight: 600; font-size: 0.7rem; color: #ddd; }
 
 
-    /* --- 4. 主内容布局 --- */
+    /* --- 4. 主内容布局调整 (最大化展示空间) --- */
     .container { 
-      max-width: 1600px; 
+      /* 
+         Logic:
+         Sidebar width (200px) + Left Gap (3rem) + Padding (~2rem) = ~16rem
+      */
+      padding-left: 16rem; 
+      padding-right: 2rem; /* 右侧留白减少 */
+      max-width: 95%;      /* 几乎全屏宽度 */
       margin: 0 auto; 
-      padding: 0 3rem 0 19rem; 
     }
 
-    .page-header { margin-bottom: 5rem; border-bottom: 1px solid #000; padding-bottom: 2rem; }
-    .page-title { font-size: 4rem; font-weight: 900; letter-spacing: -1px; margin-bottom: 0.5rem;}
+    .page-header { margin-bottom: 5rem; border-bottom: 2px solid #000; padding-bottom: 1.5rem; }
+    .page-title { font-size: 4.5rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 0.5rem; line-height: 1;}
     .page-subtitle { color: var(--text-sub); font-size: 1.1rem; }
 
     .work-section { 
@@ -118,7 +144,7 @@
       scroll-margin-top: 120px; 
     }
     
-    .section-header { margin-bottom: 2rem; display: flex; align-items: baseline; gap: 1rem; }
+    .section-header { margin-bottom: 2rem; display: flex; align-items: baseline; gap: 1rem; border-bottom: 1px solid #eee; padding-bottom: 10px;}
     .section-title-cn { font-size: 2rem; font-weight: 800; color: #000; line-height: 1.2; }
     .section-title-en { font-size: 1rem; font-weight: 400; color: #999; text-transform: uppercase; letter-spacing: 1px; font-family: "Helvetica Neue", Arial, sans-serif;}
 
@@ -131,7 +157,8 @@
     }
 
     .work-card {
-      position: relative; display: block; overflow: hidden; border-radius: 4px; background: #f4f4f4;
+      position: relative; display: block; overflow: hidden; border-radius: 0; /* 去掉圆角，更锐利 */
+      background: #f4f4f4;
       width: 100%;
       scroll-margin-top: 150px; 
       aspect-ratio: 4/3; 
@@ -147,23 +174,23 @@
     .work-card:hover img { transform: scale(1.05); filter: brightness(0.9); }
 
     .work-tag {
-      position: absolute; top: 20px; right: 20px;
-      background: rgba(0,0,0,0.6); color: #fff;
-      padding: 6px 14px; border-radius: 20px;
-      font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
-      z-index: 2; backdrop-filter: blur(4px);
+      position: absolute; top: 15px; right: 15px;
+      background: rgba(255,255,255,0.9); color: #000; /* 改为白底黑字，更清晰 */
+      padding: 4px 12px; border-radius: 2px; /* 方角 */
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+      z-index: 2;
     }
 
     .card-info {
-      position: absolute; bottom: 0; left: 0; width: 100%; padding: 2rem;
+      position: absolute; bottom: 0; left: 0; width: 100%; padding: 1.5rem;
       background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
       color: #fff; z-index: 2;
       transform: translateY(10px); opacity: 0; transition: all 0.4s ease;
     }
     .work-card:hover .card-info { transform: translateY(0); opacity: 1; }
 
-    .card-title-cn { font-size: 1.5rem; font-weight: 700; display: block; margin-bottom: 6px; }
-    .card-title-en { font-size: 0.9rem; font-weight: 300; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px;}
+    .card-title-cn { font-size: 1.4rem; font-weight: 700; display: block; margin-bottom: 4px; }
+    .card-title-en { font-size: 0.8rem; font-weight: 300; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px;}
 
     /* --- 5. 菜单与公共样式 --- */
     .menu-overlay { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--menu-height); background: var(--menu-bg); z-index: 900; transform: translateY(100%); transition: transform 0.6s var(--ease-out-expo); padding: 3rem 3rem 2rem 3rem; color: #fff; display: flex; flex-direction: column; border-top: 1px solid rgba(255,255,255,0.1); }
@@ -209,7 +236,7 @@
     /* --- Mobile Responsive --- */
     @media (max-width: 1200px) {
       .sidebar-toc { display: none; }
-      .container { padding: 0 3rem; } 
+      .container { padding: 0 3rem; max-width: 100%; } 
     }
 
     @media (max-width: 768px) {
