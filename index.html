@@ -23,7 +23,7 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
       background: #ffffff;
-      overflow: hidden; /* 锁定滚动 */
+      overflow: hidden; 
       height: 100vh;
       width: 100vw;
     }
@@ -120,7 +120,6 @@
       color: #999;
     }
 
-    /* 新增：Hero 按钮组样式 */
     .btn-group {
       display: flex;
       gap: 1.5rem;
@@ -143,57 +142,60 @@
     .btn i { margin-left: 10px; transition: transform 0.3s; }
     .btn:hover i { transform: translateX(5px); }
 
-    .btn-black {
-      background: #000;
-      color: #fff;
-      border: 1px solid #000;
-    }
-    .btn-black:hover {
-      background: transparent;
-      color: #000;
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: #000;
-      border: 1px solid #000;
-    }
-    .btn-outline:hover {
-      background: #000;
-      color: #fff;
-    }
+    .btn-black { background: #000; color: #fff; border: 1px solid #000; }
+    .btn-black:hover { background: transparent; color: #000; }
+    .btn-outline { background: transparent; color: #000; border: 1px solid #000; }
+    .btn-outline:hover { background: #000; color: #fff; }
 
     @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-    /* --- 4. 底部圆形菜单按钮 --- */
+    /* --- 4. [更新] 底部胶囊菜单按钮 --- */
     .menu-trigger-container {
       position: fixed;
-      bottom: 30px;
+      bottom: 40px; /* 稍微抬高一点 */
       left: 50%;
       transform: translateX(-50%);
       z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       cursor: pointer;
+      /* 移除之前的 flex column 布局 */
     }
 
     .menu-btn {
-      width: 60px;
-      height: 60px;
+      /* 初始状态：大圆形 */
+      width: 75px; 
+      height: 75px;
       background-color: var(--accent);
-      border-radius: 50%;
+      border-radius: 50px; /* 只要大于高度的一半就是圆 */
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 10px 30px rgba(68, 82, 254, 0.4);
-      transition: all 0.4s var(--ease-out-expo);
+      transition: width 0.5s var(--ease-out-expo), box-shadow 0.3s;
+      overflow: hidden; /* 隐藏溢出的文字 */
+      padding: 0;
       position: relative;
     }
 
+    /* 悬浮状态：变宽成为胶囊 */
     .menu-btn:hover {
-      transform: scale(1.1);
+      width: 170px; /* 伸展宽度 */
       box-shadow: 0 15px 40px rgba(68, 82, 254, 0.6);
+    }
+
+    /* 图标容器：为了在伸展时移动位置 */
+    .icon-wrapper {
+      width: 24px;
+      height: 24px;
+      position: relative;
+      flex-shrink: 0; /* 防止被压缩 */
+      transition: transform 0.5s var(--ease-out-expo);
+      /* 初始在中间 */
+      transform: translateX(0); 
+    }
+
+    /* 悬浮时，图标稍微往左移，给文字腾位置 */
+    .menu-btn:hover .icon-wrapper {
+      transform: translateX(-35px);
     }
 
     .menu-icon-line {
@@ -201,24 +203,50 @@
       height: 2px;
       background: #fff;
       position: absolute;
+      left: 0;
       transition: transform 0.3s ease;
     }
-    .menu-icon-line:first-child { transform: translateY(-4px); }
-    .menu-icon-line:last-child { transform: translateY(4px); }
+    .menu-icon-line:first-child { top: 8px; }
+    .menu-icon-line:last-child { bottom: 8px; }
 
-    body.menu-open .menu-icon-line:first-child { transform: translateY(0) rotate(45deg); }
-    body.menu-open .menu-icon-line:last-child { transform: translateY(0) rotate(-45deg); }
+    /* 打开菜单变成 X */
+    body.menu-open .menu-icon-line:first-child { top: 50%; transform: translateY(-50%) rotate(45deg); }
+    body.menu-open .menu-icon-line:last-child { bottom: 50%; transform: translateY(50%) rotate(-45deg); }
 
+    /* 文字样式 */
     .menu-label {
-      margin-top: 10px;
-      font-size: 0.8rem;
-      font-weight: 600;
+      position: absolute;
+      left: 50%; /* 初始在中间，但被 overflow:hidden 盖住 */
+      font-size: 0.9rem;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #000;
-      transition: color 0.3s;
+      letter-spacing: 2px;
+      color: #fff;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateX(10px); /* 初始位移 */
+      transition: all 0.4s ease 0.1s; /* 稍微延迟一点出现 */
+      pointer-events: none;
     }
-    body.menu-open .menu-label { color: #fff; }
+
+    /* 悬浮时显示文字 */
+    .menu-btn:hover .menu-label {
+      opacity: 1;
+      transform: translateX(10px); /* 最终位置 */
+    }
+    
+    /* 修正：因为图标左移了，文字的位置实际上是相对于容器中心的 */
+    /* 更好的定位方式：Flex gap 或者 Padding */
+    /* 下面是重写的内部布局逻辑，确保丝滑 */
+    .menu-btn {
+      justify-content: center; /* 默认居中 */
+    }
+    
+    /* 悬浮时的文字显示逻辑 */
+    .menu-btn:hover .menu-label {
+      opacity: 1;
+      transform: translateX(15px); /* 文字出现在右侧 */
+    }
 
     /* --- 5. 黑色抽屉菜单 --- */
     .menu-overlay {
@@ -286,12 +314,7 @@
     }
     .menu-link-large:hover { color: var(--accent); }
 
-    .menu-desc {
-      font-size: 0.9rem;
-      color: #aaa;
-      margin-bottom: 2rem;
-      line-height: 1.5;
-    }
+    .menu-desc { font-size: 0.9rem; color: #aaa; margin-bottom: 2rem; line-height: 1.5; }
 
     .menu-image {
       width: 100%;
@@ -301,66 +324,31 @@
       overflow: hidden;
       margin-top: auto;
     }
-    .menu-image img {
-      opacity: 0.7;
-      transition: transform 0.5s, opacity 0.5s;
-    }
-    .menu-column:hover .menu-image img {
-      transform: scale(1.05);
-      opacity: 1;
-    }
+    .menu-image img { opacity: 0.7; transition: transform 0.5s, opacity 0.5s; }
+    .menu-column:hover .menu-image img { transform: scale(1.05); opacity: 1; }
 
-    /* --- 新增：复制功能样式 --- */
+    /* 复制功能样式 */
     .contact-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1.2rem;
-      cursor: pointer;
-      padding: 10px;
-      border-radius: 8px;
-      transition: background 0.2s;
-      position: relative;
+      display: flex; align-items: center; margin-bottom: 1.2rem; cursor: pointer; padding: 10px;
+      border-radius: 8px; transition: background 0.2s; position: relative;
     }
-    .contact-item:hover {
-      background: rgba(255,255,255,0.05);
-    }
-    .contact-item:active {
-      transform: scale(0.98);
-    }
+    .contact-item:hover { background: rgba(255,255,255,0.05); }
+    .contact-item:active { transform: scale(0.98); }
     
     .contact-icon {
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #222;
-      border-radius: 50%;
-      margin-right: 15px;
-      color: var(--accent);
+      width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+      background: #222; border-radius: 50%; margin-right: 15px; color: var(--accent);
     }
     
     .contact-info { display: flex; flex-direction: column; }
     .contact-label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;}
     .contact-value { font-size: 1.1rem; color: #fff; font-weight: 500;}
 
-    /* 复制成功的提示文字 */
     .copy-feedback {
-      font-size: 0.75rem;
-      color: var(--accent);
-      margin-left: auto; /* 推到最右边 */
-      opacity: 0;
-      transform: translateX(-10px);
-      transition: all 0.3s;
-      font-weight: 600;
-      text-transform: uppercase;
+      font-size: 0.75rem; color: var(--accent); margin-left: auto; opacity: 0;
+      transform: translateX(-10px); transition: all 0.3s; font-weight: 600; text-transform: uppercase;
     }
-    
-    /* 鼠标移上去显示 "Copy" */
-    .contact-item:hover .copy-feedback {
-      opacity: 1;
-      transform: translateX(0);
-    }
+    .contact-item:hover .copy-feedback { opacity: 1; transform: translateX(0); }
 
     /* --- Mobile Responsive --- */
     @media (max-width: 768px) {
@@ -372,22 +360,26 @@
       .btn-group { justify-content: center; width: 100%; }
       .btn { padding: 12px 25px; font-size: 0.8rem; }
       
-      .menu-overlay { height: 100vh; padding: 2rem 1.5rem 6rem 1.5rem; overflow-y: auto; }
+      .menu-overlay { height: 100vh; padding: 2rem 1.5rem 8rem 1.5rem; overflow-y: auto; }
       .menu-grid { grid-template-columns: 1fr; gap: 3rem; }
       .menu-column { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2rem; padding-right: 0;}
       .menu-image { display: none; }
+      
+      /* 手机端保持圆形，或者根据需要调整 */
+      .menu-trigger-container { bottom: 20px; }
+      .menu-btn { width: 60px; height: 60px; }
+      .menu-btn:hover { width: 60px; /* 手机上通常不显示 Hover 效果，保持圆形即可 */ }
+      .menu-label { display: none; /* 手机上不显示滑出文字 */ }
+      .menu-btn:hover .icon-wrapper { transform: translateX(0); }
     }
   </style>
 </head>
 <body>
 
-  <!-- 1. 左上角固定 LOGO -->
   <a href="#" class="logo-fixed">SALLY.</a>
 
-  <!-- 2. 主视觉区域 (Split Hero) -->
   <section class="hero-split">
     <div class="hero-visual">
-      <!-- 轮播图 -->
       <img src="images/banner-1.jpg" class="hero-slide active" alt="Banner 1" fetchpriority="high">
       <img src="images/banner-2.jpg" class="hero-slide" alt="Banner 2">
       <img src="images/banner-3.jpg" class="hero-slide" alt="Banner 3">
@@ -400,12 +392,10 @@
         <span class="en-sub">Shanghai · China</span>
       </p>
 
-      <!-- 新增：首屏按钮组 -->
       <div class="btn-group">
         <a href="work.html" class="btn btn-black">
           See Work <i class="fa-solid fa-arrow-right"></i>
         </a>
-        <!-- 点击此按钮会打开菜单 -->
         <a href="#" class="btn btn-outline" onclick="toggleMenu()">
           Contact Me
         </a>
@@ -413,48 +403,31 @@
     </div>
   </section>
 
-  <!-- 3. 底部弹出的全屏菜单 -->
+  <!-- 菜单内容 -->
   <div class="menu-overlay">
     <div class="menu-grid">
-      
-      <!-- 01: HOME -->
       <div class="menu-column">
         <h3 class="menu-col-title">01</h3>
         <a href="#" class="menu-link-large" onclick="toggleMenu()">HOME</a>
         <p class="menu-desc">Return to the visual showcase start.</p>
-        <div class="menu-image">
-          <img src="images/banner-1.jpg" alt="Home Preview">
-        </div>
+        <div class="menu-image"><img src="images/banner-1.jpg" alt="Home"></div>
       </div>
-
-      <!-- 02: WORK -->
       <div class="menu-column">
         <h3 class="menu-col-title">02</h3>
         <a href="work.html" class="menu-link-large">WORK</a>
-        <p class="menu-desc">Selected projects involving UI/UX, Branding, and Photography.</p>
-        <div class="menu-image">
-          <img src="images/p1-ecommerce.jpg" alt="Work Preview">
-        </div>
+        <p class="menu-desc">Selected projects involving UI/UX, Branding.</p>
+        <div class="menu-image"><img src="images/p1-ecommerce.jpg" alt="Work"></div>
       </div>
-
-      <!-- 03: ABOUT -->
       <div class="menu-column">
         <h3 class="menu-col-title">03</h3>
         <a href="about.html" class="menu-link-large">ABOUT ME</a>
         <p class="menu-desc">My resume, journey, education, and design philosophy.</p>
-        <div class="menu-image">
-          <img src="images/banner-2.jpg" alt="About Preview">
-        </div>
+        <div class="menu-image"><img src="images/banner-2.jpg" alt="About"></div>
       </div>
-
-      <!-- 04: CONTACT (更新：点击复制功能) -->
       <div class="menu-column">
         <h3 class="menu-col-title">04</h3>
         <a href="contact.html" class="menu-link-large">CONTACT</a>
-        
         <div class="contact-list">
-          
-          <!-- 邮箱项 -->
           <div class="contact-item" onclick="copyToClipboard('sally00kk@gmail.com', this)">
             <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
             <div class="contact-info">
@@ -463,8 +436,6 @@
             </div>
             <span class="copy-feedback">Copy</span>
           </div>
-
-          <!-- 电话项 -->
           <div class="contact-item" onclick="copyToClipboard('178-9100-3233', this)">
             <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
             <div class="contact-info">
@@ -473,34 +444,25 @@
             </div>
             <span class="copy-feedback">Copy</span>
           </div>
-
-          <!-- 微信项 (可选) -->
-          <div class="contact-item" onclick="copyToClipboard('Sally_Design_WX', this)">
-            <div class="contact-icon"><i class="fa-brands fa-weixin"></i></div>
-            <div class="contact-info">
-              <span class="contact-label">WeChat</span>
-              <span class="contact-value">Sally_Design_WX</span>
-            </div>
-            <span class="copy-feedback">Copy</span>
-          </div>
-
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- 4. 底部圆形按钮 (Trigger) -->
+  <!-- 4. [更新] 底部胶囊按钮 (Capsule Button) -->
   <div class="menu-trigger-container" onclick="toggleMenu()">
     <div class="menu-btn">
-      <span class="menu-icon-line"></span>
-      <span class="menu-icon-line"></span>
+      <!-- 图标包装层 (用于移动) -->
+      <div class="icon-wrapper">
+        <span class="menu-icon-line"></span>
+        <span class="menu-icon-line"></span>
+      </div>
+      <!-- 文字层 (初始隐藏) -->
+      <span class="menu-label" id="menuText">Menu</span>
     </div>
-    <span class="menu-label" id="menuText">Menu</span>
   </div>
 
   <script>
-    // --- 幻灯片自动轮播 ---
     const slides = document.querySelectorAll('.hero-slide');
     let currentSlide = 0;
     function nextSlide() {
@@ -510,7 +472,6 @@
     }
     setInterval(nextSlide, 4000);
 
-    // --- 菜单开关逻辑 ---
     const body = document.body;
     const menuText = document.getElementById('menuText');
 
@@ -520,34 +481,24 @@
         menuText.textContent = "Close";
       } else {
         menuText.textContent = "Menu";
-        // 关闭菜单时重置所有复制提示
         setTimeout(() => {
           document.querySelectorAll('.copy-feedback').forEach(el => el.textContent = 'Copy');
         }, 500);
       }
     }
 
-    // --- 复制功能逻辑 ---
     async function copyToClipboard(text, element) {
       try {
         await navigator.clipboard.writeText(text);
-        
-        // 获取当前点击项里的提示文本元素
         const feedback = element.querySelector('.copy-feedback');
-        
-        // 更改文字并添加颜色强调
         feedback.textContent = "Copied!";
-        feedback.style.color = "#44ff99"; // 成功时显示绿色
-        
-        // 2秒后恢复原状
+        feedback.style.color = "#44ff99";
         setTimeout(() => {
           feedback.textContent = "Copy";
-          feedback.style.color = "var(--accent)"; // 恢复蓝色
+          feedback.style.color = "var(--accent)";
         }, 2000);
-        
       } catch (err) {
         console.error('Failed to copy: ', err);
-        alert('复制失败，请手动复制');
       }
     }
   </script>
