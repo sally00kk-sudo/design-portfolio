@@ -16,7 +16,8 @@
       --menu-height: 48vh; 
       --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
       --spacing-section: 10rem; 
-      --spacing-grid: 2rem;     
+      --spacing-grid: 1.5rem; /* 间距 */
+      --card-height: 500px;   /* 【核心】统一行高，设大一点防止图片变窄 */
     }
 
     html { scroll-behavior: smooth; }
@@ -51,139 +52,117 @@
     }
     body.menu-open .logo-fixed { transform: translateY(calc(var(--menu-height) * -1)); color: #fff; mix-blend-mode: difference;}
 
-    /* --- 3. 侧边栏目录 (去卡片化 + 右侧单边投影) --- */
+    /* --- 3. 侧边栏目录 --- */
     .sidebar-toc {
       position: fixed;
-      top: 100px; /* 紧贴 Logo 下方 */
+      top: 100px; 
       left: 3rem; 
-      width: 200px; /* 稍微调窄 */
-      height: calc(100vh - 100px); /* 撑满下方高度 */
+      width: 200px; 
+      height: calc(100vh - 100px); 
       overflow-y: auto;
       z-index: 100;
       padding-right: 15px; 
       padding-top: 1rem;
-      
-      /* 去除卡片背景 */
       background: transparent; 
-      border-radius: 0;
-      
-      /* 核心修改：右侧分割线 + 投影 */
-      border-right: 1px solid rgba(0,0,0,0.03); 
-      /* 利用伪元素制作右侧单边投影，避免影响透明背景 */
+      border-right: 1px solid rgba(0,0,0,0.05); 
+      transition: transform 0.6s var(--ease-out-expo);
     }
     
-    /* 使用 box-shadow 模拟右侧阴影 (Shadow on the right) */
+    /* 右侧投影伪元素 */
     .sidebar-toc::after {
-      content: '';
-      position: fixed;
-      top: 100px;
-      left: calc(3rem + 200px); /* 定位在侧边栏右边缘 */
-      width: 10px;
-      height: calc(100vh - 100px);
-      /* 只有右侧有淡阴影 */
-      box-shadow: -5px 0 15px -5px rgba(0,0,0,0.08); 
-      pointer-events: none;
-      z-index: 101;
+      content: ''; position: fixed; top: 100px; left: calc(3rem + 200px); width: 10px; height: calc(100vh - 100px);
+      box-shadow: -5px 0 15px -5px rgba(0,0,0,0.08); pointer-events: none; z-index: 101;
+      transition: transform 0.6s var(--ease-out-expo);
     }
 
-    /* 动画同步 */
-    body.menu-open .sidebar-toc, 
-    body.menu-open .sidebar-toc::after {
+    body.menu-open .sidebar-toc, body.menu-open .sidebar-toc::after {
       transform: translateY(calc(var(--menu-height) * -1));
-      transition: transform 0.6s var(--ease-out-expo);
-    }
-    .sidebar-toc, .sidebar-toc::after {
-      transition: transform 0.6s var(--ease-out-expo);
     }
 
     .sidebar-toc::-webkit-scrollbar { display: none; }
-
     .toc-list { list-style: none; }
     .toc-item { margin-bottom: 1.5rem; } 
-    
-    .toc-title {
-      font-size: 0.85rem; font-weight: 700; color: #000; margin-bottom: 0.5rem;
-      display: block; line-height: 1.4; position: relative;
-    }
-    /* 装饰：主标题前加个小方块 */
-    .toc-title::before {
-      content: ''; display: inline-block; width: 4px; height: 4px; background: #000; 
-      vertical-align: middle; margin-right: 8px; margin-bottom: 2px;
-    }
+    .toc-title { font-size: 0.85rem; font-weight: 700; color: #000; margin-bottom: 0.5rem; display: block; line-height: 1.4; position: relative; }
+    .toc-title::before { content: ''; display: inline-block; width: 4px; height: 4px; background: #000; vertical-align: middle; margin-right: 8px; margin-bottom: 2px; }
     .toc-title span { display: block; font-size: 0.65rem; color: #999; font-weight: 400; text-transform: uppercase; margin-top: 2px; margin-left: 12px;}
-
     .toc-sub-list { list-style: none; margin-left: 12px; border-left: 1px solid #eee; padding-left: 15px; }
     .toc-sub-item { margin-bottom: 0.6rem; }
-    
-    .toc-link {
-      font-size: 0.75rem; color: #666; display: block; transition: all 0.2s; line-height: 1.4;
-    }
+    .toc-link { font-size: 0.75rem; color: #666; display: block; transition: all 0.2s; line-height: 1.4; }
     .toc-link:hover { color: var(--accent); transform: translateX(3px); font-weight: 500;}
     .toc-link span { margin-right: 5px; font-weight: 600; font-size: 0.7rem; color: #ddd; }
 
 
-    /* --- 4. 主内容布局调整 (最大化展示空间) --- */
+    /* --- 4. 主内容布局 --- */
     .container { 
-      /* 
-         Logic:
-         Sidebar width (200px) + Left Gap (3rem) + Padding (~2rem) = ~16rem
-      */
-      padding-left: 16rem; 
-      padding-right: 2rem; /* 右侧留白减少 */
-      max-width: 95%;      /* 几乎全屏宽度 */
-      margin: 0 auto; 
+      padding-left: 16rem; padding-right: 2rem; max-width: 96%; margin: 0 auto; 
     }
 
     .page-header { margin-bottom: 5rem; border-bottom: 2px solid #000; padding-bottom: 1.5rem; }
     .page-title { font-size: 4.5rem; font-weight: 900; letter-spacing: -2px; margin-bottom: 0.5rem; line-height: 1;}
     .page-subtitle { color: var(--text-sub); font-size: 1.1rem; }
 
-    .work-section { 
-      margin-bottom: var(--spacing-section); 
-      position: relative;
-      scroll-margin-top: 120px; 
-    }
+    .work-section { margin-bottom: var(--spacing-section); position: relative; scroll-margin-top: 120px; }
     
     .section-header { margin-bottom: 2rem; display: flex; align-items: baseline; gap: 1rem; border-bottom: 1px solid #eee; padding-bottom: 10px;}
     .section-title-cn { font-size: 2rem; font-weight: 800; color: #000; line-height: 1.2; }
     .section-title-en { font-size: 1rem; font-weight: 400; color: #999; text-transform: uppercase; letter-spacing: 1px; font-family: "Helvetica Neue", Arial, sans-serif;}
 
-    /* Grid & Card Styles */
+    /* 
+       【Grid 终极修复】
+       强制使用 grid-auto-rows 固定每一行的高度。
+       无论图片是 1 列宽还是 2 列宽，它们的高度都强制一样，这样就绝对对齐了。
+    */
     .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, 1fr); /* 3列 */
       gap: var(--spacing-grid);
+      grid-auto-rows: var(--card-height); /* 强制统一行高 500px */
       grid-auto-flow: dense;
     }
 
     .work-card {
-      position: relative; display: block; overflow: hidden; border-radius: 0; /* 去掉圆角，更锐利 */
-      background: #f4f4f4;
+      position: relative; display: block; overflow: hidden; border-radius: 0; background: #f4f4f4;
       width: 100%;
+      height: 100%; /* 填满格子的高度 */
       scroll-margin-top: 150px; 
-      aspect-ratio: 4/3; 
+      /* 删除 aspect-ratio，改用 height:100% 配合 grid-auto-rows */
     }
     
-    .span-2 { grid-column: span 2; aspect-ratio: 16/10; }
-    .span-full { grid-column: 1 / -1; aspect-ratio: 21/9; }
+    .span-2 { grid-column: span 2; }
+    .span-full { grid-column: 1 / -1; }
+    
+    /* 
+       对于 Span-Full (全宽图)，如果不希望它也只有 500px 高（那样会显得很扁），
+       我们可以让它跨越 2 行的高度，或者给它一个特例高度。
+       这里我选择让它默认高度为 650px，比普通行稍高一点，更有气势。
+       注意：在 grid-auto-rows 下，如果不 span row，它会遵循 auto-rows。
+       我们可以用 inline style 覆盖，或者用 CSS。
+    */
+    .span-full-height {
+       /* 如果想要更霸气的高度，取消下面的注释，否则保持和大家一样齐 */
+       /* grid-row: span 2; */ 
+    }
 
+    /* 图片强制 Cover，填满格子不留白 */
     .work-card img {
-      width: 100%; height: 100%; object-fit: cover;
+      width: 100%; height: 100%; 
+      object-fit: cover; /* 核心：裁剪多余部分，填满容器 */
+      object-position: center;
       transition: transform 0.8s var(--ease-out-expo), filter 0.5s ease;
     }
     .work-card:hover img { transform: scale(1.05); filter: brightness(0.9); }
 
     .work-tag {
       position: absolute; top: 15px; right: 15px;
-      background: rgba(255,255,255,0.9); color: #000; /* 改为白底黑字，更清晰 */
-      padding: 4px 12px; border-radius: 2px; /* 方角 */
-      font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-      z-index: 2;
+      background: rgba(255,255,255,0.95); color: #000;
+      padding: 5px 14px; border-radius: 2px;
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+      z-index: 2; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
     .card-info {
       position: absolute; bottom: 0; left: 0; width: 100%; padding: 1.5rem;
-      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
       color: #fff; z-index: 2;
       transform: translateY(10px); opacity: 0; transition: all 0.4s ease;
     }
@@ -244,8 +223,9 @@
       .page-header { margin-bottom: 3rem; }
       .page-title { font-size: 2.5rem; }
       
-      .gallery-grid { grid-template-columns: 1fr; gap: 1rem;}
-      .work-card, .span-2, .span-full { grid-column: span 1; aspect-ratio: 4/3; }
+      /* 手机端改回单列 */
+      .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 280px; gap: 1rem;}
+      .work-card, .span-2, .span-full { grid-column: span 1; }
       
       .work-section { margin-bottom: 5rem; }
       .section-header { flex-direction: column; gap: 0.2rem; align-items: flex-start; }
@@ -265,71 +245,47 @@
   <!-- 侧边栏目录 -->
   <nav class="sidebar-toc">
     <ul class="toc-list">
-      <!-- 1 -->
       <li class="toc-item">
-        <a href="#section-1" class="toc-title">
-          1. 全球化电商营销体验
-          <span>Global E-commerce Marketing</span>
-        </a>
+        <a href="#section-1" class="toc-title">1. 全球化电商营销体验</a>
         <ul class="toc-sub-list">
-          <li class="toc-sub-item"><a href="#item-1-1" class="toc-link"><span>1.1</span> 独立站网页设计</a></li>
-          <li class="toc-sub-item"><a href="#item-1-2" class="toc-link"><span>1.2</span> 亚马逊店铺装修</a></li>
-          <li class="toc-sub-item"><a href="#item-1-3" class="toc-link"><span>1.3</span> TikTok Shop 界面设计</a></li>
+          <li class="toc-sub-item"><a href="#item-1-1" class="toc-link">1.1 独立站网页设计</a></li>
+          <li class="toc-sub-item"><a href="#item-1-2" class="toc-link">1.2 亚马逊店铺装修</a></li>
+          <li class="toc-sub-item"><a href="#item-1-3" class="toc-link">1.3 TikTok Shop 界面设计</a></li>
         </ul>
       </li>
-      <!-- 2 -->
       <li class="toc-item">
-        <a href="#section-2" class="toc-title">
-          2. 高级A+页面与广告设计
-          <span>Premium A+ Content & Ads</span>
-        </a>
+        <a href="#section-2" class="toc-title">2. 高级A+页面与广告设计</a>
         <ul class="toc-sub-list">
-          <li class="toc-sub-item"><a href="#item-2-1" class="toc-link"><span>2.1</span> 社交媒体广告创意</a></li>
-          <li class="toc-sub-item"><a href="#item-2-2" class="toc-link"><span>2.2</span> 独立站详情页面设计</a></li>
-          <li class="toc-sub-item"><a href="#item-2-3" class="toc-link"><span>2.3</span> 亚马逊高级A+页面</a></li>
-          <li class="toc-sub-item"><a href="#item-2-4" class="toc-link"><span>2.4</span> TikTok A+页面设计</a></li>
+          <li class="toc-sub-item"><a href="#item-2-1" class="toc-link">2.1 社交媒体广告创意</a></li>
+          <li class="toc-sub-item"><a href="#item-2-2" class="toc-link">2.2 独立站详情页面设计</a></li>
+          <li class="toc-sub-item"><a href="#item-2-3" class="toc-link">2.3 亚马逊高级A+页面</a></li>
+          <li class="toc-sub-item"><a href="#item-2-4" class="toc-link">2.4 TikTok A+页面设计</a></li>
         </ul>
       </li>
-      <!-- 3 -->
       <li class="toc-item">
-        <a href="#section-3" class="toc-title">
-          3. 品牌视觉与全案设计
-          <span>Brand Identity & Design</span>
-        </a>
+        <a href="#section-3" class="toc-title">3. 品牌视觉与全案设计</a>
         <ul class="toc-sub-list">
-          <li class="toc-sub-item"><a href="#item-3-1" class="toc-link"><span>3.1</span> 包装设计与物料延展</a></li>
-          <li class="toc-sub-item"><a href="#item-3-2" class="toc-link"><span>3.2</span> 巴西酸奶品牌全案</a></li>
-          <li class="toc-sub-item"><a href="#item-3-3" class="toc-link"><span>3.3</span> Redtop 西部牛仔靴全案</a></li>
+          <li class="toc-sub-item"><a href="#item-3-1" class="toc-link">3.1 包装设计与物料延展</a></li>
+          <li class="toc-sub-item"><a href="#item-3-2" class="toc-link">3.2 巴西酸奶品牌全案</a></li>
+          <li class="toc-sub-item"><a href="#item-3-3" class="toc-link">3.3 Redtop 西部牛仔靴</a></li>
         </ul>
       </li>
-      <!-- 4 -->
       <li class="toc-item">
-        <a href="#section-4" class="toc-title">
-          4. 空间视觉与导视系统
-          <span>Spatial Visuals</span>
-        </a>
+        <a href="#section-4" class="toc-title">4. 空间视觉与导视系统</a>
         <ul class="toc-sub-list">
-          <li class="toc-sub-item"><a href="#item-4-1" class="toc-link"><span>4.1</span> 工法馆与展示厅设计</a></li>
+          <li class="toc-sub-item"><a href="#item-4-1" class="toc-link">4.1 工法馆与展示厅设计</a></li>
         </ul>
       </li>
-      <!-- 5 -->
       <li class="toc-item">
-        <a href="#section-5" class="toc-title">
-          5. 产品设计与模特摄影
-          <span>Product Design & Photo</span>
-        </a>
+        <a href="#section-5" class="toc-title">5. 产品设计与模特摄影</a>
         <ul class="toc-sub-list">
-          <li class="toc-sub-item"><a href="#item-5-1" class="toc-link"><span>5.1</span> 策划以及现场调度</a></li>
+          <li class="toc-sub-item"><a href="#item-5-1" class="toc-link">5.1 策划以及现场调度</a></li>
         </ul>
       </li>
-      <!-- 6 -->
       <li class="toc-item">
-        <a href="#section-6" class="toc-title">
-          6. 三维建模与渲染
-          <span>3D Modeling & Rendering</span>
-        </a>
+        <a href="#section-6" class="toc-title">6. 三维建模与渲染</a>
         <ul class="toc-sub-list">
-          <li class="toc-sub-item"><a href="#item-6-1" class="toc-link"><span>6.1</span> 3D 建模与渲染练习</a></li>
+          <li class="toc-sub-item"><a href="#item-6-1" class="toc-link">6.1 3D 建模与渲染练习</a></li>
         </ul>
       </li>
     </ul>
@@ -374,7 +330,7 @@
           </a>
 
           <!-- Item 1.3 -->
-          <a href="#" id="item-1-3" class="work-card span-full" style="aspect-ratio: 21/9;">
+          <a href="#" id="item-1-3" class="work-card span-full">
             <span class="work-tag">TikTok</span>
             <img src="images/banner-3.jpg" alt="TikTok">
             <div class="card-info">
@@ -482,7 +438,7 @@
         
         <div class="gallery-grid">
           <!-- Item 4.1 -->
-          <a href="#" id="item-4-1" class="work-card span-full" style="aspect-ratio: 21/9;">
+          <a href="#" id="item-4-1" class="work-card span-full">
             <span class="work-tag">Spatial Design</span>
             <img src="images/p4-spatial.jpg" alt="Exhibition">
             <div class="card-info">
