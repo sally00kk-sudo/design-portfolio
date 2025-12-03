@@ -13,8 +13,8 @@
     :root {
       --text-main: #000000;
       --text-sub: #555555;
-      --accent: #4452FE; /* 参考图中的蓝色 */
-      --menu-bg: #000000;
+      --accent: #4452FE; /* 核心蓝色 */
+      --menu-bg: #0c0c0c; /* 深色菜单背景 */
       --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
     }
 
@@ -23,8 +23,7 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
       background: #ffffff;
-      /* 锁定滚动，只保留第一屏 */
-      overflow: hidden; 
+      overflow: hidden; /* 锁定滚动 */
       height: 100vh;
       width: 100vw;
     }
@@ -32,20 +31,34 @@
     a { text-decoration: none; color: inherit; transition: opacity 0.3s; }
     img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
-    /* --- 2. 简化的 Split Hero (只保留第一屏) --- */
+    /* --- 2. LOGO (左上角固定) --- */
+    .logo-fixed {
+      position: fixed;
+      top: 2rem;
+      left: 3rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      z-index: 800;
+      color: #fff;
+      mix-blend-mode: difference; 
+      transition: opacity 0.3s;
+    }
+    .logo-fixed:hover { opacity: 0.7; }
+
+    /* --- 3. Split Hero (主视觉) --- */
     .hero-split {
       display: flex;
       height: 100vh;
       width: 100%;
       position: relative;
-      z-index: 1; /* 保证在菜单之下 */
-      transition: transform 0.6s var(--ease-out-expo);
+      transition: transform 0.6s var(--ease-out-expo), filter 0.6s;
     }
 
-    /* 菜单打开时，主内容稍微缩小或变暗 (可选效果) */
     body.menu-open .hero-split {
       transform: scale(0.95);
-      filter: brightness(0.5);
+      filter: brightness(0.4);
       pointer-events: none;
     }
 
@@ -92,7 +105,7 @@
     .hero-subtitle {
       font-size: 1.5rem;
       color: var(--text-sub);
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
       letter-spacing: 1px;
       opacity: 0; transform: translateY(30px);
       animation: fadeInUp 1s var(--ease-out-expo) 0.4s forwards;
@@ -107,9 +120,52 @@
       color: #999;
     }
 
+    /* 新增：Hero 按钮组样式 */
+    .btn-group {
+      display: flex;
+      gap: 1.5rem;
+      opacity: 0; transform: translateY(30px);
+      animation: fadeInUp 1s var(--ease-out-expo) 0.6s forwards;
+    }
+
+    .btn {
+      padding: 16px 40px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+    }
+    .btn i { margin-left: 10px; transition: transform 0.3s; }
+    .btn:hover i { transform: translateX(5px); }
+
+    .btn-black {
+      background: #000;
+      color: #fff;
+      border: 1px solid #000;
+    }
+    .btn-black:hover {
+      background: transparent;
+      color: #000;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #000;
+      border: 1px solid #000;
+    }
+    .btn-outline:hover {
+      background: #000;
+      color: #fff;
+    }
+
     @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-    /* --- 3. 底部圆形菜单触发器 --- */
+    /* --- 4. 底部圆形菜单按钮 --- */
     .menu-trigger-container {
       position: fixed;
       bottom: 30px;
@@ -140,7 +196,6 @@
       box-shadow: 0 15px 40px rgba(68, 82, 254, 0.6);
     }
 
-    /* 按钮内的图标线条 */
     .menu-icon-line {
       width: 24px;
       height: 2px;
@@ -151,7 +206,6 @@
     .menu-icon-line:first-child { transform: translateY(-4px); }
     .menu-icon-line:last-child { transform: translateY(4px); }
 
-    /* 打开状态下的按钮变形 (变成X) */
     body.menu-open .menu-icon-line:first-child { transform: translateY(0) rotate(45deg); }
     body.menu-open .menu-icon-line:last-child { transform: translateY(0) rotate(-45deg); }
 
@@ -164,35 +218,30 @@
       color: #000;
       transition: color 0.3s;
     }
-    
-    body.menu-open .menu-label {
-      color: #fff; /* 菜单打开时文字变白 */
-    }
+    body.menu-open .menu-label { color: #fff; }
 
-    /* --- 4. 黑色弹出式菜单 (Mega Menu) --- */
+    /* --- 5. 黑色抽屉菜单 --- */
     .menu-overlay {
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 85vh; /* 占据屏幕大部分，像抽屉一样 */
+      height: 85vh;
       background: var(--menu-bg);
       z-index: 900;
       transform: translateY(100%);
       transition: transform 0.6s var(--ease-out-expo);
-      padding: 4rem 3rem 8rem 3rem; /* 底部留空间给按钮 */
+      padding: 4rem 3rem 8rem 3rem; 
       color: #fff;
       display: flex;
       flex-direction: column;
     }
 
-    body.menu-open .menu-overlay {
-      transform: translateY(0);
-    }
+    body.menu-open .menu-overlay { transform: translateY(0); }
 
     .menu-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr); /* 4列布局 */
+      grid-template-columns: repeat(4, 1fr);
       gap: 2rem;
       height: 100%;
       max-width: 1400px;
@@ -209,10 +258,9 @@
       transform: translateY(20px);
       transition: all 0.5s ease;
     }
-    
     .menu-column:last-child { border-right: none; }
 
-    /* 菜单内容依次出现的动画 */
+    /* 菜单延迟动画 */
     body.menu-open .menu-column:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
     body.menu-open .menu-column:nth-child(2) { transition-delay: 0.2s; opacity: 1; transform: translateY(0); }
     body.menu-open .menu-column:nth-child(3) { transition-delay: 0.3s; opacity: 1; transform: translateY(0); }
@@ -222,7 +270,7 @@
       font-size: 0.9rem;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: #888;
+      color: #666;
       margin-bottom: 1.5rem;
       font-weight: 700;
     }
@@ -234,6 +282,7 @@
       margin-bottom: 1rem;
       display: block;
       color: #fff;
+      transition: color 0.3s;
     }
     .menu-link-large:hover { color: var(--accent); }
 
@@ -244,52 +293,98 @@
       line-height: 1.5;
     }
 
-    /* 菜单里的预览图 */
     .menu-image {
       width: 100%;
       aspect-ratio: 16/10;
       background: #222;
       border-radius: 4px;
       overflow: hidden;
-      margin-top: auto; /* 推到底部 */
+      margin-top: auto;
     }
     .menu-image img {
       opacity: 0.7;
-      transition: transform 0.5s;
+      transition: transform 0.5s, opacity 0.5s;
     }
     .menu-column:hover .menu-image img {
       transform: scale(1.05);
       opacity: 1;
     }
 
-    /* Contact List */
-    .contact-list a {
+    /* --- 新增：复制功能样式 --- */
+    .contact-item {
       display: flex;
       align-items: center;
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-      color: #ccc;
+      margin-bottom: 1.2rem;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 8px;
+      transition: background 0.2s;
+      position: relative;
     }
-    .contact-list a i { margin-right: 10px; width: 20px; text-align: center; }
-    .contact-list a:hover { color: #fff; }
+    .contact-item:hover {
+      background: rgba(255,255,255,0.05);
+    }
+    .contact-item:active {
+      transform: scale(0.98);
+    }
+    
+    .contact-icon {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #222;
+      border-radius: 50%;
+      margin-right: 15px;
+      color: var(--accent);
+    }
+    
+    .contact-info { display: flex; flex-direction: column; }
+    .contact-label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;}
+    .contact-value { font-size: 1.1rem; color: #fff; font-weight: 500;}
+
+    /* 复制成功的提示文字 */
+    .copy-feedback {
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-left: auto; /* 推到最右边 */
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all 0.3s;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    /* 鼠标移上去显示 "Copy" */
+    .contact-item:hover .copy-feedback {
+      opacity: 1;
+      transform: translateX(0);
+    }
 
     /* --- Mobile Responsive --- */
     @media (max-width: 768px) {
+      .logo-fixed { left: 1.5rem; top: 1.5rem; font-size: 1.2rem; }
       .hero-split { flex-direction: column; }
       .hero-visual, .hero-content { width: 100%; height: 50%; }
       .hero-content { padding: 2rem; align-items: center; text-align: center; }
       .hero-title { font-size: 3rem; }
+      .btn-group { justify-content: center; width: 100%; }
+      .btn { padding: 12px 25px; font-size: 0.8rem; }
       
       .menu-overlay { height: 100vh; padding: 2rem 1.5rem 6rem 1.5rem; overflow-y: auto; }
       .menu-grid { grid-template-columns: 1fr; gap: 3rem; }
       .menu-column { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2rem; padding-right: 0;}
-      .menu-image { display: none; /* 手机端隐藏菜单里的图片以节省空间 */ }
+      .menu-image { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- 1. 第一屏主要内容 (Split Hero) -->
+  <!-- 1. 左上角固定 LOGO -->
+  <a href="#" class="logo-fixed">SALLY.</a>
+
+  <!-- 2. 主视觉区域 (Split Hero) -->
   <section class="hero-split">
     <div class="hero-visual">
       <!-- 轮播图 -->
@@ -299,66 +394,103 @@
     </div>
     
     <div class="hero-content">
-      <h1 class="hero-title">SALLY.</h1>
+      <h1 class="hero-title">Portfolio</h1>
       <p class="hero-subtitle">
-        Portfolio
-        <span class="en-sub">Visual Designer & Art Director</span>
+        Visionary Designer & Art Director
+        <span class="en-sub">Shanghai · China</span>
       </p>
+
+      <!-- 新增：首屏按钮组 -->
+      <div class="btn-group">
+        <a href="work.html" class="btn btn-black">
+          See Work <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <!-- 点击此按钮会打开菜单 -->
+        <a href="#" class="btn btn-outline" onclick="toggleMenu()">
+          Contact Me
+        </a>
+      </div>
     </div>
   </section>
 
-  <!-- 2. 底部弹出的全屏菜单 -->
+  <!-- 3. 底部弹出的全屏菜单 -->
   <div class="menu-overlay">
     <div class="menu-grid">
       
-      <!-- Column 1: HOME -->
+      <!-- 01: HOME -->
       <div class="menu-column">
         <h3 class="menu-col-title">01</h3>
         <a href="#" class="menu-link-large" onclick="toggleMenu()">HOME</a>
         <p class="menu-desc">Return to the visual showcase start.</p>
         <div class="menu-image">
-          <!-- 替换为你的封面图 -->
           <img src="images/banner-1.jpg" alt="Home Preview">
         </div>
       </div>
 
-      <!-- Column 2: WORK -->
+      <!-- 02: WORK -->
       <div class="menu-column">
         <h3 class="menu-col-title">02</h3>
         <a href="work.html" class="menu-link-large">WORK</a>
         <p class="menu-desc">Selected projects involving UI/UX, Branding, and Photography.</p>
         <div class="menu-image">
-          <!-- 替换为你的作品集封面 -->
           <img src="images/p1-ecommerce.jpg" alt="Work Preview">
         </div>
       </div>
 
-      <!-- Column 3: ABOUT ME -->
+      <!-- 03: ABOUT -->
       <div class="menu-column">
         <h3 class="menu-col-title">03</h3>
         <a href="about.html" class="menu-link-large">ABOUT ME</a>
         <p class="menu-desc">My resume, journey, education, and design philosophy.</p>
         <div class="menu-image">
-          <!-- 替换为你的个人照 -->
           <img src="images/banner-2.jpg" alt="About Preview">
         </div>
       </div>
 
-      <!-- Column 4: CONTACT ME -->
+      <!-- 04: CONTACT (更新：点击复制功能) -->
       <div class="menu-column">
         <h3 class="menu-col-title">04</h3>
         <a href="contact.html" class="menu-link-large">CONTACT</a>
+        
         <div class="contact-list">
-          <a href="mailto:sally00kk@gmail.com"><i class="fa-solid fa-envelope"></i> Email Me</a>
-          <a href="#"><i class="fa-brands fa-weixin"></i> WeChat</a>
-          <a href="#"><i class="fa-solid fa-phone"></i> 178-9100-3233</a>
+          
+          <!-- 邮箱项 -->
+          <div class="contact-item" onclick="copyToClipboard('sally00kk@gmail.com', this)">
+            <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
+            <div class="contact-info">
+              <span class="contact-label">Email</span>
+              <span class="contact-value">sally00kk@gmail.com</span>
+            </div>
+            <span class="copy-feedback">Copy</span>
+          </div>
+
+          <!-- 电话项 -->
+          <div class="contact-item" onclick="copyToClipboard('178-9100-3233', this)">
+            <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
+            <div class="contact-info">
+              <span class="contact-label">Phone</span>
+              <span class="contact-value">178-9100-3233</span>
+            </div>
+            <span class="copy-feedback">Copy</span>
+          </div>
+
+          <!-- 微信项 (可选) -->
+          <div class="contact-item" onclick="copyToClipboard('Sally_Design_WX', this)">
+            <div class="contact-icon"><i class="fa-brands fa-weixin"></i></div>
+            <div class="contact-info">
+              <span class="contact-label">WeChat</span>
+              <span class="contact-value">Sally_Design_WX</span>
+            </div>
+            <span class="copy-feedback">Copy</span>
+          </div>
+
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- 3. 底部圆形按钮 (Trigger) -->
+  <!-- 4. 底部圆形按钮 (Trigger) -->
   <div class="menu-trigger-container" onclick="toggleMenu()">
     <div class="menu-btn">
       <span class="menu-icon-line"></span>
@@ -368,7 +500,7 @@
   </div>
 
   <script>
-    // --- 1. 幻灯片自动轮播 ---
+    // --- 幻灯片自动轮播 ---
     const slides = document.querySelectorAll('.hero-slide');
     let currentSlide = 0;
     function nextSlide() {
@@ -378,17 +510,44 @@
     }
     setInterval(nextSlide, 4000);
 
-    // --- 2. 菜单开关逻辑 ---
+    // --- 菜单开关逻辑 ---
     const body = document.body;
     const menuText = document.getElementById('menuText');
 
     function toggleMenu() {
       body.classList.toggle('menu-open');
-      
       if (body.classList.contains('menu-open')) {
         menuText.textContent = "Close";
       } else {
         menuText.textContent = "Menu";
+        // 关闭菜单时重置所有复制提示
+        setTimeout(() => {
+          document.querySelectorAll('.copy-feedback').forEach(el => el.textContent = 'Copy');
+        }, 500);
+      }
+    }
+
+    // --- 复制功能逻辑 ---
+    async function copyToClipboard(text, element) {
+      try {
+        await navigator.clipboard.writeText(text);
+        
+        // 获取当前点击项里的提示文本元素
+        const feedback = element.querySelector('.copy-feedback');
+        
+        // 更改文字并添加颜色强调
+        feedback.textContent = "Copied!";
+        feedback.style.color = "#44ff99"; // 成功时显示绿色
+        
+        // 2秒后恢复原状
+        setTimeout(() => {
+          feedback.textContent = "Copy";
+          feedback.style.color = "var(--accent)"; // 恢复蓝色
+        }, 2000);
+        
+      } catch (err) {
+        console.error('Failed to copy: ', err);
+        alert('复制失败，请手动复制');
       }
     }
   </script>
