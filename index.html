@@ -1,27 +1,35 @@
-<!DOCTYPE html>
+、<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sally's Portfolio | Visionary Designer</title>
   
+  <!-- 预加载首屏图片 -->
   <link rel="preload" as="image" href="images/banner-1.jpg">
+  
+  <!-- 引入 Font Awesome 图标库 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     /* --- 1. Reset & 核心变量 --- */
     :root {
-      --text-main: #111;
-      --text-sub: #666;
-      --bg-color: #fff;
+      --text-main: #000000;
+      --text-sub: #444444;
+      --text-light: #888888;
+      --bg-color: #ffffff;
+      --accent: #000;
       --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
-      --ease-image: cubic-bezier(0.77, 0, 0.175, 1);
+      
+      /* 定义两种字体风格 */
+      --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif; /* 大标题用 */
+      --font-serif: "Georgia", "Times New Roman", Times, serif; /* 副文案用，增加精致感 */
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      font-family: var(--font-sans);
       line-height: 1.5;
       color: var(--text-main);
       background: var(--bg-color);
@@ -33,220 +41,238 @@
     ul { list-style: none; }
     img { display: block; width: 100%; height: auto; object-fit: cover; }
 
+    /* 辅助排版类 */
     .en-sub { 
-      display: block; font-family: "Helvetica Neue", Arial, sans-serif; 
-      font-weight: 300; color: #999; margin-top: 4px; font-size: 0.9em; line-height: 1.4;
+      display: block; 
+      font-weight: 300; 
+      color: var(--text-light); 
+      margin-top: 4px; 
+      font-size: 0.9em; 
+      line-height: 1.4;
+      font-family: var(--font-sans);
     }
 
-    /* --- 2. 导航栏 (Flex布局) --- */
+    /* --- 2. 导航栏 (极简风格) --- */
     .nav {
-      position: fixed; top: 0; left: 0; width: 100%;
-      display: flex; 
-      justify-content: space-between; /* 电脑端：Logo左，按钮右 */
-      align-items: center;
-      padding: 1.5rem 3rem; z-index: 1000;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0));
-      transition: all 0.3s;
-      transform: translateY(-100%); animation: slideDown 0.8s var(--ease-out-expo) 0.5s forwards;
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 2rem 3rem; /* 更大的留白 */
+      z-index: 1000;
+      background: transparent; /* 初始全透明 */
+      transition: background 0.3s, padding 0.3s;
     }
-    .nav.scrolled { background: rgba(255,255,255,0.98); padding: 1rem 3rem; box-shadow: 0 5px 20px rgba(0,0,0,0.03); }
-    @keyframes slideDown { to { transform: translateY(0); } }
-    
-    .logo { font-size: 1.2rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; z-index: 1001; }
-
-    /* 汉堡菜单按钮 */
-    .menu-toggle {
-      cursor: pointer; display: flex; align-items: center; font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; transition: opacity 0.3s; z-index: 1001;
-    }
-    .menu-toggle:hover { opacity: 0.6; }
-    .menu-toggle i { font-size: 1.2rem; margin-left: 10px; } /* 电脑端：图标在文字右边 */
-
-    /* --- 2.1 侧边栏 (Sidebar Menu) --- */
-    .sidebar-menu {
-      position: fixed; top: 0; right: 0; left: auto; width: 400px; height: 100vh;
-      background: #111; color: #fff; z-index: 2000; padding: 3rem;
-      display: flex; flex-direction: column; justify-content: space-between;
-      transform: translateX(100%); transition: transform 0.6s var(--ease-out-expo);
-      box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+    .nav.scrolled { 
+      background: rgba(255,255,255,0.98); 
+      padding: 1rem 3rem;
+      border-bottom: 1px solid #eee;
     }
     
-    .sidebar-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-      background: rgba(0,0,0,0.3); z-index: 1999;
-      opacity: 0; pointer-events: none; transition: opacity 0.6s ease;
-      backdrop-filter: blur(5px);
+    .logo { font-size: 1.4rem; font-weight: 900; letter-spacing: -0.5px; text-transform: uppercase; }
+    .nav-links a { margin-left: 2.5rem; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; position: relative;}
+    
+    /* --- 3. Split Hero (核心修改：参考图版式) --- */
+    .hero-split {
+      display: flex;
+      height: 100vh;
+      width: 100%;
+      position: relative;
     }
 
-    body.menu-open .sidebar-menu { transform: translateX(0); }
-    body.menu-open .sidebar-overlay { opacity: 1; pointer-events: auto; }
-    body.menu-open { overflow: hidden; }
+    /* 左侧：视觉区域 (50%) */
+    .hero-visual {
+      width: 50%;
+      height: 100%;
+      position: relative;
+      background-color: #f0f0f0;
+      overflow: hidden;
+    }
 
-    .sidebar-header { display: flex; justify-content: flex-end; }
-    .close-btn { cursor: pointer; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; letter-spacing: 1px;}
-    .close-btn i { margin-left: 10px; font-size: 1.2rem; transition: transform 0.3s;}
-    .close-btn:hover i { transform: rotate(90deg); }
-
-    .sidebar-links ul { display: flex; flex-direction: column; gap: 2rem; margin-top: 4rem;}
-    .sidebar-links a { font-size: 2.5rem; font-weight: 800; color: #fff; transition: color 0.3s, padding-left 0.3s; display: inline-block; }
-    .sidebar-links a:hover { color: #999; padding-left: 10px; }
-    .sidebar-links span { font-size: 0.9rem; font-weight: 400; color: #666; margin-left: 10px; display: block; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px;}
-
-    .sidebar-footer { font-size: 0.85rem; color: #555; border-top: 1px solid #333; padding-top: 2rem; }
-    .sidebar-footer p { margin-bottom: 5px; }
-
-    /* --- 3. Split Hero --- */
-    .hero-split { display: flex; height: 100vh; width: 100%; position: relative; }
-    .hero-visual { width: 45%; height: 100%; position: relative; background: #f4f4f4; overflow: hidden; transform: translateX(-10%); opacity: 0; animation: slideInLeft 1.2s var(--ease-out-expo) forwards; }
-    @keyframes slideInLeft { to { transform: translateX(0); opacity: 1; } }
-    .hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.5s ease-in-out, transform 8s ease; transform: scale(1.1); }
+    .hero-slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out, transform 8s ease;
+      transform: scale(1.1);
+      will-change: opacity, transform;
+    }
     .hero-slide.active { opacity: 1; transform: scale(1); }
+
+    /* 右侧：文字区域 (50%) */
+    .hero-content {
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      /* 参考图是左对齐的，但整体居中 */
+      padding: 0 8%; 
+      background: #fff;
+    }
+
+    /* 顶部小标签 (参考图 CERTIFIED...) */
+    .top-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 2rem;
+      color: #000;
+      display: block;
+    }
+
+    /* 大标题 (参考图 WE BUILD BRANDS...) */
+    .hero-title {
+      font-family: var(--font-sans);
+      font-size: clamp(3rem, 5vw, 5.5rem); /* 响应式巨型字体 */
+      font-weight: 800; /* 极粗 */
+      line-height: 0.95; /* 紧凑行高 */
+      margin-bottom: 3rem;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+      color: #000;
+    }
+
+    /* 副文案 (参考图 Serif 字体段落) */
+    .hero-desc {
+      font-family: var(--font-serif); /* 衬线体，形成对比 */
+      font-size: 1.3rem;
+      line-height: 1.6;
+      color: #444;
+      margin-bottom: 4rem;
+      max-width: 500px;
+    }
+
+    /* 按钮组 (参考图 方块按钮) */
+    .btn-group { display: flex; gap: 0; /* 按钮紧挨着或者稍微分开 */ }
     
-    .hero-content { width: 55%; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 0 6rem; background: #fff; position: relative; }
-    .hero-meta { position: absolute; top: 120px; left: 6rem; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #999; display: flex; align-items: center; }
-    .hero-meta::before { content: ''; width: 40px; height: 1px; background: #000; margin-right: 15px; }
-    
-    .reveal-text { opacity: 0; transform: translateY(40px); }
+    .btn-square {
+      padding: 18px 40px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid #000;
+      background: transparent;
+      color: #000;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-width: 160px;
+      text-align: center;
+      margin-right: 15px; /* 两个按钮之间的间距 */
+    }
+    .btn-square:hover {
+      background: #000;
+      color: #fff;
+    }
+
+
+    /* 动效类 */
+    .reveal-text { opacity: 0; transform: translateY(30px); }
     .loaded .reveal-text { animation: fadeInUp 1s var(--ease-out-expo) forwards; }
     .delay-1 { animation-delay: 0.2s !important; }
     .delay-2 { animation-delay: 0.4s !important; }
     .delay-3 { animation-delay: 0.6s !important; }
+    .delay-4 { animation-delay: 0.8s !important; }
+
     @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-    .hero-title { font-size: clamp(3rem, 6vw, 6rem); font-weight: 800; line-height: 0.95; margin-bottom: 1.5rem; letter-spacing: -3px; }
-    
-    /* 描述框升级：适应更多文字 */
-    .hero-desc-box { max-width: 650px; border-left: 2px solid #eee; padding-left: 2rem; margin-bottom: 2.5rem; }
-    .hero-headline { font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: #000; line-height: 1.3; }
-    .hero-body { font-size: 0.95rem; color: #555; margin-bottom: 1.2rem; line-height: 1.7; text-align: justify; }
-    
-    /* 标签胶囊样式 */
-    .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-    .tag-pill { 
-      font-size: 0.75rem; color: #666; border: 1px solid #ddd; 
-      padding: 4px 12px; border-radius: 100px; white-space: nowrap; 
-      background: #fafafa;
-    }
 
-    .btn-group { display: flex; gap: 1rem; }
-    .btn { padding: 16px 40px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #000; transition: all 0.4s; cursor: pointer; display: inline-flex; align-items: center; }
-    .btn i { margin-left: 8px; transition: transform 0.3s; }
-    .btn:hover i { transform: translateX(4px); }
-    .btn-black { background: #000; color: #fff; }
-    .btn-black:hover { background: transparent; color: #000; }
-    .btn-outline { background: transparent; color: #000; }
-    .btn-outline:hover { background: #000; color: #fff; }
+    /* --- 4. Section 通用 --- */
+    .section-container { max-width: 1400px; margin: 0 auto; padding: 8rem 4rem; border-top: 1px solid #f0f0f0; }
     
-    .hero-badge { position: absolute; bottom: 60px; right: 60px; width: 140px; height: 140px; animation: spin 10s linear infinite; opacity: 0.8; }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-
-    /* --- 4. Section General --- */
-    .section-container { max-width: 1200px; margin: 0 auto; padding: 8rem 2rem; }
-    .works-container { max-width: 90%; margin: 0 auto; padding: 8rem 0; }
-
     /* --- 5. Tab Switcher --- */
-    .tab-header { display: flex; align-items: center; gap: 3rem; margin-bottom: 4rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; overflow-x: auto; white-space: nowrap; }
+    .tab-header {
+      display: flex; align-items: center; gap: 4rem; margin-bottom: 5rem;
+      padding-bottom: 1rem; border-bottom: 1px solid #eee; overflow-x: auto;
+    }
     .tab-header::-webkit-scrollbar { display: none; }
-    .tab-btn { background: none; border: none; font-size: 1.8rem; font-weight: 700; color: #ccc; cursor: pointer; transition: all 0.3s; text-align: left; flex-shrink: 0; }
+    
+    .tab-btn {
+      background: none; border: none; font-size: 2rem; font-weight: 700; color: #ccc; cursor: pointer;
+      transition: all 0.3s; padding: 0; text-align: left; flex-shrink: 0;
+    }
+    .tab-btn .en-sub { font-size: 0.4em; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px;}
     .tab-btn.active { color: #000; }
+    
     .tab-content { display: none; opacity: 0; transition: opacity 0.5s ease; }
     .tab-content.active { display: grid; opacity: 1; }
 
-    /* --- 6. Resume --- */
-    .resume-list { gap: 3rem; width: 100%; }
-    .resume-item { display: grid; grid-template-columns: 220px 1fr; padding-bottom: 2rem; border-bottom: 1px solid #f9f9f9; }
-    .resume-year { font-weight: 700; font-size: 1.1rem; color: #000; display: flex; align-items: flex-start; }
-    .resume-year i { color: #ccc; font-size: 0.8em; margin-top: 4px; margin-right: 10px; }
-    .resume-detail h4 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.3rem; }
-    .resume-detail ul { list-style: disc; padding-left: 20px; color: #555; font-size: 0.95rem; margin-top: 0.5rem; }
-    .detail-group { margin-top: 1rem; }
-    .detail-label { font-size: 0.9rem; font-weight: 700; color: #333; display: block; margin-bottom: 0.5rem; }
+    /* --- 6. 简历列表 --- */
+    .resume-list { gap: 4rem; width: 100%; }
+    .resume-item { display: grid; grid-template-columns: 250px 1fr; padding-bottom: 3rem; border-bottom: 1px solid #f9f9f9; }
+    .resume-year { font-weight: 700; font-size: 1.2rem; color: #000; display: flex; align-items: flex-start;}
+    .resume-year i { color: #ccc; font-size: 0.7em; margin-top: 6px; margin-right: 12px;}
+    .resume-detail h4 { font-size: 1.4rem; margin-bottom: 0.5rem; font-weight: 700;}
+    
+    /* 标签式详情 */
+    .detail-group { margin-top: 1.5rem; }
+    .detail-label { font-size: 0.9rem; font-weight: 700; color: #000; margin-bottom: 0.8rem; display: block; text-transform: uppercase; letter-spacing: 0.5px;}
+    .detail-text { font-size: 1rem; color: #555; line-height: 1.7; }
+    .normal-list li { margin-bottom: 8px; color: #555; }
 
-    /* --- 7. Works Layout --- */
-    .section-header { margin-bottom: 6rem; padding-left: 5%; }
-    .section-title { font-size: 3rem; font-weight: 800; display: flex; align-items: center; margin-bottom: 1rem; letter-spacing: -1px;}
+    /* --- 7. 作品集 --- */
+    .section-title { font-size: 2.5rem; margin-bottom: 5rem; font-weight: 800; display: flex; align-items: center; letter-spacing: -1px;}
     .section-title i { font-size: 0.6em; color: #ccc; margin-right: 20px; }
-    .cases-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10rem 6rem; }
-    .work-item:nth-child(even) { margin-top: 8rem; }
-    .work-item { display: block; group-hover: none; }
-    .work-image-box { width: 100%; aspect-ratio: 16 / 11; position: relative; overflow: hidden; background: #f0f0f0; }
-    .reveal-img-mask { width: 100%; height: 100%; object-fit: cover; clip-path: inset(0 0 100% 0); transition: clip-path 1.5s var(--ease-image), transform 1.5s var(--ease-image); transform: scale(1.1); }
-    .reveal-img-mask.is-visible { clip-path: inset(0 0 0 0); transform: scale(1); }
-    .work-item:hover .reveal-img-mask.is-visible { transform: scale(1.05); }
-    .work-meta { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.1); position: relative; }
-    .work-meta::before { content: ''; position: absolute; top: -1px; left: 0; width: 0; height: 1px; background: #000; transition: width 0.6s var(--ease-out-expo); }
-    .work-item:hover .work-meta::before { width: 100%; }
-    .work-title { font-size: 1.8rem; font-weight: 700; color: #000; max-width: 60%; line-height: 1.2; }
-    .work-info { text-align: right; max-width: 35%; }
-    .work-category { font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #000; display: block; margin-bottom: 5px; }
-    .work-tags { font-size: 0.85rem; color: #888; }
-    .work-arrow { margin-top: 1rem; font-size: 1.5rem; color: transparent; transform: translateX(-20px); transition: all 0.4s ease; -webkit-text-stroke: 1px #000; }
-    .work-item:hover .work-arrow { color: #000; transform: translateX(0); }
+
+    .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(550px, 1fr)); gap: 6rem 4rem; }
+    .case-card { display: block; group-hover: none; }
+    
+    .case-image { 
+      width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: #f0f0f0; margin-bottom: 2rem; position: relative;
+    }
+    .case-icon {
+      position: absolute; bottom: 20px; right: 20px;
+      width: 50px; height: 50px; background: #fff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transform: translateY(10px); transition: all 0.4s ease;
+      color: #000; font-size: 18px;
+    }
+    .case-card:hover .case-icon { opacity: 1; transform: translateY(0); }
+    .case-image img { 
+      width: 100%; height: 100%; transition: transform 1.2s var(--ease-out-expo), filter 0.5s ease; 
+    }
+    .case-card:hover .case-image img { transform: scale(1.05); filter: brightness(1.02); }
+    .case-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 0.5rem; transition: color 0.3s; }
+    .case-card:hover .case-title { color: #666; }
+    .case-desc { color: var(--text-sub); font-size: 1.1rem; }
 
     /* --- 8. Footer --- */
-    .footer { background: #111; color: #fff; padding: 8rem 2rem 4rem; }
-    .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
-    .footer-left h2 { font-size: clamp(3rem, 5vw, 4.5rem); font-weight: 800; margin-bottom: 2rem; line-height: 1.1; letter-spacing: -1px; }
-    .contact-row { display: flex; justify-content: space-between; align-items: center; padding: 2rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); color: #fff; text-decoration: none; transition: all 0.4s ease; }
-    .contact-row:first-child { border-top: 1px solid rgba(255,255,255,0.1); }
-    .contact-label { font-size: 0.9rem; text-transform: uppercase; color: #666; }
-    .contact-value { font-size: 1.5rem; font-weight: 600; }
-    .contact-arrow { opacity: 0; transform: translateX(-10px); transition: all 0.4s ease; }
-    .contact-row:hover { background: rgba(255,255,255,0.05); padding-left: 20px; }
-    .contact-row:hover .contact-arrow { opacity: 1; transform: translateX(0); }
-    .footer-bottom { max-width: 1200px; margin: 6rem auto 0; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; color: #555; font-size: 0.85rem; }
-    .back-to-top { cursor: pointer; text-transform: uppercase; transition: color 0.3s; }
-    .back-to-top:hover { color: #fff; }
+    .footer { background: #111; color: #fff; padding: 8rem 2rem; text-align: center; }
+    .footer h2 { font-size: 3rem; margin-bottom: 3rem; font-weight: 800; letter-spacing: -1px;}
+    .footer-links { display: flex; justify-content: center; gap: 4rem; flex-wrap: wrap; margin-top: 4rem;}
+    .footer-links a { 
+      color: #888; border-bottom: 1px solid transparent; padding-bottom: 5px; transition: all 0.3s;
+      font-size: 1.2rem; display: flex; align-items: center;
+    }
+    .footer-links a i { margin-right: 10px; }
+    .footer-links a:hover { color: #fff; border-bottom-color: #fff; transform: translateY(-3px); }
 
+    /* --- 滚动显现 --- */
     .scroll-reveal { opacity: 0; transform: translateY(50px); transition: all 1s var(--ease-out-expo); }
     .scroll-reveal.is-visible { opacity: 1; transform: translateY(0); }
 
     /* --- Mobile Responsive --- */
     @media (max-width: 900px) {
-      /* 1. 导航栏重排 */
-      .nav { justify-content: flex-start; padding: 1rem 1.5rem; }
-      .menu-toggle { order: -1; margin-right: 15px; }
-      .menu-toggle span { display: none; }
-      .menu-toggle i { margin-left: 0; font-size: 1.4rem;}
-      .logo { order: 0; font-size: 1.1rem; }
-
-      /* 2. 侧边栏左滑 */
-      .sidebar-menu { left: 0; right: auto; width: 85%; transform: translateX(-100%); }
+      .nav { padding: 1.5rem; }
+      .nav-links { display: none; }
       
-      /* 3. Hero 内容优化 */
-      .hero-split { flex-direction: column; height: auto; padding-top: 80px; }
-      .hero-visual { width: 100%; height: 50vh; transform: none; opacity: 1; animation: none;}
-      
+      .hero-split { flex-direction: column; height: auto; }
+      .hero-visual { width: 100%; height: 50vh; opacity: 1; animation: none;}
       .hero-content { width: 100%; padding: 4rem 2rem; }
-      .hero-title { font-size: 3rem; margin-bottom: 1.5rem;} /* 标题稍微拉开距离 */
-      .hero-badge { display: none; }
-      .hero-meta { display: none; }
       
-      /* 手机上显示描述框，但去掉左边框 */
-      .hero-desc-box { 
-        display: block; 
-        border-left: none; 
-        padding-left: 0; 
-        margin-bottom: 2rem; 
-      }
-      .hero-headline { font-size: 1.2rem; }
-      .hero-tags { gap: 6px; }
+      .hero-title { font-size: 3rem; margin-bottom: 2rem;}
+      .hero-desc { font-size: 1.1rem; margin-bottom: 3rem;}
+      .btn-square { width: 100%; margin-bottom: 10px; margin-right: 0;}
+      .btn-group { flex-direction: column; }
       
-      /* Works Mobile */
-      .works-container { max-width: 100%; padding: 4rem 1.5rem; }
+      .section-container { padding: 5rem 1.5rem; }
       .cases-grid { grid-template-columns: 1fr; gap: 4rem; }
-      .work-item:nth-child(even) { margin-top: 0; }
-      .section-header { padding-left: 0; margin-bottom: 3rem; }
-      .work-title { font-size: 1.5rem; }
-      
-      /* Resume Mobile */
-      .resume-item { grid-template-columns: 1fr; gap: 0.5rem; }
-      .resume-year { margin-bottom: 5px; }
-      
-      .work-arrow { display: none; }
-      .footer-container { grid-template-columns: 1fr; gap: 3rem; }
-      .contact-value { font-size: 1.1rem; }
-      .contact-row:hover { padding-left: 0; background: none;}
-      .contact-arrow { opacity: 1; transform: none; }
+      .resume-item { grid-template-columns: 1fr; gap: 1rem; }
+      .tab-header { gap: 2rem; }
+      .tab-btn { font-size: 1.4rem; }
     }
   </style>
 </head>
@@ -254,115 +280,95 @@
 
   <!-- 导航 -->
   <nav class="nav">
-    <a href="index.html" class="logo">SALLY.</a>
-    
-    <!-- 菜单按钮 -->
-    <div class="menu-toggle" onclick="toggleMenu()">
-      <span>MENU</span> <i class="fa-solid fa-bars"></i>
+    <a href="#" class="logo">SALLY.</a>
+    <div class="nav-links">
+      <a href="#work">Work</a>
+      <a href="#about">Resume</a>
+      <a href="#contact">Contact</a>
     </div>
   </nav>
 
-  <!-- 遮罩层 -->
-  <div class="sidebar-overlay" onclick="toggleMenu()"></div>
-
-  <!-- 侧边栏菜单 -->
-  <aside class="sidebar-menu">
-    <div class="sidebar-header">
-      <div class="close-btn" onclick="toggleMenu()">
-        CLOSE <i class="fa-solid fa-xmark"></i>
-      </div>
-    </div>
-    
-    <div class="sidebar-links">
-      <ul>
-        <li>
-          <a href="#work" onclick="toggleMenu()">Work</a>
-          <span class="en-sub">Selected Projects</span>
-        </li>
-        <li>
-          <a href="#about" onclick="toggleMenu()">Resume</a>
-          <span class="en-sub">Experience & Skills</span>
-        </li>
-        <li>
-          <a href="#contact" onclick="toggleMenu()">Contact</a>
-          <span class="en-sub">Get in touch</span>
-        </li>
-      </ul>
-    </div>
-
-    <div class="sidebar-footer">
-      <p>SALLY PORTFOLIO</p>
-      <p>&copy; 2025 All Rights Reserved.</p>
-    </div>
-  </aside>
-
-  <!-- 1. Banner -->
+  <!-- 1. Split Hero (BIA 风格) -->
   <section class="hero-split">
+    <!-- 左侧：视觉 (50%) -->
     <div class="hero-visual">
       <img src="images/banner-1.jpg" class="hero-slide active" alt="Banner 1" fetchpriority="high">
       <img src="images/banner-2.jpg" class="hero-slide" alt="Banner 2">
       <img src="images/banner-3.jpg" class="hero-slide" alt="Banner 3">
     </div>
+    
+    <!-- 右侧：大文字 (50%) -->
     <div class="hero-content">
-      <div class="hero-meta reveal-text delay-1">Based in China</div>
-      <h1 class="hero-title reveal-text delay-1">SALLY<br>PORTFOLIO</h1>
+      <!-- 顶部小标签 -->
+      <span class="top-label reveal-text delay-1">Visual Designer & Art Director</span>
       
-      <!-- 描述框 -->
-      <div class="hero-desc-box reveal-text delay-2">
-        <h3 class="hero-headline">电商体验 × 品牌视觉 × 多维创意</h3>
-        <p class="hero-body">
-          具备电商全链路设计能力，从独立站 UI/UX 优化、平台店铺装修（Amazon/TK）、A+ 页面与广告创意，到品牌全案升级、空间视觉设计，为电商品牌提供 “体验 + 转化 + 品牌” 一体化设计解决方案，助力全球化营销落地。
-        </p>
-        
-        <!-- 标签组 -->
-        <div class="hero-tags">
-          <span class="tag-pill">DTC 独立站设计</span>
-          <span class="tag-pill">Amazon/TK 店铺装修</span>
-          <span class="tag-pill">电商广告创意</span>
-          <span class="tag-pill">品牌全案升级</span>
-          <span class="tag-pill">空间导视设计</span>
-          <span class="tag-pill">3D 建模渲染</span>
-        </div>
+      <!-- 霸气大标题 (英文 Slogan) -->
+      <h1 class="hero-title reveal-text delay-2">
+        Crafting<br>Digital<br>Experiences
+      </h1>
+      
+      <!-- 衬线体副文案 -->
+      <p class="hero-desc reveal-text delay-3">
+        专注于全球化电商营销、品牌全案视觉与用户体验设计。打造驱动转化的数字品牌形象。
+        <span class="en-sub" style="font-family: var(--font-sans); font-size:0.8em; margin-top:10px;">
+          Designed by Sally
+        </span>
+      </p>
+      
+      <!-- 两个方形按钮 -->
+      <div class="btn-group reveal-text delay-4">
+        <a href="#work" class="btn-square">
+          Selected Work
+        </a>
+        <a href="#contact" class="btn-square">
+          Contact Me
+        </a>
       </div>
-
-      <div class="btn-group reveal-text delay-3">
-        <a href="#work" class="btn btn-black">See Work <i class="fa-solid fa-arrow-right-long"></i></a>
-        <a href="#contact" class="btn btn-outline">Contact Me <i class="fa-regular fa-paper-plane"></i></a>
-      </div>
-      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCI+CiAgPGRlZnM+CiAgICA8cGF0aCBpZD0iY2lyY2xlIiBkPSJNMSA1MCBhIDQ5IDQ5IDAgMCAxIDk4IDAgYSA0OSA0OSAwIDAgMSAtOTggMCIgLz4KICA8L2RlZnM+CiAgPHRleHQgZm9udC1zaXplPSIxMiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXdlaWdodD0iYm9sZCIgbGV0dGVyLXNwYWNpbmc9IjEiPgogICAgPHRleHRQYXRoIHhsaW5rOmhyZWY9IiNjaXJjbGUiPlNBTExZIFBPUlRGT0xJTyAtIDIwMjUgLSBERSBTSUdOIC0gPC90ZXh0UGF0aD4KICA8L3RleHQ+Cjwvc3ZnPg==" class="hero-badge" alt="Badge">
     </div>
   </section>
 
-  <!-- 2. Resume (Tabs) -->
+  <!-- 2. Resume 简历 -->
   <section id="about" class="section-container">
+    
+    <!-- Tab 按钮区 -->
     <div class="tab-header scroll-reveal">
       <button class="tab-btn active" onclick="switchTab('education', this)">
-        <i class="fa-solid fa-user-graduate" style="font-size: 0.5em; margin-bottom:5px;"></i> 教育背景 <span class="en-sub">Education</span>
+        教育背景
+        <span class="en-sub">Education</span>
       </button>
+
       <button class="tab-btn" onclick="switchTab('jobs', this)">
-        <i class="fa-solid fa-briefcase" style="font-size: 0.5em; margin-bottom:5px;"></i> 工作经历 <span class="en-sub">Work Experience</span>
+        工作经历
+        <span class="en-sub">Work Experience</span>
       </button>
+
       <button class="tab-btn" onclick="switchTab('campus', this)">
-        <i class="fa-solid fa-graduation-cap" style="font-size: 0.5em; margin-bottom:5px;"></i> 校园实践 <span class="en-sub">Campus Practice</span>
+        校园实践
+        <span class="en-sub">Campus Practice</span>
       </button>
     </div>
     
-    <!-- Tab Contents -->
+    <!-- Tab 1: 教育背景 -->
     <div id="education" class="resume-list tab-content active">
       <div class="resume-item scroll-reveal">
-        <div class="resume-year"><i class="fa-solid fa-circle-dot" style="font-size:0.6em; margin-top:6px;"></i> 2017.09 - 2021.06</div>
+        <div class="resume-year">
+          <i class="fa-solid fa-graduation-cap"></i> 2017.09 - 2021.06
+        </div>
         <div class="resume-detail">
-          <h4>湖南农业大学 <span class="en-sub">/ Hunan Agricultural University</span></h4>
+          <h4>湖南农业大学 <span class="en-sub" style="display:inline;">/ Hunan Agricultural University</span></h4>
           <p><strong>视觉传达设计专业 (本科)</strong></p>
+          <p class="en-sub">Bachelor of Arts in Visual Communication Design</p>
           <div class="detail-group">
-            <span class="detail-label">主修课程:</span>
-            <p style="color:#666; font-size:0.95em;">交互设计、插画设计、版式设计、动画设计、字体设计、展示设计、设计思维、包装设计</p>
+            <span class="detail-label">主修课程 / Core Courses</span>
+            <p class="detail-text">
+              交互设计、插画设计、版式设计、动画设计、字体设计、展示设计、设计思维、包装设计、招贴设计、书籍设计
+            </p>
           </div>
           <div class="detail-group">
-            <span class="detail-label">选修 / 证书 / 荣誉:</span>
-            <ul style="list-style:disc; padding-left:20px; color:#666; font-size:0.95em;">
+            <span class="detail-label">选修 / 证书 / 荣誉</span>
+            <ul class="normal-list">
               <li>选修：药膳学、艺术哲学、欧洲文明的现代历程</li>
-              <li>证书：普通话二级甲等、英语四级、高中美术教资</li>
+              <li>证书：普通话二级甲等、大学生英语四级 (CET-4)、教师资格证 (高级中学美术)</li>
               <li>荣誉：2019届“优秀助班”奖</li>
             </ul>
           </div>
@@ -370,13 +376,14 @@
       </div>
     </div>
 
+    <!-- Tab 2: 工作经历 (ID=jobs) -->
     <div id="jobs" class="resume-list tab-content">
       <div class="resume-item">
-        <div class="resume-year"><i class="fa-solid fa-briefcase" style="font-size:0.6em; margin-top:6px;"></i> 2022.10 - Present <span class="en-sub">至今</span></div>
+        <div class="resume-year"><i class="fa-solid fa-briefcase"></i> 2022.10 - Present</div>
         <div class="resume-detail">
-          <h4>电商网页设计师 <span class="en-sub">/ E-commerce Web Designer</span></h4>
+          <h4>电商网页设计师 <span class="en-sub" style="display:inline;">/ E-commerce Web Designer</span></h4>
           <p><strong>@安徽美瑞邦达跨境电商有限公司</strong></p>
-          <ul style="list-style:disc; padding-left:20px; color:#666;">
+          <ul class="normal-list">
             <li>海外独立站设计、改版及产品图精修</li>
             <li>跨境电商 A+ 页面设计与店铺装修</li>
             <li>品牌 VI、Logo 升级优化及包装物料设计</li>
@@ -385,212 +392,176 @@
         </div>
       </div>
       <div class="resume-item">
-        <div class="resume-year"><i class="fa-regular fa-circle" style="font-size:0.6em; margin-top:6px;"></i> 2022.07 - 2022.08</div>
+        <div class="resume-year"><i class="fa-regular fa-circle"></i> 2022.07 - 2022.08</div>
         <div class="resume-detail">
-          <h4>设计师助理 <span class="en-sub">/ Designer Assistant</span></h4>
+          <h4>设计师助理 <span class="en-sub" style="display:inline;">/ Designer Assistant</span></h4>
           <p><strong>@赛飞广告传播有限公司</strong></p>
-          <ul style="list-style:disc; padding-left:20px; color:#666;">
+          <ul class="normal-list">
             <li>参与设计部的创意设计工作（画册、折页、海报等）</li>
             <li>品牌工法墙标识导视系统设计</li>
           </ul>
         </div>
       </div>
       <div class="resume-item">
-        <div class="resume-year"><i class="fa-regular fa-circle" style="font-size:0.6em; margin-top:6px;"></i> 2022.02 - 2022.05</div>
+        <div class="resume-year"><i class="fa-regular fa-circle"></i> 2022.02 - 2022.05</div>
         <div class="resume-detail">
-          <h4>美术教师 <span class="en-sub">/ Art Teacher</span></h4>
+          <h4>美术教师 <span class="en-sub" style="display:inline;">/ Art Teacher</span></h4>
           <p><strong>@安徽朗声教育咨询有限公司</strong></p>
-          <ul style="list-style:disc; padding-left:20px; color:#666;">
-            <li>创意美术：定制教学计划，因材施教，增进家长沟通</li>
+          <ul class="normal-list">
+            <li>创意美术：定制教学计划，因材施教</li>
             <li>素描教学：几何石膏、静物、人物头像教学</li>
           </ul>
         </div>
       </div>
     </div>
 
+    <!-- Tab 3: 校园实践 -->
     <div id="campus" class="resume-list tab-content">
       <div class="resume-item">
-        <div class="resume-year"><i class="fa-solid fa-school" style="font-size:0.6em; margin-top:6px;"></i> 2019.09 - 2019.10</div>
+        <div class="resume-year"><i class="fa-solid fa-users"></i> 2019.09 - 2019.10</div>
         <div class="resume-detail">
-          <h4>新生助理班主任 <span class="en-sub">/ Assistant Class Teacher</span></h4>
+          <h4>新生助理班主任 <span class="en-sub" style="display:inline;">/ Assistant Class Teacher</span></h4>
           <p><strong>@ 2019级视觉传达设计一班</strong></p>
-          <ul style="list-style:disc; padding-left:20px; color:#666;">
+          <ul class="normal-list">
             <li>管理并组织班级同学参加军训以及各种活动</li>
             <li>协助辅导员处理新生入学适宜及班级建设</li>
           </ul>
         </div>
       </div>
       <div class="resume-item">
-        <div class="resume-year"><i class="fa-solid fa-users-rays" style="font-size:0.6em; margin-top:6px;"></i> 2018.09 - 2019.09</div>
+        <div class="resume-year"><i class="fa-solid fa-flag"></i> 2018.09 - 2019.09</div>
         <div class="resume-detail">
-          <h4>科幻俱乐部团长 <span class="en-sub">/ President of Sci-Fi Club</span></h4>
+          <h4>科幻俱乐部团长 <span class="en-sub" style="display:inline;">/ President of Sci-Fi Club</span></h4>
           <p><strong>@ 湖南农业大学科幻俱乐部</strong></p>
-          <ul style="list-style:disc; padding-left:20px; color:#666;">
+          <ul class="normal-list">
             <li>负责社团日常运营、活动策划与执行</li>
             <li>组织30余名成员参与校园社团文化艺术节及音响演出</li>
           </ul>
         </div>
       </div>
       <div class="resume-item">
-        <div class="resume-year"><i class="fa-solid fa-microphone-lines" style="font-size:0.6em; margin-top:6px;"></i> 2017.09 - 2018.09</div>
+        <div class="resume-year"><i class="fa-solid fa-microphone"></i> 2017.09 - 2018.09</div>
         <div class="resume-detail">
-          <h4>广播播音员 & 宣传组负责人 <span class="en-sub">/ Broadcaster & Publicity Lead</span></h4>
+          <h4>广播播音员 & 宣传组负责人 <span class="en-sub" style="display:inline;">/ Broadcaster & Lead</span></h4>
           <p><strong>@ 湖南农业大学广播电视台</strong></p>
-          <ul style="list-style:disc; padding-left:20px; color:#666;">
+          <ul class="normal-list">
             <li>负责宣传海报、喷绘、易拉宝等平面物料设计</li>
             <li>负责校园广播播音，脚本编辑、录制及后期剪辑</li>
           </ul>
         </div>
       </div>
       <div class="resume-item">
-        <div class="resume-year"><i class="fa-solid fa-bullhorn" style="font-size:0.6em; margin-top:6px;"></i> 2017.09 - 2021.09</div>
+        <div class="resume-year"><i class="fa-solid fa-bullhorn"></i> 2017.09 - 2021.09</div>
         <div class="resume-detail">
-          <h4>班级宣传员 <span class="en-sub">/ Class Publicity Committee</span></h4>
+          <h4>班级宣传员 <span class="en-sub" style="display:inline;">/ Class Publicity</span></h4>
           <p><strong>@ 2017级视传一班</strong></p>
-          <ul style="list-style:disc; padding-left:20px; color:#666;">
+          <ul class="normal-list">
             <li>负责班级形象建设与活动宣传</li>
             <li>运营与管理班级官方微信公众号</li>
           </ul>
         </div>
       </div>
     </div>
+
   </section>
 
-  <!-- 3. Works (80% Width + Staggered Layout) -->
-  <section id="work" class="works-container">
-    <div class="section-header scroll-reveal">
-      <h2 class="section-title">
-        <i class="fa-solid fa-star-of-life"></i> Selected Work
-      </h2>
-      <p style="color:#666; font-size:1.1rem; max-width:600px; margin-top:10px;">
-        A collection of projects focusing on eCommerce, Branding, and Digital Experiences.
-      </p>
-    </div>
+  <!-- 3. Work 作品集 (ID=work) -->
+  <section id="work" class="section-container">
+    <h2 class="section-title scroll-reveal">
+      <i class="fa-solid fa-arrow-right-long" style="color:#000;"></i>
+      SELECTED WORK
+    </h2>
     
     <div class="cases-grid">
       <!-- P1 -->
-      <a href="works.html#p1-1" class="work-item">
-        <div class="work-image-box">
-          <img src="images/p1-ecommerce.jpg" alt="Work" class="reveal-img-mask" loading="lazy">
+      <a href="works.html#p1-1" class="case-card scroll-reveal">
+        <div class="case-image">
+          <img src="images/p1-ecommerce.jpg" alt="Work" loading="lazy">
+          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
-        <div class="work-meta">
-          <div class="work-title">跨境电商网页设计</div>
-          <div class="work-info">
-            <span class="work-category">Web / UIUX</span>
-            <span class="work-tags">Global eCommerce</span>
-          </div>
+        <div class="case-info">
+          <h3 class="case-title">跨境电商网页设计</h3>
+          <p class="case-desc">独立站网站设计、亚马逊店铺装修、TK界面设计</p>
+          <span class="en-sub">Global eCommerce & DTC UI/UX</span>
         </div>
-        <div class="work-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
       </a>
       <!-- P2 -->
-      <a href="works.html#p2-1" class="work-item">
-        <div class="work-image-box">
-          <img src="images/p2-marketing.jpg" alt="Work" class="reveal-img-mask" loading="lazy">
+      <a href="works.html#p2-1" class="case-card scroll-reveal">
+        <div class="case-image">
+          <img src="images/p2-marketing.jpg" alt="Work" loading="lazy">
+          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
-        <div class="work-meta">
-          <div class="work-title">视频营销与广告设计</div>
-          <div class="work-info">
-            <span class="work-category">Ads / Motion</span>
-            <span class="work-tags">Social Media & A+</span>
-          </div>
+        <div class="case-info">
+          <h3 class="case-title">视频营销与广告设计</h3>
+          <p class="case-desc">社交媒体广告创意 (FB / Google Ads)，高级A+页面设计</p>
+          <span class="en-sub">Video Marketing & Premium A+ Content</span>
         </div>
-        <div class="work-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
       </a>
       <!-- P3 -->
-      <a href="works.html#p3-1" class="work-item">
-        <div class="work-image-box">
-          <img src="images/p3-branding.jpg" alt="Work" class="reveal-img-mask" loading="lazy">
+      <a href="works.html#p3-1" class="case-card scroll-reveal">
+        <div class="case-image">
+          <img src="images/p3-branding.jpg" alt="Work" loading="lazy">
+          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
-        <div class="work-meta">
-          <div class="work-title">品牌视觉与全案设计</div>
-          <div class="work-info">
-            <span class="work-category">Branding</span>
-            <span class="work-tags">VIS & Packaging</span>
-          </div>
+        <div class="case-info">
+          <h3 class="case-title">品牌视觉与全案设计</h3>
+          <p class="case-desc">巴西酸奶/美国牛仔靴品牌全案，包装设计与物料延展</p>
+          <span class="en-sub">Brand Identity (VIS) & Packaging</span>
         </div>
-        <div class="work-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
       </a>
       <!-- P4 -->
-      <a href="works.html#p4-1" class="work-item">
-        <div class="work-image-box">
-          <img src="images/p4-spatial.jpg" alt="Work" class="reveal-img-mask" loading="lazy">
+      <a href="works.html#p4-1" class="case-card scroll-reveal">
+        <div class="case-image">
+          <img src="images/p4-spatial.jpg" alt="Work" loading="lazy">
+          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
-        <div class="work-meta">
-          <div class="work-title">空间视觉与导视系统</div>
-          <div class="work-info">
-            <span class="work-category">Spatial</span>
-            <span class="work-tags">Wayfinding</span>
-          </div>
+        <div class="case-info">
+          <h3 class="case-title">空间视觉与导视系统</h3>
+          <p class="case-desc">工法馆与展示厅视觉设计</p>
+          <span class="en-sub">Spatial Visuals & Wayfinding</span>
         </div>
-        <div class="work-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
       </a>
       <!-- P5 -->
-      <a href="works.html#p5-1" class="work-item">
-        <div class="work-image-box">
-          <img src="images/p5-photography.jpg" alt="Work" class="reveal-img-mask" loading="lazy">
+      <a href="works.html#p5-1" class="case-card scroll-reveal">
+        <div class="case-image">
+          <img src="images/p5-photography.jpg" alt="Work" loading="lazy">
+          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
-        <div class="work-meta">
-          <div class="work-title">摄影策划与指导</div>
-          <div class="work-info">
-            <span class="work-category">Photography</span>
-            <span class="work-tags">Art Direction</span>
-          </div>
+        <div class="case-info">
+          <h3 class="case-title">摄影策划与指导</h3>
+          <p class="case-desc">拍摄策划、服饰搭配场景选择、现场调度</p>
+          <span class="en-sub">Photography Direction & Planning</span>
         </div>
-        <div class="work-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
       </a>
       <!-- P6 -->
-      <a href="works.html#p6-1" class="work-item">
-        <div class="work-image-box">
-          <img src="images/p6-3d.jpg" alt="Work" class="reveal-img-mask" loading="lazy">
+      <a href="works.html#p6-1" class="case-card scroll-reveal">
+        <div class="case-image">
+          <img src="images/p6-3d.jpg" alt="Work" loading="lazy">
+          <div class="case-icon"><i class="fa-solid fa-arrow-right"></i></div>
         </div>
-        <div class="work-meta">
-          <div class="work-title">三维建模与渲染</div>
-          <div class="work-info">
-            <span class="work-category">3D Design</span>
-            <span class="work-tags">Modeling & Render</span>
-          </div>
+        <div class="case-info">
+          <h3 class="case-title">三维建模与渲染</h3>
+          <p class="case-desc">3D建模和渲染视觉表现</p>
+          <span class="en-sub">3D Modeling & Rendering</span>
         </div>
-        <div class="work-arrow"><i class="fa-solid fa-arrow-right-long"></i></div>
       </a>
     </div>
   </section>
 
   <!-- 4. Footer -->
   <section id="contact" class="footer">
-    <div class="footer-container scroll-reveal">
-      <div class="footer-left">
-        <h2>Let's build something<br>great together.</h2>
-        <p>Looking for a designer who understands both brand aesthetics and conversion? Let's talk.</p>
-        <p style="margin-top:20px; font-size:0.9rem; color:#666;">
-          <i class="fa-solid fa-location-dot"></i> Based in China, Available Worldwide.
-        </p>
+    <div class="scroll-reveal">
+      <h2>Let's create something together.</h2>
+      <div class="footer-links">
+        <a href="mailto:sally00kk@gmail.com"><i class="fa-solid fa-envelope"></i> sally00kk@gmail.com</a>
+        <a href="mailto:1355652997@qq.com"><i class="fa-brands fa-qq"></i> 1355652997@qq.com</a>
+        <span><i class="fa-solid fa-phone"></i> 178-9100-3233</span>
       </div>
-      <div class="footer-contact-list">
-        <a href="mailto:sally00kk@gmail.com" class="contact-row">
-          <div><span class="contact-label">Email</span><div class="contact-value">sally00kk@gmail.com</div></div>
-          <i class="fa-solid fa-arrow-right contact-arrow"></i>
-        </a>
-        <a href="mailto:1355652997@qq.com" class="contact-row">
-          <div><span class="contact-label">QQ / Email CN</span><div class="contact-value">1355652997@qq.com</div></div>
-          <i class="fa-solid fa-arrow-right contact-arrow"></i>
-        </a>
-        <a href="tel:17891003233" class="contact-row">
-          <div><span class="contact-label">Phone</span><div class="contact-value">178-9100-3233</div></div>
-          <i class="fa-solid fa-arrow-right contact-arrow"></i>
-        </a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>&copy; 2025 Sally Portfolio. All Rights Reserved.</span>
-      <div class="back-to-top" onclick="window.scrollTo(0,0)">Back to Top <i class="fa-solid fa-arrow-up"></i></div>
     </div>
   </section>
 
   <script>
-    function toggleMenu() {
-      document.body.classList.toggle('menu-open');
-    }
-
+    // --- 1. Tab 切换逻辑 ---
     function switchTab(tabId, btnElement) {
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -598,8 +569,10 @@
       document.getElementById(tabId).classList.add('active');
     }
 
+    // --- 2. 页面加载动画 ---
     window.addEventListener('load', () => { document.body.classList.add('loaded'); });
 
+    // --- 3. 幻灯片自动轮播 ---
     const slides = document.querySelectorAll('.hero-slide');
     let currentSlide = 0;
     function nextSlide() {
@@ -609,13 +582,15 @@
     }
     setInterval(nextSlide, 3500);
 
+    // --- 4. 导航栏滚动变色 ---
     window.addEventListener('scroll', () => {
       const nav = document.querySelector('.nav');
       if(window.scrollY > 50) nav.classList.add('scrolled');
       else nav.classList.remove('scrolled');
     });
 
-    const observer = new IntersectionObserver((entries) => {
+    // --- 5. 滚动显现动画 ---
+    const observer = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('is-visible');
@@ -625,27 +600,6 @@
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
-    
-    const imgObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          imgObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    
-    document.querySelectorAll('.reveal-img-mask').forEach(el => imgObserver.observe(el));
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        if(this.getAttribute('href').startsWith('#')) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute('href'));
-          if(target) target.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    });
   </script>
 </body>
 </html>
