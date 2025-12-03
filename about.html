@@ -7,11 +7,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /* ... (CSS 保持与 work.html 一致，为了节省篇幅，请直接复制 work.html 中 <style> 标签内的所有内容到这里) ... */
-    /* 请务必复制上面 work.html 的 CSS，因为包含了关键的 @media (max-width: 768px) 修复 */
-    /* 下面是针对 about 页面特有的微调，如果 work.html 的 CSS 已复制，可忽略以下重复部分，直接使用 work.html 的样式即可，它们是通用的。 */
-    
-    /* 基础变量 */
+    /* --- 1. 基础变量 --- */
     :root {
       --text-main: #000000;
       --text-sub: #555555;
@@ -20,59 +16,90 @@
       --menu-height: 48vh; 
       --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
     }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-      background: #ffffff; color: var(--text-main); overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: #ffffff;
+      color: var(--text-main);
+      overflow-x: hidden;
     }
+
     a { text-decoration: none; color: inherit; transition: opacity 0.3s; }
-    img { display: block; width: 100%; height: auto; object-fit: cover; }
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
     ul { list-style: none; }
 
-    /* 页面容器 */
+    /* --- 2. 页面容器 --- */
     .page-container {
       background: #fff; position: relative; z-index: 10; min-height: 100vh;
       transition: transform 0.6s var(--ease-out-expo), filter 0.6s;
       padding-top: 100px; padding-bottom: 120px; will-change: transform;
     }
-    /* 桌面端：上移 */
+    
+    /* 桌面端：菜单打开时内容上移 */
     body.menu-open .page-container {
       transform: translateY(calc(var(--menu-height) * -1));
       filter: brightness(0.8); border-radius: 0 0 20px 20px; overflow: hidden; height: 100vh;
     }
 
-    /* Logo */
+    /* --- 3. 头部区域 (Logo) --- */
     .header-wrapper {
-      position: fixed; top: 2rem; left: 3rem; z-index: 800;
+      position: fixed; 
+      top: 2rem; left: 3rem; 
+      z-index: 800;
       transition: transform 0.6s var(--ease-out-expo);
     }
+
     .logo-sally {
       font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #000;
       mix-blend-mode: normal;
     }
     
-    /* 桌面端：上移并反色 */
-    body.menu-open .header-wrapper { transform: translateY(calc(var(--menu-height) * -1)); }
-    body.menu-open .logo-sally { color: #fff; mix-blend-mode: difference; }
+    /* 桌面端：菜单打开时上移并反色 */
+    body.menu-open .header-wrapper { 
+      transform: translateY(calc(var(--menu-height) * -1)); 
+    }
+    body.menu-open .logo-sally { 
+      color: #fff; mix-blend-mode: difference; 
+    }
 
-    /* 关于页面布局 */
-    .about-split { display: flex; max-width: 1400px; margin: 0 auto; padding: 0 3rem; gap: 5rem; }
-    .about-visual { width: 35%; position: sticky; top: 120px; height: fit-content; }
+    /* --- 4. 关于页面布局 --- */
+    .about-split {
+      display: flex; max-width: 1400px; margin: 0 auto; padding: 0 3rem; gap: 5rem;
+    }
+    
+    /* 左侧：个人照 */
+    .about-visual {
+      width: 35%; position: sticky; top: 120px; height: fit-content;
+    }
+    /* 3:4 竖构图比例 */
     .profile-img { width: 100%; aspect-ratio: 3/4; background: #f0f0f0; border-radius: 4px; overflow: hidden; }
     .profile-img img { width: 100%; height: 100%; object-fit: cover; }
+    
     .about-intro { margin-top: 2rem; }
     .about-intro h2 { font-size: 2.5rem; line-height: 1.1; margin-bottom: 1rem; font-weight: 900;}
     .about-intro p { color: var(--text-sub); line-height: 1.6; font-size: 1rem; text-align: justify;}
 
+    /* 右侧：简历 Tabs */
     .about-content { width: 65%; }
-    .tab-header { display: flex; gap: 2.5rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; margin-bottom: 3rem; overflow-x: auto; }
-    .tab-btn { background: none; border: none; font-size: 1.4rem; font-weight: 700; color: #ddd; cursor: pointer; transition: color 0.3s; padding: 0; text-align: left; flex-shrink: 0; }
+    
+    .tab-header {
+      display: flex; gap: 2.5rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; margin-bottom: 3rem;
+      overflow-x: auto; 
+    }
+    .tab-btn {
+      background: none; border: none; font-size: 1.4rem; font-weight: 700; color: #ddd; cursor: pointer;
+      transition: color 0.3s; padding: 0; text-align: left; flex-shrink: 0;
+    }
     .tab-btn span { display: block; font-size: 0.7rem; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
     .tab-btn.active { color: #000; }
+    
     .tab-pane { display: none; opacity: 0; animation: fadeIn 0.5s forwards; }
     .tab-pane.active { display: block; }
     @keyframes fadeIn { to { opacity: 1; } }
 
+    /* 简历项样式 */
     .resume-item { display: grid; grid-template-columns: 180px 1fr; margin-bottom: 2.5rem; border-bottom: 1px solid #f9f9f9; padding-bottom: 2rem; }
     .resume-item:last-child { border-bottom: none; }
     .resume-year { font-weight: 700; color: #000; font-size: 1rem; line-height: 1.4; }
@@ -85,7 +112,7 @@
     .edu-info p { margin-bottom: 0.8rem; font-size: 0.95rem; line-height: 1.6; color: #666; }
     .edu-info strong { color: #333; font-weight: 600; }
 
-    /* 菜单样式 (复制 work.html) */
+    /* --- 5. 菜单样式 --- */
     .menu-overlay { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--menu-height); background: var(--menu-bg); z-index: 900; transform: translateY(100%); transition: transform 0.6s var(--ease-out-expo); padding: 3rem; color: #fff; display: flex; flex-direction: column; border-top: 1px solid rgba(255,255,255,0.1); }
     body.menu-open .menu-overlay { transform: translateY(0); }
     .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; height: 100%; max-width: 1600px; margin: 0 auto; width: 100%; }
@@ -126,7 +153,7 @@
     .copy-feedback { font-size: 0.7rem; color: var(--accent); margin-left: auto; opacity: 0; transform: translateX(-5px); transition: all 0.3s; font-weight: 700; text-transform: uppercase; }
     .contact-item:hover .copy-feedback { opacity: 1; transform: translateX(0); }
 
-    /* --- Mobile Responsive (关键修复) --- */
+    /* --- 6. Mobile Responsive (关键修复) --- */
     @media (max-width: 768px) {
       .about-split { flex-direction: column; gap: 2rem; padding: 0 1.5rem; }
       .about-visual { width: 100%; position: static; }
@@ -195,8 +222,8 @@
       <!-- 左侧：个人信息 -->
       <div class="about-visual">
         <div class="profile-img">
-          <!-- 替换为你的照片 -->
-          <img src="images/banner-2.jpg" alt="Sally Profile">
+          <!-- 【修改】这里使用了新的 profile.jpg -->
+          <img src="images/profile.jpg" alt="Sally Profile">
         </div>
         <div class="about-intro">
           <h2>Hi, I'm Sally.</h2>
@@ -327,7 +354,7 @@
     </div>
   </div>
 
-  <!-- Menu Overlay (复制 work.html) -->
+  <!-- Menu Overlay -->
   <div class="menu-overlay">
     <div class="menu-grid">
       <div class="menu-column">
