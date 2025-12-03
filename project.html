@@ -7,18 +7,15 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
-    /* --- 1. 基础变量 --- */
     :root {
       --text-main: #000000;
       --text-sub: #555555;
       --accent: #4452FE; 
       --menu-bg: #000000;
-      --menu-height: 48vh; 
+      --menu-height: 48vh;
       --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
       background: #fff; color: var(--text-main);
@@ -30,7 +27,6 @@
     img { display: block; width: 100%; height: auto; }
     a { text-decoration: none; color: inherit; transition: opacity 0.3s; }
 
-    /* --- 2. 顶部导航 (Logo左，Back右) --- */
     .detail-nav {
       position: fixed; top: 0; left: 0; width: 100%; 
       padding: 2rem 3rem; 
@@ -39,53 +35,25 @@
       mix-blend-mode: difference; color: #fff;
       transition: transform 0.6s var(--ease-out-expo), opacity 0.3s;
     }
+    body.menu-open .detail-nav { opacity: 0; pointer-events: none; }
 
-    /* 当菜单打开时，隐藏顶部的 Back 栏，防止视觉干扰 */
-    body.menu-open .detail-nav {
-      opacity: 0; pointer-events: none;
-    }
-
-    .nav-logo {
-      font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
-    }
-
-    .back-btn {
-      font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 1px; border: 1px solid #fff; 
-      padding: 8px 20px; border-radius: 50px; transition: all 0.3s;
-    }
+    .nav-logo { font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+    .back-btn { font-size: 1rem; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border: 1px solid #fff; padding: 8px 20px; border-radius: 50px; transition: all 0.3s; }
     .back-btn:hover { background: #fff; color: #000; }
 
-    /* --- 3. 内容区域 --- */
-    .detail-hero {
-      width: 100%; height: 100vh; overflow: hidden; position: relative;
-    }
-    .detail-hero img {
-      width: 100%; height: 100%; object-fit: cover;
-      view-transition-name: hero-image; 
-    }
+    .detail-hero { width: 100%; height: 100vh; overflow: hidden; position: relative; }
+    .detail-hero img { width: 100%; height: 100%; object-fit: cover; view-transition-name: hero-image; }
 
-    .detail-content {
-      width: 100%; max-width: 100%; margin: 0 auto; padding: 0;
-    }
-    .detail-image-block {
-      margin-bottom: 0; width: 100%; font-size: 0;
-    }
+    .detail-content { width: 100%; max-width: 100%; margin: 0 auto; padding: 0; }
+    .detail-image-block { margin-bottom: 0; width: 100%; font-size: 0; }
     .detail-image-block img { width: 100%; display: block; }
 
-    /* 底部“下一个作品” */
-    .project-footer {
-      padding: 8rem 3rem; text-align: center; border-top: 1px solid #f0f0f0; margin-top: 4rem; 
-      margin-bottom: 80px; /* 给底部菜单按钮留位置 */
-    }
-    .next-project-link {
-      font-size: 2rem; font-weight: 800; text-decoration: none; color: #000;
-      transition: color 0.3s;
-    }
+    .project-footer { padding: 8rem 3rem; text-align: center; border-top: 1px solid #f0f0f0; margin-top: 4rem; margin-bottom: 80px; }
+    .next-project-link { font-size: 2rem; font-weight: 800; text-decoration: none; color: #000; transition: color 0.3s; }
     .next-project-link:hover { color: var(--accent); }
     .next-label { display: block; font-size: 0.9rem; color: #999; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
 
-    /* --- 4. 菜单样式 (复用标准样式) --- */
+    /* Menu & Button Styles (Copied for consistency) */
     .menu-overlay { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--menu-height); background: var(--menu-bg); z-index: 900; transform: translateY(100%); transition: transform 0.6s var(--ease-out-expo); padding: 3rem 3rem 2rem 3rem; color: #fff; display: flex; flex-direction: column; border-top: 1px solid rgba(255,255,255,0.1); }
     body.menu-open .menu-overlay { transform: translateY(0); }
     .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; height: 100%; max-width: 1600px; margin: 0 auto; width: 100%; }
@@ -126,7 +94,7 @@
     .copy-feedback { font-size: 0.7rem; color: var(--accent); margin-left: auto; opacity: 0; transform: translateX(-5px); transition: all 0.3s; font-weight: 700; text-transform: uppercase; }
     .contact-item:hover .copy-feedback { opacity: 1; transform: translateX(0); }
 
-    /* --- Mobile Responsive --- */
+    /* Mobile Responsive */
     @media (max-width: 768px) {
       .detail-nav { padding: 1.5rem; }
       .detail-hero { height: 50vh; }
@@ -147,19 +115,12 @@
       .menu-btn:hover .icon-wrapper { transform: translateX(0) !important; }
     }
 
-    /* --- Advanced Animations --- */
+    /* Animation */
     ::view-transition-group(root) { animation-duration: 0.4s; }
-    ::view-transition-group(hero-image) {
-      z-index: 10000; 
-      animation-timing-function: cubic-bezier(0.87, 0, 0.13, 1);
-      animation-duration: 0.8s;
-    }
-    ::view-transition-old(hero-image), ::view-transition-new(hero-image) {
-      object-fit: cover; object-position: center; width: 100%; height: 100%;
-    }
+    ::view-transition-group(hero-image) { z-index: 10000; animation-timing-function: cubic-bezier(0.87, 0, 0.13, 1); animation-duration: 0.8s; }
+    ::view-transition-old(hero-image), ::view-transition-new(hero-image) { object-fit: cover; object-position: center; width: 100%; height: 100%; }
     ::view-transition-old(root) { animation: fade-out-down 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
     ::view-transition-new(root) { animation: fade-in-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; animation-delay: 0.1s; opacity: 0; }
-    
     @keyframes fade-out-down { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
     @keyframes fade-in-up { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
   </style>
@@ -192,7 +153,7 @@
     </a>
   </div>
 
-  <!-- Menu Overlay (Added) -->
+  <!-- Menu Overlay -->
   <div class="menu-overlay">
     <div class="menu-grid">
       <div class="menu-column">
@@ -237,7 +198,6 @@
     </div>
   </div>
 
-  <!-- Menu Button (Added) -->
   <div class="menu-trigger-container" onclick="toggleMenu()">
     <div class="menu-btn">
       <div class="icon-wrapper">
@@ -248,11 +208,43 @@
   </div>
 
   <script>
-    // ==========================================
-    // 1. 作品数据配置
-    // ==========================================
+    // Auto Scroll Logic
+    const scrollSpeed = 0.5; 
+    let isScrolling = true;
+    let accumulatedScroll = 0;
+
+    function autoScroll() {
+        if (!isScrolling) return;
+        if (document.body.classList.contains('menu-open')) return;
+
+        // Check if reached bottom
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+            isScrolling = false;
+            return;
+        }
+
+        accumulatedScroll += scrollSpeed;
+        const pixelsToScroll = Math.floor(accumulatedScroll);
+
+        if (pixelsToScroll > 0) {
+            window.scrollBy(0, pixelsToScroll);
+            accumulatedScroll -= pixelsToScroll;
+        }
+
+        requestAnimationFrame(autoScroll);
+    }
+
+    // Stop on interaction
+    const stopEvents = ['mousedown', 'wheel', 'touchmove', 'keydown', 'click'];
+    stopEvents.forEach(event => {
+        window.addEventListener(event, () => {
+            isScrolling = false;
+        }, { passive: true });
+    });
+
+    setTimeout(autoScroll, 1500);
+
     const projects = {
-      // 1. 全球化电商
       "p1": {
         hero: "images/p1-hero.jpg",
         images: ["images/p1-detail-1.jpg"],
@@ -268,7 +260,6 @@
         images: ["images/p3-detail-1.jpg"],
         nextId: "p4", nextTitle: "社交媒体广告创意"
       },
-      // 2. A+
       "p4": {
         hero: "images/p4-hero.jpg",
         images: ["images/p4-detail-1.jpg"],
@@ -289,7 +280,6 @@
         images: ["images/p7-detail-1.jpg"],
         nextId: "p8", nextTitle: "包装设计与物料延展"
       },
-      // 3. 品牌
       "p8": {
         hero: "images/p8-hero.jpg",
         images: ["images/p8-detail-1.jpg"],
@@ -305,19 +295,16 @@
         images: ["images/p10-detail-1.jpg"],
         nextId: "p11", nextTitle: "工法馆与展示厅视觉设计"
       },
-      // 4. 空间
       "p11": {
         hero: "images/p11-hero.jpg",
         images: ["images/p11-detail-1.jpg"],
         nextId: "p12", nextTitle: "策划以及现场调度"
       },
-      // 5. 摄影
       "p12": {
         hero: "images/p12-hero.jpg",
         images: ["images/p12-detail-1.jpg"],
         nextId: "p13", nextTitle: "3D 建模与渲染练习"
       },
-      // 6. 三维
       "p13": {
         hero: "images/p13-hero.jpg",
         images: ["images/p13-detail-1.jpg"],
@@ -325,9 +312,6 @@
       }
     };
 
-    // ==========================================
-    // 2. 逻辑
-    // ==========================================
     function initProject() {
       const params = new URLSearchParams(window.location.search);
       const currentId = params.get('id');
@@ -348,12 +332,10 @@
       document.body.classList.add('loaded');
     }
 
-    // 菜单逻辑
-    const body = document.body;
     const menuText = document.getElementById('menuText');
     function toggleMenu() {
-      body.classList.toggle('menu-open');
-      menuText.textContent = body.classList.contains('menu-open') ? "Close" : "Menu";
+      document.body.classList.toggle('menu-open');
+      menuText.textContent = document.body.classList.contains('menu-open') ? "Close" : "Menu";
     }
 
     async function copyToClipboard(text, element) {
