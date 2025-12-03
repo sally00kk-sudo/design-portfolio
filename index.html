@@ -58,24 +58,72 @@
     }
     .hero-slide.active { opacity: 1; transform: scale(1); }
 
-    .hero-content { width: 50%; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 0 5rem; background: #fff; }
+    /* 【核心修改】居中对齐布局 */
+    .hero-content {
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center; /* 水平居中 */
+      padding: 0 4rem;
+      background: #fff;
+      text-align: center; /* 文字居中 */
+    }
 
-    /* 文案样式 */
+    /* 新增：顶部装饰文字 */
+    .hero-top-deco {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 1.5rem;
+      opacity: 0; transform: translateY(20px);
+      animation: fadeInUp 1s var(--ease-out-expo) 0.1s forwards;
+    }
+    
+    .hero-top-deco span {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: #999;
+      text-transform: uppercase;
+    }
+
+    /* 装饰线条 */
+    .deco-line {
+      width: 30px;
+      height: 1px;
+      background-color: #ccc;
+    }
+
+    /* 标题样式升级 */
     .hero-title {
-      font-size: clamp(2.5rem, 4vw, 4.5rem); font-weight: 900; line-height: 1.2; margin-bottom: 0.8rem;
-      letter-spacing: -1px; color: var(--text-main); opacity: 0; transform: translateY(30px);
+      font-size: clamp(3rem, 5vw, 5.5rem); 
+      font-weight: 900; 
+      line-height: 1.1; 
+      margin-bottom: 1rem;
+      letter-spacing: -1px; 
+      color: var(--text-main); 
+      opacity: 0; transform: translateY(30px);
       animation: fadeInUp 1s var(--ease-out-expo) 0.2s forwards;
     }
+    
     .hero-subtitle-tags {
-      font-size: 1.2rem; font-weight: 700; color: var(--accent); margin-bottom: 1.5rem; letter-spacing: 1px;
+      font-size: 1.2rem; font-weight: 700; color: var(--accent); margin-bottom: 2rem; letter-spacing: 1px;
       opacity: 0; transform: translateY(30px); animation: fadeInUp 1s var(--ease-out-expo) 0.3s forwards;
     }
+    
     .hero-desc {
-      font-size: 1rem; color: var(--text-sub); line-height: 1.8; margin-bottom: 2.5rem; max-width: 540px; text-align: justify;
+      font-size: 1rem; color: var(--text-sub); line-height: 1.8; margin-bottom: 3rem; 
+      max-width: 580px; /* 限制宽度，防止居中时单行过长 */
       opacity: 0; transform: translateY(30px); animation: fadeInUp 1s var(--ease-out-expo) 0.4s forwards;
     }
 
-    .btn-group { display: flex; gap: 1.5rem; opacity: 0; transform: translateY(30px); animation: fadeInUp 1s var(--ease-out-expo) 0.6s forwards; }
+    .btn-group { 
+      display: flex; gap: 1.5rem; justify-content: center; /* 按钮居中 */
+      opacity: 0; transform: translateY(30px); animation: fadeInUp 1s var(--ease-out-expo) 0.6s forwards; 
+    }
+    
     .btn { padding: 16px 40px; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; position: relative; transition: all 0.3s ease; display: inline-flex; align-items: center; }
     .btn i { margin-left: 10px; transition: transform 0.3s; }
     .btn:hover i { transform: translateX(5px); }
@@ -96,7 +144,7 @@
     body.menu-open .menu-overlay { transform: translateY(0); }
 
     .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; height: 100%; max-width: 1600px; margin: 0 auto; width: 100%; }
-    .menu-column { display: flex; flex-direction: column; opacity: 0; transform: translateY(30px); transition: all 0.5s ease; height: 100%; position: relative; }
+    .menu-column { display: flex; flex-direction: column; opacity: 0; transform: translateY(30px); transition: all 0.5s ease; height: 100%; position: relative; text-align: left; /* 菜单内部保持左对齐 */ }
     .col-dot { display: inline-block; width: 8px; height: 8px; background-color: var(--accent); border-radius: 50%; margin-right: 8px; }
     body.menu-open .menu-column:nth-child(1) { transition-delay: 0.1s; opacity: 1; transform: translateY(0); }
     body.menu-open .menu-column:nth-child(2) { transition-delay: 0.15s; opacity: 1; transform: translateY(0); }
@@ -139,24 +187,30 @@
     .menu-label { position: absolute; left: 50%; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #fff; white-space: nowrap; opacity: 0; transform: translateX(10px); transition: all 0.4s ease 0.1s; pointer-events: none; }
     .menu-btn:hover .menu-label { opacity: 1; transform: translateX(15px); }
 
-    /* Mobile Responsive */
+    /* --- Mobile Responsive --- */
     @media (max-width: 768px) {
-      :root { --menu-height: 100vh; } 
       .logo-fixed { left: 1.5rem; top: 1.5rem; font-size: 1.2rem; }
       body.menu-open .logo-fixed { transform: translateY(0); mix-blend-mode: normal; color: #fff; } 
+
       .hero-split { flex-direction: column; }
       body.menu-open .hero-split { transform: translateY(0); opacity: 0; } 
+
       .hero-visual, .hero-content { width: 100%; height: 50%; }
       .hero-content { padding: 2rem; align-items: center; text-align: center; }
-      .hero-title { font-size: 2.2rem; margin-top: -30px; }
+      
+      /* 移动端字体调整 */
+      .hero-title { font-size: 2.8rem; margin-top: -30px; }
       .hero-subtitle-tags { font-size: 1rem; margin-bottom: 1rem; }
-      .hero-desc { font-size: 0.9rem; line-height: 1.6; text-align: left; }
+      .hero-desc { font-size: 0.9rem; line-height: 1.6; text-align: left; } /* 移动端正文可以左对齐，阅读更舒适 */
+      
       .btn-group { justify-content: center; width: 100%; }
       .btn { padding: 12px 25px; font-size: 0.8rem; }
+      
       .menu-overlay { padding: 4rem 1.5rem 8rem 1.5rem; overflow-y: auto; }
       .menu-grid { grid-template-columns: 1fr; gap: 2.5rem; display: block; }
       .menu-column { margin-bottom: 2rem; border-bottom: 1px solid #222; padding-bottom: 1.5rem; height: auto;}
       .menu-image { display: none; }
+      
       .menu-trigger-container { bottom: 20px; }
       .menu-btn { width: 60px; height: 60px; }
       .menu-btn:hover { width: 60px; }
@@ -167,8 +221,7 @@
 </head>
 <body>
 
-  <!-- Logo -->
-  <a href="index.html" class="logo-fixed">SALLY.</a>
+  <a href="#" class="logo-fixed">SALLY.</a>
 
   <section class="hero-split">
     <div class="hero-visual">
@@ -178,19 +231,33 @@
     </div>
     
     <div class="hero-content">
-      <h1 class="hero-title">Sally 设计作品集</h1>
+      
+      <!-- 1. 新增：顶部装饰文字 -->
+      <div class="hero-top-deco">
+        <span class="deco-line"></span>
+        <span>Visual Communication Design</span>
+        <span class="deco-line"></span>
+      </div>
+
+      <!-- 2. 主标题 -->
+      <h1 class="hero-title">Sally's Design Portfolio</h1>
+      
+      <!-- 3. 标签 -->
       <div class="hero-subtitle-tags">
         电商体验 × 品牌视觉 × 多维创意
       </div>
+      
+      <!-- 4. 正文描述 -->
       <p class="hero-desc">
         具备电商全链路设计能力，精通 DTC 独立站 / 亚马逊 / TikTok 店铺视觉搭建、社交广告创意产出；同时掌握品牌 VI 设计、3D 建模渲染等技能，可高效承接电商场景下从视觉创意到体验落地的全流程设计需求。
       </p>
 
       <div class="btn-group">
-        <!-- 【重点修正】这里必须写 work.html -->
+        <!-- 链接到 work.html -->
         <a href="work.html" class="btn btn-black">
           See Work <i class="fa-solid fa-arrow-right"></i>
         </a>
+        <!-- 点击打开菜单查看联系方式 -->
         <a href="#" class="btn btn-outline" onclick="toggleMenu()">
           Contact Me
         </a>
@@ -203,27 +270,26 @@
     <div class="menu-grid">
       <div class="menu-column">
         <h3 class="menu-col-title"><span class="col-dot"></span>01</h3>
-        <a href="index.html" class="menu-link-large" onclick="toggleMenu()">HOME</a>
+        <a href="#" class="menu-link-large" onclick="toggleMenu()">HOME</a>
         <p class="menu-desc">Return to the visual showcase start.</p>
         <div class="menu-image"><img src="images/banner-1.jpg" alt="Home"></div>
       </div>
       <div class="menu-column">
         <h3 class="menu-col-title"><span class="col-dot"></span>02</h3>
-        <!-- 【重点修正】这里必须写 work.html -->
         <a href="work.html" class="menu-link-large">WORK</a>
         <p class="menu-desc">Selected projects involving UI/UX, Branding.</p>
         <div class="menu-image"><img src="images/p1-ecommerce.jpg" alt="Work"></div>
       </div>
       <div class="menu-column">
         <h3 class="menu-col-title"><span class="col-dot"></span>03</h3>
-        <!-- 【重点修正】这里必须写 about.html -->
         <a href="about.html" class="menu-link-large">ABOUT ME</a>
         <p class="menu-desc">My resume, journey, education, and design philosophy.</p>
         <div class="menu-image"><img src="images/banner-2.jpg" alt="About"></div>
       </div>
+      
       <div class="menu-column">
         <h3 class="menu-col-title"><span class="col-dot"></span>04</h3>
-        <a href="#" class="menu-link-large">CONTACT</a>
+        <a href="contact.html" class="menu-link-large">CONTACT</a>
         <div class="contact-list">
           <div class="contact-item" onclick="copyToClipboard('sally00kk@gmail.com', this)">
             <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
@@ -272,20 +338,32 @@
 
     const body = document.body;
     const menuText = document.getElementById('menuText');
+
     function toggleMenu() {
       body.classList.toggle('menu-open');
-      menuText.textContent = body.classList.contains('menu-open') ? "Close" : "Menu";
-      if (!body.classList.contains('menu-open')) {
-        setTimeout(() => { document.querySelectorAll('.copy-feedback').forEach(el => el.textContent = 'Copy'); }, 500);
+      if (body.classList.contains('menu-open')) {
+        menuText.textContent = "Close";
+      } else {
+        menuText.textContent = "Menu";
+        setTimeout(() => {
+          document.querySelectorAll('.copy-feedback').forEach(el => el.textContent = 'Copy');
+        }, 500);
       }
     }
+
     async function copyToClipboard(text, element) {
       try {
         await navigator.clipboard.writeText(text);
         const feedback = element.querySelector('.copy-feedback');
-        feedback.textContent = "Copied!"; feedback.style.color = "#44ff99";
-        setTimeout(() => { feedback.textContent = "Copy"; feedback.style.color = "var(--accent)"; }, 2000);
-      } catch (err) { console.error('Failed to copy: ', err); }
+        feedback.textContent = "Copied!";
+        feedback.style.color = "#44ff99";
+        setTimeout(() => {
+          feedback.textContent = "Copy";
+          feedback.style.color = "var(--accent)";
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy: ', err);
+      }
     }
   </script>
 </body>
