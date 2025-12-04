@@ -53,7 +53,7 @@
     .next-project-link:hover { color: var(--accent); }
     .next-label { display: block; font-size: 0.9rem; color: #999; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
 
-    /* Menu & Button Styles (Copied for consistency) */
+    /* Menu & Button Styles */
     .menu-overlay { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--menu-height); background: var(--menu-bg); z-index: 900; transform: translateY(100%); transition: transform 0.6s var(--ease-out-expo); padding: 3rem 3rem 2rem 3rem; color: #fff; display: flex; flex-direction: column; border-top: 1px solid rgba(255,255,255,0.1); }
     body.menu-open .menu-overlay { transform: translateY(0); }
     .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; height: 100%; max-width: 1600px; margin: 0 auto; width: 100%; }
@@ -101,9 +101,9 @@
       .project-footer { padding: 4rem 1.5rem; }
       .next-project-link { font-size: 1.5rem; }
 
-      /* Menu Fixes */
+      /* Menu Fixes (核心修复) */
       :root { --menu-height: 100vh; } 
-      .menu-overlay { z-index: 2000; padding: 4rem 2rem 8rem 2rem; display: block; overflow-y: auto; }
+      .menu-overlay { z-index: 2000; padding: 10rem 2rem 8rem 2rem; display: block; overflow-y: auto; }
       .menu-grid { display: flex; flex-direction: column; gap: 1.5rem; height: auto; }
       .menu-column { height: auto; margin-bottom: 1.5rem; opacity: 1; transform: none; }
       .menu-image { display: none; }
@@ -127,25 +127,17 @@
 </head>
 <body>
 
-  <!-- Top Nav (Logo左，Back右) -->
   <nav class="detail-nav">
     <a href="index.html" class="nav-logo">SALLY.</a>
-    <a href="work.html" class="back-btn">
-      Back <i class="fa-solid fa-arrow-right" style="transform: rotate(180deg) !important; margin-left:0; margin-right:5px;"></i>
-    </a>
+    <a href="work.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back</a>
   </nav>
 
-  <!-- Hero Image -->
   <div class="detail-hero">
     <img id="heroImg" src="" alt="Project Cover">
   </div>
 
-  <!-- Detail Content (Images) -->
-  <div class="detail-content" id="detailContainer">
-    <!-- Dynamic Content -->
-  </div>
+  <div class="detail-content" id="detailContainer"></div>
 
-  <!-- Footer Navigation -->
   <div class="project-footer">
     <a href="#" id="nextLink" class="next-project-link">
       <span class="next-label">Next Project</span>
@@ -153,7 +145,6 @@
     </a>
   </div>
 
-  <!-- Menu Overlay -->
   <div class="menu-overlay">
     <div class="menu-grid">
       <div class="menu-column">
@@ -208,42 +199,6 @@
   </div>
 
   <script>
-    // Auto Scroll Logic
-    const scrollSpeed = 0.5; 
-    let isScrolling = true;
-    let accumulatedScroll = 0;
-
-    function autoScroll() {
-        if (!isScrolling) return;
-        if (document.body.classList.contains('menu-open')) return;
-
-        // Check if reached bottom
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-            isScrolling = false;
-            return;
-        }
-
-        accumulatedScroll += scrollSpeed;
-        const pixelsToScroll = Math.floor(accumulatedScroll);
-
-        if (pixelsToScroll > 0) {
-            window.scrollBy(0, pixelsToScroll);
-            accumulatedScroll -= pixelsToScroll;
-        }
-
-        requestAnimationFrame(autoScroll);
-    }
-
-    // Stop on interaction
-    const stopEvents = ['mousedown', 'wheel', 'touchmove', 'keydown', 'click'];
-    stopEvents.forEach(event => {
-        window.addEventListener(event, () => {
-            isScrolling = false;
-        }, { passive: true });
-    });
-
-    setTimeout(autoScroll, 1500);
-
     const projects = {
       "p1": {
         hero: "images/p1-hero.jpg",
@@ -332,10 +287,11 @@
       document.body.classList.add('loaded');
     }
 
+    const body = document.body;
     const menuText = document.getElementById('menuText');
     function toggleMenu() {
-      document.body.classList.toggle('menu-open');
-      menuText.textContent = document.body.classList.contains('menu-open') ? "Close" : "Menu";
+      body.classList.toggle('menu-open');
+      menuText.textContent = body.classList.contains('menu-open') ? "Close" : "Menu";
     }
 
     async function copyToClipboard(text, element) {
