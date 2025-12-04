@@ -24,7 +24,6 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
       background: #ffffff;
-      /* 桌面端：锁定滚动，全屏显示 */
       overflow: hidden; 
       height: 100vh;
       width: 100vw;
@@ -39,10 +38,9 @@
       letter-spacing: 2px; text-transform: uppercase; z-index: 800; color: #fff;
       mix-blend-mode: difference; transition: transform 0.6s var(--ease-out-expo);
     }
-    /* 菜单打开时 Logo 上移 */
     body.menu-open .logo-fixed { transform: translateY(calc(var(--menu-height) * -1)); }
 
-    /* --- 3. Split Hero (主视觉) --- */
+    /* --- 3. Split Hero --- */
     .hero-split {
       display: flex; height: 100vh; width: 100%; position: relative;
       transition: transform 0.6s var(--ease-out-expo), filter 0.6s; will-change: transform;
@@ -60,32 +58,20 @@
     }
     .hero-slide.active { opacity: 1; transform: scale(1); }
 
-    /* 居中对齐布局 */
     .hero-content {
-      width: 50%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center; 
-      padding: 0 4rem;
-      background: #fff;
-      text-align: center;
+      width: 50%; height: 100%; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; padding: 0 4rem;
+      background: #fff; text-align: center;
     }
 
-    /* 顶部装饰文字 */
     .hero-top-deco {
       display: flex; align-items: center; gap: 15px; margin-bottom: 2rem;
       opacity: 0; transform: translateY(20px);
       animation: fadeInUp 1s var(--ease-out-expo) 0.1s forwards;
     }
-    
-    .hero-top-deco span {
-      font-size: 0.7rem; font-weight: 700; letter-spacing: 3px; color: #bbb; text-transform: uppercase;
-    }
+    .hero-top-deco span { font-size: 0.7rem; font-weight: 700; letter-spacing: 3px; color: #bbb; text-transform: uppercase; }
     .deco-line { width: 40px; height: 1px; background-color: #ddd; }
 
-    /* 标题样式 */
     .hero-title {
       font-size: clamp(3rem, 5vw, 5.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem;
       letter-spacing: -1px; color: var(--text-main); opacity: 0; transform: translateY(30px);
@@ -143,7 +129,6 @@
     .menu-image img { opacity: 0.8; transition: transform 0.6s, opacity 0.6s; height: 100%; width: 100%; object-fit: cover; }
     .menu-column:hover .menu-image img { transform: scale(1.05); opacity: 1; }
 
-    /* Contact List */
     .contact-list { margin-top: 1.5rem; }
     .contact-item { display: flex; align-items: center; margin-bottom: 0.5rem; cursor: pointer; padding: 10px; border-radius: 6px; transition: background 0.2s; position: relative; }
     .contact-item:hover { background: rgba(255,255,255,0.1); }
@@ -171,86 +156,41 @@
     .menu-label { position: absolute; left: 50%; font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #fff; white-space: nowrap; opacity: 0; transform: translateX(10px); transition: all 0.4s ease 0.1s; pointer-events: none; }
     .menu-btn:hover .menu-label { opacity: 1; transform: translateX(15px); }
 
-    /* --- Mobile Responsive (核心排版修复) --- */
+    /* --- Mobile Responsive (关键修正) --- */
     @media (max-width: 768px) {
-      /* 1. 允许页面垂直滚动 */
-      body {
-        overflow-y: auto; 
-        height: auto; /* 解除高度限制 */
-      }
-
-      /* 2. 页面结构改为上下自然排列 */
-      .hero-split { 
-        flex-direction: column; 
-        height: auto; /* 高度自适应 */
-        min-height: 100vh; /* 保证至少满屏 */
-      }
+      /* 1. 基础布局 */
+      body { overflow-y: auto; height: auto; }
+      .hero-split { flex-direction: column; height: auto; min-height: 100vh; }
+      .hero-visual { width: 100%; height: 45vh; min-height: 300px; }
+      .hero-content { width: 100%; height: auto; padding: 3rem 1.5rem 8rem 1.5rem; justify-content: flex-start; }
       
-      /* 3. 图片区域：固定高度，不占满全屏 */
-      .hero-visual { 
-        width: 100%; 
-        height: 45vh; /* 占屏幕约 45% */
-        min-height: 300px;
-      }
-      
-      /* 4. 内容区域：自适应高度，增加内边距 */
-      .hero-content { 
-        width: 100%; 
-        height: auto; 
-        padding: 3rem 1.5rem 8rem 1.5rem; /* 底部 8rem 留给悬浮按钮 */
-        justify-content: flex-start; /* 内容从上往下排 */
-      }
-      
-      /* 5. 字体与间距微调 */
+      /* 2. 字体与间距 */
       .hero-top-deco { margin-bottom: 1rem; }
       .deco-line { width: 25px; }
       .hero-top-deco span { font-size: 0.6rem; letter-spacing: 2px; }
+      .hero-title { font-size: 2.8rem; margin-bottom: 1rem; transform: translateY(0); opacity: 1; }
+      .hero-subtitle-tags { font-size: 1rem; margin-bottom: 1.5rem; }
+      .hero-desc { font-size: 0.95rem; line-height: 1.6; text-align: justify; text-align-last: left; margin-bottom: 2.5rem; }
+      
+      .btn-group { flex-direction: column; width: 100%; gap: 1rem; }
+      .btn { width: 100%; justify-content: center; padding: 14px 0; }
 
-      .hero-title { 
-        font-size: 2.2rem; 
-        margin-bottom: 1rem;
-        /* 取消之前的位移动画初始值，防止文字跑偏，或者保持一致 */
-        transform: translateY(0); 
-        opacity: 1; /* 手机端简化动画逻辑，或者保持动画 */
-      }
-      
-      .hero-subtitle-tags { 
-        font-size: 1rem; 
-        margin-bottom: 1.5rem; 
-      }
-      
-      .hero-desc { 
-        font-size: 0.95rem; 
-        line-height: 1.6; 
-        text-align: justify; /* 保持两端对齐 */
-        text-align-last: left; /* 最后一行左对齐，阅读更自然 */
-        margin-bottom: 2.5rem;
-      }
-      
-      /* 6. 按钮组：改为纵向排列或保持横向但缩小间距 */
-      .btn-group { 
-        flex-direction: column; /* 手机端按钮垂直排列更易点击 */
-        width: 100%; 
-        gap: 1rem;
-      }
-      .btn { 
-        width: 100%; 
-        justify-content: center; 
-        padding: 14px 0; 
-      }
-
-      /* 7. Logo 调整 */
+      /* 3. Logo */
       .logo-fixed { left: 1.5rem; top: 1.5rem; font-size: 1.2rem; }
-      /* 手机端打开菜单 Logo 变白 */
       body.menu-open .logo-fixed { transform: translateY(0); mix-blend-mode: normal; color: #fff; z-index: 2002; } 
       
-      /* 8. 菜单内容与滚动 */
-      .menu-overlay { padding: 4rem 1.5rem 8rem 1.5rem; overflow-y: auto; z-index: 2000; }
+      /* 4. 菜单全屏修正 (100%宽 + 顶部留白) */
+      :root { --menu-height: 100vh; } 
+      .menu-overlay { 
+        padding: 10rem 1.5rem 8rem 1.5rem; /* 顶部留足 10rem */
+        overflow-y: auto; 
+        z-index: 2000; 
+      }
       .menu-grid { grid-template-columns: 1fr; gap: 2.5rem; display: block; }
       .menu-column { margin-bottom: 2rem; border-bottom: 1px solid #222; padding-bottom: 1.5rem; height: auto;}
       .menu-image { display: none; }
       
-      /* 9. 菜单按钮强制重置 */
+      /* 5. 菜单按钮修正 (强制圆形 + 隐藏文字) */
       .menu-trigger-container { bottom: 30px; z-index: 2001; }
       .menu-btn { width: 60px !important; height: 60px !important; border-radius: 50% !important; }
       body.menu-open .menu-btn { width: 60px !important; background-color: #fff; }
@@ -272,33 +212,26 @@
     </div>
     
     <div class="hero-content">
-      
-      <!-- 1. 顶部装饰文字 -->
       <div class="hero-top-deco">
         <span class="deco-line"></span>
         <span>Visual Communication Design</span>
         <span class="deco-line"></span>
       </div>
 
-      <!-- 2. 主标题 -->
       <h1 class="hero-title">Sally's Design Portfolio</h1>
       
-      <!-- 3. 标签 -->
       <div class="hero-subtitle-tags">
         电商体验 × 品牌视觉 × 多维创意
       </div>
       
-      <!-- 4. 正文描述 -->
       <p class="hero-desc">
         具备电商全链路设计能力，精通 DTC 独立站 / 亚马逊 / TikTok 店铺视觉搭建、社交广告创意产出；同时掌握品牌 VI 设计、3D 建模渲染等技能，可高效承接电商场景下从视觉创意到体验落地的全流程设计需求。
       </p>
 
       <div class="btn-group">
-        <!-- 链接到 work.html -->
         <a href="work.html" class="btn btn-black">
           See Work <i class="fa-solid fa-arrow-right"></i>
         </a>
-        <!-- 点击打开菜单查看联系方式 -->
         <a href="#" class="btn btn-outline" onclick="toggleMenu()">
           Contact Me
         </a>
@@ -306,7 +239,7 @@
     </div>
   </section>
 
-  <!-- 菜单内容 (已补全 QQ) -->
+  <!-- 菜单内容 -->
   <div class="menu-overlay">
     <div class="menu-grid">
       <div class="menu-column">
@@ -327,30 +260,23 @@
         <p class="menu-desc">My resume, journey, education, and design philosophy.</p>
         <div class="menu-image"><img src="images/banner-2.jpg" alt="About"></div>
       </div>
-      
       <div class="menu-column">
         <h3 class="menu-col-title"><span class="col-dot"></span>04</h3>
-        <a href="contact.html" class="menu-link-large">CONTACT</a>
+        <a href="contact.html" class="menu-link-large" onclick="toggleMenu()">CONTACT</a>
         <div class="contact-list">
           <div class="contact-item" onclick="copyToClipboard('sally00kk@gmail.com', this)">
             <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
-            <div class="contact-info">
-              <span class="contact-value">sally00kk@gmail.com</span>
-            </div>
+            <div class="contact-info"><span class="contact-value">sally00kk@gmail.com</span></div>
             <span class="copy-feedback">Copy</span>
           </div>
           <div class="contact-item" onclick="copyToClipboard('1355652997@qq.com', this)">
             <div class="contact-icon"><i class="fa-brands fa-qq"></i></div>
-            <div class="contact-info">
-              <span class="contact-value">1355652997@qq.com</span>
-            </div>
+            <div class="contact-info"><span class="contact-value">1355652997@qq.com</span></div>
             <span class="copy-feedback">Copy</span>
           </div>
           <div class="contact-item" onclick="copyToClipboard('178-9100-3233', this)">
             <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
-            <div class="contact-info">
-              <span class="contact-value">178-9100-3233</span>
-            </div>
+            <div class="contact-info"><span class="contact-value">178-9100-3233</span></div>
             <span class="copy-feedback">Copy</span>
           </div>
         </div>
