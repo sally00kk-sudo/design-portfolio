@@ -40,7 +40,7 @@
       transition: transform 0.6s var(--ease-out-expo), filter 0.6s;
       padding-top: 120px; padding-bottom: 120px; will-change: transform;
     }
-    /* 桌面端：菜单打开时上移 */
+    /* 桌面端：上移 */
     body.menu-open .page-container {
       transform: translateY(calc(var(--menu-height) * -1));
       filter: brightness(0.8); border-radius: 0 0 20px 20px; overflow: hidden; height: 100vh; 
@@ -53,16 +53,16 @@
       transition: transform 0.6s var(--ease-out-expo), opacity 0.3s;
     }
     .toc-btn {
-      display: none; /* 桌面端隐藏 */
-      background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #000; padding: 5px;
+      display: none; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: #000; padding: 5px;
     }
     .logo-sally {
       font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #000; mix-blend-mode: normal; 
     }
+    /* 桌面端：菜单打开时 Logo 上移并反色 */
     body.menu-open .header-wrapper { transform: translateY(calc(var(--menu-height) * -1)); }
     body.menu-open .logo-sally { color: #fff; mix-blend-mode: difference; }
 
-    /* --- 4. 侧边栏目录 (Desktop Styles) --- */
+    /* --- 4. 侧边栏目录 --- */
     .sidebar-toc {
       position: fixed; top: 100px; left: 3rem; width: 200px; height: calc(100vh - 100px); 
       overflow-y: auto; z-index: 100; padding-right: 15px; padding-top: 1rem;
@@ -75,7 +75,6 @@
       transition: transform 0.6s var(--ease-out-expo);
     }
     body.menu-open .sidebar-toc, body.menu-open .sidebar-toc::after { transform: translateY(calc(var(--menu-height) * -1)); }
-    
     .sidebar-toc::-webkit-scrollbar { display: none; }
     .toc-list { list-style: none; }
     .toc-item { margin-bottom: 1.5rem; } 
@@ -88,12 +87,9 @@
     .toc-link:hover { color: var(--accent); transform: translateX(3px); font-weight: 500;}
     .toc-link span { margin-right: 5px; font-weight: 600; font-size: 0.7rem; color: #ddd; }
     
-    /* 遮罩层 (移动端用) */
     .toc-overlay-backdrop {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5); z-index: 2999; /* 很高，但在 sidebar 下面 */
-      opacity: 0; visibility: hidden; transition: all 0.3s;
-      backdrop-filter: blur(2px);
+      background: rgba(0,0,0,0.5); z-index: 99; opacity: 0; visibility: hidden; transition: all 0.3s;
     }
     body.toc-open .toc-overlay-backdrop { opacity: 1; visibility: visible; }
 
@@ -108,7 +104,7 @@
     .section-title-en { font-size: 1rem; font-weight: 400; color: #999; text-transform: uppercase; letter-spacing: 1px; font-family: "Helvetica Neue", Arial, sans-serif;}
 
     .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-grid); grid-auto-rows: var(--card-height); grid-auto-flow: dense; }
-    .work-card { position: relative; display: block; overflow: hidden; border-radius: 0; background: #f4f4f4; width: 100%; height: 100%; scroll-margin-top: 150px; cursor: pointer; }
+    .work-card { position: relative; display: block; overflow: hidden; border-radius: 0; background: #f4f4f4; width: 100%; height: 100%; scroll-margin-top: 150px; }
     .span-2 { grid-column: span 2; }
     .span-full { grid-column: 1 / -1; }
     .work-card img { width: 100%; height: 100%; object-fit: cover; object-position: center; transition: transform 0.8s var(--ease-out-expo), filter 0.5s ease; }
@@ -170,54 +166,68 @@
     @media (max-width: 768px) {
       :root { --menu-height: 100vh; } 
 
+      /* 1. Header: 核心修复 - 固定定位 + 顶部通栏 */
       .header-wrapper {
-        position: absolute; top: 2rem; left: 1.5rem; width: auto; transform: none !important;
+        position: fixed; /* 固定在顶部 */
+        top: 0; 
+        left: 0; 
+        width: 100%; /* 全宽 */
+        padding: 1.5rem; /* 内边距 */
+        background: rgba(255, 255, 255, 0.95); /* 半透明白底 */
+        backdrop-filter: blur(10px); /* 毛玻璃 */
+        border-bottom: 1px solid rgba(0,0,0,0.05); /* 细微底边 */
+        transform: none !important;
+        z-index: 900; /* 高层级 */
       }
       .toc-btn { display: block; }
       
+      /* 2. 页面容器: 菜单打开时不动 */
       body.menu-open .page-container {
         transform: none; filter: none; border-radius: 0;
       }
+
+      /* 3. Logo: 菜单打开时隐藏 */
       body.menu-open .header-wrapper { opacity: 0; pointer-events: none; }
 
-      /* 【核心修改】侧边栏 Drawer：宽度75%，留出右侧空间 */
+      /* 4. 侧边栏 Drawer */
       .sidebar-toc {
-        display: block; 
-        position: fixed; 
-        top: 0; 
-        left: 0; 
-        width: 75%; /* 占据 75%，右侧留白 */
+        display: block; position: fixed; top: 0; left: 0; 
+        width: 75%; /* 左侧 75% */
         height: 100vh;
         background: #fff; 
-        padding: 6rem 1.5rem; /* 顶部留白，避开 Logo 区域 */
-        transform: translateX(-100%); 
-        box-shadow: 4px 0 30px rgba(0,0,0,0.15); /* 加深阴影 */
-        z-index: 3000; /* 确保在最上层 */
-        transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-        border-right: none;
+        padding: 6rem 1.5rem; /* 避开顶部 Header */
+        transform: translateX(-100%);
+        box-shadow: 2px 0 20px rgba(0,0,0,0.1); z-index: 1000; transition: transform 0.4s ease;
+        border: none;
       }
       .sidebar-toc::after { display: none; }
       body.toc-open .sidebar-toc { transform: translateX(0); }
       body.toc-open { overflow: hidden; }
 
-      .container { padding: 0 1.5rem; padding-top: 20px; }
+      .container { padding: 0 1.5rem; padding-top: 100px; /* 增加顶部padding避开Header */ }
       .page-header { margin-bottom: 3rem; }
       .page-title { font-size: 2.5rem; }
       
       .gallery-grid { grid-template-columns: 1fr; grid-auto-rows: 280px; gap: 1rem;}
       .work-card, .span-2, .span-full { grid-column: span 1; }
+      
       .work-section { margin-bottom: 5rem; }
       .section-header { flex-direction: column; gap: 0.2rem; align-items: flex-start; }
       .section-title-cn { font-size: 1.5rem; }
       .section-title-en { font-size: 0.9rem; }
 
-      /* 菜单修正 */
-      .menu-overlay { z-index: 2000; padding: 10rem 2rem 8rem 2rem; display: block; overflow-y: auto; }
+      /* 5. 菜单内容与滚动 (修正padding) */
+      .menu-overlay { 
+        z-index: 2000; 
+        padding: 10rem 2rem 8rem 2rem; 
+        display: block; 
+        overflow-y: auto; 
+      }
       .menu-grid { display: flex; flex-direction: column; gap: 1.5rem; height: auto; }
       .menu-column { height: auto; margin-bottom: 1.5rem; opacity: 1; transform: none; }
       .menu-image { display: none; }
 
-      /* 菜单按钮强制重置 */
+      /* 6. 菜单按钮强制重置 */
       .menu-trigger-container { bottom: 30px; z-index: 2001; }
       .menu-btn { width: 60px !important; height: 60px !important; border-radius: 50% !important; }
       body.menu-open .menu-btn { width: 60px !important; background-color: #fff; }
@@ -228,21 +238,14 @@
 
     /* 
        =========================================
-       高级过渡动画 (Advanced View Transitions)
+       高级过渡动画
        =========================================
     */
     ::view-transition-group(root) { animation-duration: 0.4s; }
-    ::view-transition-group(hero-image) {
-      z-index: 10000; 
-      animation-timing-function: cubic-bezier(0.87, 0, 0.13, 1);
-      animation-duration: 0.8s;
-    }
-    ::view-transition-old(hero-image), ::view-transition-new(hero-image) {
-      object-fit: cover; object-position: center; width: 100%; height: 100%;
-    }
+    ::view-transition-group(hero-image) { z-index: 10000; animation-timing-function: cubic-bezier(0.87, 0, 0.13, 1); animation-duration: 0.8s; }
+    ::view-transition-old(hero-image), ::view-transition-new(hero-image) { object-fit: cover; object-position: center; width: 100%; height: 100%; }
     ::view-transition-old(root) { animation: fade-out-down 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
     ::view-transition-new(root) { animation: fade-in-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; animation-delay: 0.1s; opacity: 0; }
-    
     @keyframes fade-out-down { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(20px); } }
     @keyframes fade-in-up { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
   </style>
